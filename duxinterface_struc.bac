@@ -1,0 +1,2256 @@
+-- MySQL dump 10.13  Distrib 5.5.24, for Win32 (x86)
+--
+-- Host: 192.168.0.101    Database: dux_interface
+-- ------------------------------------------------------
+-- Server version	5.5.24
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `aleaciones`
+--
+
+DROP TABLE IF EXISTS `aleaciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aleaciones` (
+  `IdAleacion` int(11) NOT NULL,
+  `Identificador` varchar(5) DEFAULT NULL,
+  `Descripcion` varchar(30) DEFAULT NULL,
+  `IdAleacionTipo` int(11) NOT NULL,
+  PRIMARY KEY (`IdAleacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `aleacionestipo`
+--
+
+DROP TABLE IF EXISTS `aleacionestipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aleacionestipo` (
+  `IdAleacionTipo` int(11) NOT NULL,
+  `Identificador` varchar(5) NOT NULL,
+  `Descripcion` varchar(30) NOT NULL,
+  `Factor` decimal(19,4) NOT NULL,
+  `DUX_Codigo` varchar(20) NOT NULL,
+  `DUX_CuentaContable` varchar(20) NOT NULL,
+  PRIMARY KEY (`IdAleacionTipo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `aleacionestipofactor`
+--
+
+DROP TABLE IF EXISTS `aleacionestipofactor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aleacionestipofactor` (
+  `IdAleacionTipoFactor` int(11) NOT NULL,
+  `IdAleacionTipo` int(11) NOT NULL,
+  `Fecha` date NOT NULL,
+  `Factor` decimal(19,4) NOT NULL,
+  PRIMARY KEY (`IdAleacionTipoFactor`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `almacen`
+--
+
+DROP TABLE IF EXISTS `almacen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `almacen` (
+  `IDENTIFICACION` char(20) DEFAULT NULL,
+  `DESCRIPCION` char(40) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `almprod`
+--
+
+DROP TABLE IF EXISTS `almprod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `almprod` (
+  `PRODUCTO` char(20) NOT NULL DEFAULT '',
+  `ALMACEN` char(20) NOT NULL DEFAULT '',
+  `CUENTACONTABLEVENTA` char(19) DEFAULT NULL,
+  `CUENTACONTABLECOMPRA` char(19) DEFAULT NULL,
+  `CUENTACONTABLECOSTOVENTAS` char(19) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `COSTO` double DEFAULT NULL,
+  `ULTIMOCOSTO` double DEFAULT NULL,
+  `COSTOPROMEDIO` double DEFAULT NULL,
+  `MAXIMO` double DEFAULT NULL,
+  `MINIMO` double DEFAULT NULL,
+  `PUNTOREORDEN` double DEFAULT NULL,
+  `UBICACION` char(50) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL,
+  `CUENTACONTABLEORDEN` char(19) DEFAULT NULL,
+  `CANTIDADRESERVADA` double DEFAULT NULL,
+  `CUENTACONTABLEESPECIAL` char(19) DEFAULT NULL,
+  `OBS2` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`PRODUCTO`,`ALMACEN`),
+  KEY `IDX_ALMACEN` (`ALMACEN`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `areas`
+--
+
+DROP TABLE IF EXISTS `areas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `areas` (
+  `CODIGO` char(15) NOT NULL,
+  `IDENTIFICACION` char(20) DEFAULT NULL,
+  `DESCRIPCION` char(80) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `bitacora`
+--
+
+DROP TABLE IF EXISTS `bitacora`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bitacora` (
+  `Idbitacora` int(11) NOT NULL,
+  `tabla` varchar(30) DEFAULT NULL,
+  `idtabla` int(11) DEFAULT NULL,
+  `Campo` varchar(20) DEFAULT NULL,
+  `Valor` varchar(20) DEFAULT NULL,
+  `Fecha` datetime DEFAULT NULL,
+  `Hora` datetime DEFAULT NULL,
+  `pc` varchar(30) DEFAULT NULL,
+  `usuarioWin` varchar(30) DEFAULT NULL,
+  `usuarioaccess` int(11) DEFAULT NULL,
+  `campo2` varchar(30) DEFAULT NULL,
+  `valor2` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Idbitacora`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `bitacorasyncdux`
+--
+
+DROP TABLE IF EXISTS `bitacorasyncdux`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bitacorasyncdux` (
+  `idbitacoraSyncDux` int(11) NOT NULL AUTO_INCREMENT,
+  `tabla` varchar(20) DEFAULT NULL,
+  `fechayhorainicio` datetime DEFAULT NULL,
+  `fechayhorafin` datetime DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `tarea` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`idbitacoraSyncDux`)
+) ENGINE=InnoDB AUTO_INCREMENT=385017 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clientes` (
+  `CODIGO` char(15) NOT NULL,
+  `NOMBRE` char(100) DEFAULT NULL,
+  `CONTACTO` char(45) DEFAULT NULL,
+  `RFC` char(15) DEFAULT NULL,
+  `DOMICILIO` char(50) DEFAULT NULL,
+  `COLONIA` char(50) DEFAULT NULL,
+  `CIUDAD` char(50) DEFAULT NULL,
+  `ESTADO` char(40) DEFAULT NULL,
+  `CP` char(5) DEFAULT NULL,
+  `PAIS` char(20) DEFAULT NULL,
+  `TELEFONO1` char(40) DEFAULT NULL,
+  `TELEFONO2` char(40) DEFAULT NULL,
+  `TELEFONO3` char(40) DEFAULT NULL,
+  `FAX` char(40) DEFAULT NULL,
+  `CLASIFICACION` char(20) DEFAULT NULL,
+  `ZONA` char(20) DEFAULT NULL,
+  `IVADESGLOSADO` int(11) DEFAULT NULL,
+  `AGENTE` char(40) DEFAULT NULL,
+  `DESCUENTO` char(20) DEFAULT NULL,
+  `DIASCREDITO` int(11) DEFAULT NULL,
+  `LIMITECREDITO` double DEFAULT NULL,
+  `FECHAINICIORELACIONES` date DEFAULT NULL,
+  `FECHAULTIMOMOVIMIENTO` date DEFAULT NULL,
+  `CONCEPTO` char(50) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `BLOQUEADO` int(11) DEFAULT NULL,
+  `MOTIVOBLOQUEO` char(40) DEFAULT NULL,
+  `FECHAALTA` date DEFAULT NULL,
+  `PUBLICOGENERAL` int(11) DEFAULT NULL,
+  `GOLDMINE` char(20) DEFAULT NULL,
+  `EMAIL` char(50) DEFAULT NULL,
+  `PAGINAWEB` char(50) DEFAULT NULL,
+  `CODIGOADICIONAL` char(20) DEFAULT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `SUBALMACEN` char(20) DEFAULT NULL,
+  `INTERCOMPANIA` int(11) DEFAULT NULL,
+  `CUENTACONTABLECOSTOVENTAS` char(19) DEFAULT NULL,
+  `CUENTACONTABLEVENTAS` char(19) DEFAULT NULL,
+  `AUTORIZADOPOR` char(50) DEFAULT NULL,
+  `FECHAAUTORIZACION` date DEFAULT NULL,
+  `NIVELRIESGO` char(5) DEFAULT NULL,
+  `COMENTARIOSCREDITO` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO4` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO5` char(50) DEFAULT NULL,
+  `CUENTACONTABLEORDEN` char(19) DEFAULT NULL,
+  `AGENTECOBRANZA` char(40) DEFAULT NULL,
+  `COBRARIVA` int(11) DEFAULT NULL,
+  `CURP` char(20) DEFAULT NULL,
+  `RLUNES` int(11) DEFAULT NULL,
+  `RMARTES` int(11) DEFAULT NULL,
+  `RMIERCOLES` int(11) DEFAULT NULL,
+  `RJUEVES` int(11) DEFAULT NULL,
+  `RVIERNES` int(11) DEFAULT NULL,
+  `RSABADO` int(11) DEFAULT NULL,
+  `RDOMINGO` int(11) DEFAULT NULL,
+  `PLUNES` int(11) DEFAULT NULL,
+  `PMARTES` int(11) DEFAULT NULL,
+  `PMIERCOLES` int(11) DEFAULT NULL,
+  `PJUEVES` int(11) DEFAULT NULL,
+  `PVIERNES` int(11) DEFAULT NULL,
+  `PSABADO` int(11) DEFAULT NULL,
+  `PDOMINGO` int(11) DEFAULT NULL,
+  `NOMBRECOMERCIAL` char(80) DEFAULT NULL,
+  `ENTRECALLE1` char(60) DEFAULT NULL,
+  `ENTRECALLE2` char(60) DEFAULT NULL,
+  `HORARIO` char(40) DEFAULT NULL,
+  `DELEGACION` char(50) DEFAULT NULL,
+  `ESPECIFICACIONFECHAREVISION` char(70) DEFAULT NULL,
+  `ESPECIFICACIONFECHAPAGO` char(70) DEFAULT NULL,
+  `HORAINICIOREVISION` time DEFAULT NULL,
+  `HORAFINALREVISION` time DEFAULT NULL,
+  `HORAINICIOPAGO` time DEFAULT NULL,
+  `HORAFINALPAGO` time DEFAULT NULL,
+  `NUMEROEXTERIOR` char(20) DEFAULT NULL,
+  `NUMEROINTERIOR` char(20) DEFAULT NULL,
+  `COORDENADASDOMICILIO` char(30) DEFAULT NULL,
+  `GEOCERCA` char(6) DEFAULT NULL,
+  `DISTANCIAMASDEUNAHORA` int(11) DEFAULT NULL,
+  `NIVELACCESO` char(1) DEFAULT NULL,
+  `NIVELRIESGOACCESO` char(1) DEFAULT NULL,
+  `ESTACIONAMIENTO` char(1) DEFAULT NULL,
+  `COORDENADASESTACIONAMIENTO` char(30) DEFAULT NULL,
+  `ELUNES` int(11) DEFAULT NULL,
+  `EMARTES` int(11) DEFAULT NULL,
+  `EMIERCOLES` int(11) DEFAULT NULL,
+  `EJUEVES` int(11) DEFAULT NULL,
+  `EVIERNES` int(11) DEFAULT NULL,
+  `ESABADO` int(11) DEFAULT NULL,
+  `EDOMINGO` int(11) DEFAULT NULL,
+  `HORAINICIOENTREGALUNES` time DEFAULT NULL,
+  `HORAFINALENTREGALUNES` time DEFAULT NULL,
+  `HORAINICIOENTREGAMARTES` time DEFAULT NULL,
+  `HORAFINALENTREGAMARTES` time DEFAULT NULL,
+  `HORAINICIOENTREGAMIERCOLES` time DEFAULT NULL,
+  `HORAFINALENTREGAMIERCOLES` time DEFAULT NULL,
+  `HORAINICIOENTREGAJUEVES` time DEFAULT NULL,
+  `HORAFINALENTREGAJUEVES` time DEFAULT NULL,
+  `HORAINICIOENTREGAVIERNES` time DEFAULT NULL,
+  `HORAFINALENTREGAVIERNES` time DEFAULT NULL,
+  `HORAINICIOENTREGASABADO` time DEFAULT NULL,
+  `HORAFINALENTREGASABADO` time DEFAULT NULL,
+  `HORAINICIOENTREGADOMINGO` time DEFAULT NULL,
+  `HORAFINALENTREGADOMINGO` time DEFAULT NULL,
+  `GEOCERCAESTACIONAMIENTO` char(6) DEFAULT NULL,
+  `METODOPAGO` int(11) DEFAULT NULL,
+  `DATOSCUENTAPAGO` char(20) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `config_args`
+--
+
+DROP TABLE IF EXISTS `config_args`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `config_args` (
+  `idconfig` int(11) NOT NULL AUTO_INCREMENT,
+  `camponombre` varchar(30) DEFAULT NULL,
+  `campovalor` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`idconfig`),
+  UNIQUE KEY `UNQ_camponombre` (`camponombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `control de fallas`
+--
+
+DROP TABLE IF EXISTS `control de fallas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `control de fallas` (
+  `IdControldeFallas` int(11) NOT NULL AUTO_INCREMENT,
+  `Maquina` varchar(20) DEFAULT NULL,
+  `Responsable` int(11) DEFAULT NULL,
+  `Turno` varchar(20) DEFAULT NULL,
+  `Fecha` datetime DEFAULT NULL,
+  `Hrs Turno` double DEFAULT NULL,
+  `cerrado` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`IdControldeFallas`)
+) ENGINE=InnoDB AUTO_INCREMENT=1034 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `control de fallaspar`
+--
+
+DROP TABLE IF EXISTS `control de fallaspar`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `control de fallaspar` (
+  `Idparcontroldefallas` int(11) NOT NULL AUTO_INCREMENT,
+  `idcontroldefallas` int(11) NOT NULL,
+  `Act` int(11) DEFAULT NULL,
+  `Tinicio` datetime DEFAULT NULL,
+  `Tfinal` datetime DEFAULT NULL,
+  `IdTipodeProblema` int(11) DEFAULT NULL,
+  `clasif` varchar(255) DEFAULT NULL,
+  `Obs` longtext,
+  `fecha` datetime DEFAULT NULL,
+  `fecha1` datetime DEFAULT NULL,
+  PRIMARY KEY (`Idparcontroldefallas`),
+  KEY `FK_idcontrolfallas_idx` (`idcontroldefallas`)
+) ENGINE=InnoDB AUTO_INCREMENT=738023 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `controloentregas`
+--
+
+DROP TABLE IF EXISTS `controloentregas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `controloentregas` (
+  `idcontrolOentregas` int(11) NOT NULL AUTO_INCREMENT,
+  `codigooentrega` int(11) NOT NULL,
+  `partidaoentrega` int(1) NOT NULL,
+  `estatus` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`codigooentrega`,`partidaoentrega`),
+  UNIQUE KEY `UQ` (`idcontrolOentregas`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ctrldepedidos`
+--
+
+DROP TABLE IF EXISTS `ctrldepedidos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ctrldepedidos` (
+  `Idpedido` int(11) NOT NULL AUTO_INCREMENT,
+  `CodigoyNumpar` varchar(20) DEFAULT NULL,
+  `MARCADO` bit(1) DEFAULT b'0',
+  `PASADO` bit(1) DEFAULT b'0',
+  `HECHOS` int(11) DEFAULT NULL,
+  `PROG` int(11) DEFAULT NULL,
+  `CERRARPEDIDO` int(11) DEFAULT NULL,
+  `numsem` int(11) DEFAULT NULL,
+  `SALDO EXIST` int(11) DEFAULT NULL,
+  `FECHA ALM` date DEFAULT NULL,
+  PRIMARY KEY (`Idpedido`),
+  UNIQUE KEY `CodigoyNumpar_UNIQUE` (`CodigoyNumpar`)
+) ENGINE=InnoDB AUTO_INCREMENT=14019 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cuentas`
+--
+
+DROP TABLE IF EXISTS `cuentas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cuentas` (
+  `CUENTA` char(19) NOT NULL,
+  `DESCRIPCION` char(50) DEFAULT NULL,
+  `CODIGORANGO` smallint(6) DEFAULT NULL,
+  `AFECTABLE` char(1) DEFAULT NULL,
+  `SALDOINICIAL` double DEFAULT NULL,
+  `CARGOSENERO` double DEFAULT NULL,
+  `ABONOSENERO` double DEFAULT NULL,
+  `CARGOSFEBRERO` double DEFAULT NULL,
+  `ABONOSFEBRERO` double DEFAULT NULL,
+  `CARGOSMARZO` double DEFAULT NULL,
+  `ABONOSMARZO` double DEFAULT NULL,
+  `CARGOSABRIL` double DEFAULT NULL,
+  `ABONOSABRIL` double DEFAULT NULL,
+  `CARGOSMAYO` double DEFAULT NULL,
+  `ABONOSMAYO` double DEFAULT NULL,
+  `CARGOSJUNIO` double DEFAULT NULL,
+  `ABONOSJUNIO` double DEFAULT NULL,
+  `CARGOSJULIO` double DEFAULT NULL,
+  `ABONOSJULIO` double DEFAULT NULL,
+  `CARGOSAGOSTO` double DEFAULT NULL,
+  `ABONOSAGOSTO` double DEFAULT NULL,
+  `CARGOSSEPTIEMBRE` double DEFAULT NULL,
+  `ABONOSSEPTIEMBRE` double DEFAULT NULL,
+  `CARGOSOCTUBRE` double DEFAULT NULL,
+  `ABONOSOCTUBRE` double DEFAULT NULL,
+  `CARGOSNOVIEMBRE` double DEFAULT NULL,
+  `ABONOSNOVIEMBRE` double DEFAULT NULL,
+  `CARGOSDICIEMBRE` double DEFAULT NULL,
+  `ABONOSDICIEMBRE` double DEFAULT NULL,
+  `CARGOSENERO1` double DEFAULT NULL,
+  `ABONOSENERO1` double DEFAULT NULL,
+  `CARGOSFEBRERO2` double DEFAULT NULL,
+  `ABONOSFEBRERO2` double DEFAULT NULL,
+  `CARGOSMARZO3` double DEFAULT NULL,
+  `ABONOSMARZO3` double DEFAULT NULL,
+  `CARGOSABRIL4` double DEFAULT NULL,
+  `ABONOSABRIL4` double DEFAULT NULL,
+  `CUENTANIVELANTERIOR` char(19) DEFAULT NULL,
+  `NIVEL` int(11) DEFAULT NULL,
+  `FORMATOCUENTA` char(19) DEFAULT NULL,
+  `FORMATODESCRIPCION` char(70) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO4` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO5` char(50) DEFAULT NULL,
+  `SUBGRUPO` char(40) DEFAULT NULL,
+  `FECHAADQUISICION` date DEFAULT NULL,
+  `IMPORTEORIGINAL` double DEFAULT NULL,
+  `PORCENTAJEMENSUALADEPRECIAR` double DEFAULT NULL,
+  `CUENTAGASTO` char(19) DEFAULT NULL,
+  `CUENTADEPRECIACION` char(19) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CUENTA`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `deptos`
+--
+
+DROP TABLE IF EXISTS `deptos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `deptos` (
+  `IDENTIFICACION` char(20) NOT NULL,
+  `DESCRIPCION` char(50) DEFAULT NULL,
+  `NOMBRERESPONSABLE` char(90) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IDENTIFICACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `dia_sem`
+--
+
+DROP TABLE IF EXISTS `dia_sem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dia_sem` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogdeprod` int(11) NOT NULL,
+  `NUSEM` int(11) NOT NULL,
+  `diasem` int(11) NOT NULL,
+  `pr` int(11) DEFAULT NULL,
+  `ppr` int(11) DEFAULT NULL,
+  `Moldesb` int(11) DEFAULT NULL,
+  `Moldesm` int(11) DEFAULT NULL,
+  `vacOK` int(11) DEFAULT NULL,
+  `VacRec` int(11) DEFAULT NULL,
+  `PRODUCTO` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idprogdeprod`,`NUSEM`,`diasem`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6678 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `embarques`
+--
+
+DROP TABLE IF EXISTS `embarques`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `embarques` (
+  `IdPediEmbarcar` int(11) NOT NULL AUTO_INCREMENT,
+  `codynumpar` varchar(20) DEFAULT NULL,
+  `CLIENTE` varchar(50) DEFAULT NULL,
+  `PRODUCTO` varchar(20) DEFAULT NULL,
+  `NOPARTECLIENTE` varchar(50) DEFAULT NULL,
+  `PEDID` int(11) DEFAULT NULL,
+  `CANT` int(11) DEFAULT NULL,
+  `OBSERVACIONES` mediumtext,
+  `FECHA` datetime DEFAULT NULL,
+  `FECHALTA` timestamp NULL DEFAULT NULL,
+  `SELECC` bit(1) DEFAULT NULL,
+  `FECHA ENTREGA` datetime DEFAULT NULL,
+  `OC` varchar(50) DEFAULT NULL,
+  `DESCRIPCION` varchar(50) DEFAULT NULL,
+  `NOTAS` mediumtext,
+  `PLB` int(11) DEFAULT NULL,
+  `CTB` int(11) DEFAULT NULL,
+  `PMB` int(11) DEFAULT NULL,
+  `PTB` int(11) DEFAULT NULL,
+  `TRB` int(11) DEFAULT NULL,
+  `PCC` int(11) DEFAULT NULL,
+  PRIMARY KEY (`IdPediEmbarcar`),
+  KEY `codynumpar` (`codynumpar`),
+  KEY `prod` (`PRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=9448 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`avilla`@`%`*/ /*!50003 TRIGGER  fechaalta_beforeInsert 
+BEFORE INSERT
+ON  embarques for each row
+
+begin
+	set NEW.fechalta=current_date();
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `empleado`
+--
+
+DROP TABLE IF EXISTS `empleado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `empleado` (
+  `CODIGO` char(15) NOT NULL,
+  `CODIGOANTERIOR` char(20) DEFAULT NULL,
+  `GOLDMINE` char(20) DEFAULT NULL,
+  `APELLIDOPATERNO` char(30) DEFAULT NULL,
+  `APELLIDOMATERNO` char(30) DEFAULT NULL,
+  `NOMBRES` char(30) DEFAULT NULL,
+  `NOMBRECOMPLETO` char(90) DEFAULT NULL,
+  `ESTATUS` char(25) DEFAULT NULL,
+  `RFC` char(15) DEFAULT NULL,
+  `IMSS` char(15) DEFAULT NULL,
+  `FECHAINICIO` date DEFAULT NULL,
+  `DEPARTAMENTO` char(25) DEFAULT NULL,
+  `PUESTO` char(50) DEFAULT NULL,
+  `FECHAINICIOPUESTO` date DEFAULT NULL,
+  `TURNO` char(40) DEFAULT NULL,
+  `SIGUIENTENOMINA` date DEFAULT NULL,
+  `FECHAULTIMANOMINA` date DEFAULT NULL,
+  `SALARIODIARIO` double DEFAULT NULL,
+  `SALARIODIARIOINTEGRADO` double DEFAULT NULL,
+  `TIPOSALARIO` int(11) DEFAULT NULL,
+  `PORCENTAJEPRIMAVACACIONAL` char(30) DEFAULT NULL,
+  `DIASAGUINALDO` char(30) DEFAULT NULL,
+  `FORMAPAGO` char(1) DEFAULT NULL,
+  `REFERENCIAPAGO` char(40) DEFAULT NULL,
+  `PERIODICIDAD` char(25) DEFAULT NULL,
+  `CAUSABAJA` char(50) DEFAULT NULL,
+  `FECHABAJA` date DEFAULT NULL,
+  `SEXO` char(1) DEFAULT NULL,
+  `CURP` char(20) DEFAULT NULL,
+  `SAR` char(30) DEFAULT NULL,
+  `DOMICILIO` char(100) DEFAULT NULL,
+  `CALLE` char(40) DEFAULT NULL,
+  `NUMEROEXTERIOR` char(10) DEFAULT NULL,
+  `NUMEROINTERIOR` char(10) DEFAULT NULL,
+  `COLONIA` char(40) DEFAULT NULL,
+  `MUNICIPIO` char(40) DEFAULT NULL,
+  `ESTADO` char(20) DEFAULT NULL,
+  `CP` char(6) DEFAULT NULL,
+  `TELEFONO1` char(30) DEFAULT NULL,
+  `TELEFONO2` char(30) DEFAULT NULL,
+  `FECHANACIMIENTO` date DEFAULT NULL,
+  `LUGARNACIMIENTO` char(50) DEFAULT NULL,
+  `ESTADOCIVIL` char(1) DEFAULT NULL,
+  `NOMBREPADRE` char(50) DEFAULT NULL,
+  `NOMBREMADRE` char(50) DEFAULT NULL,
+  `VACACIONES` int(11) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `EXISTEPRESTAMO` int(11) DEFAULT NULL,
+  `REFERENCIAPRESTAMO` char(20) DEFAULT NULL,
+  `MONTOPRESTAMO` double DEFAULT NULL,
+  `SALDOPRESTAMO` double DEFAULT NULL,
+  `PORCENTAJERETENCION` int(11) DEFAULT NULL,
+  `SINIMPRIMIRNOTIFICACION` int(11) DEFAULT NULL,
+  `TABLAVACACIONES` char(30) DEFAULT NULL,
+  `PORCENTAJEFIJOINFONAVIT` double DEFAULT NULL,
+  `FACTORADICIONALINTEGRADO` double DEFAULT NULL,
+  `NOMBRESIMPLE` char(30) DEFAULT NULL,
+  `EMAIL` char(60) DEFAULT NULL,
+  `TIPO` char(20) DEFAULT NULL,
+  `CALCULARENBASEASMGVDF` int(11) DEFAULT NULL,
+  `IMPORTEARETENER` double DEFAULT NULL,
+  `CENTRODECOSTOS` char(20) DEFAULT NULL,
+  `USARELOJCHECADOR` int(11) DEFAULT NULL,
+  `CALCULAENVECESALSALARIOMINIMO` int(11) DEFAULT NULL,
+  `CALCULARENBASEASMGVZ` int(11) DEFAULT NULL,
+  `BANCO` char(20) DEFAULT NULL,
+  `REGIMENCONTRATACION` int(11) DEFAULT NULL,
+  `CATALOGOBANCOS` char(4) DEFAULT NULL,
+  `RIESGOPUESTO` int(11) DEFAULT NULL,
+  `TIPOCONTRATO` char(20) DEFAULT NULL,
+  `TIPOJORNADA` char(20) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `existenciasporalmacen`
+--
+
+DROP TABLE IF EXISTS `existenciasporalmacen`;
+/*!50001 DROP VIEW IF EXISTS `existenciasporalmacen`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `existenciasporalmacen` (
+  `IDENTIFICACION` char(20),
+  `DESCRIPCION` char(60),
+  `ALMACEN` char(20),
+  `EXISTENCIA` double
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `import_almprod`
+--
+
+DROP TABLE IF EXISTS `import_almprod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_almprod` (
+  `PRODUCTO` char(20) NOT NULL,
+  `ALMACEN` char(20) NOT NULL,
+  `CUENTACONTABLEVENTA` char(19) DEFAULT NULL,
+  `CUENTACONTABLECOMPRA` char(19) DEFAULT NULL,
+  `CUENTACONTABLECOSTOVENTAS` char(19) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `COSTO` double DEFAULT NULL,
+  `ULTIMOCOSTO` double DEFAULT NULL,
+  `COSTOPROMEDIO` double DEFAULT NULL,
+  `MAXIMO` double DEFAULT NULL,
+  `MINIMO` double DEFAULT NULL,
+  `PUNTOREORDEN` double DEFAULT NULL,
+  `UBICACION` char(50) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL,
+  `CUENTACONTABLEORDEN` char(19) DEFAULT NULL,
+  `CANTIDADRESERVADA` double DEFAULT NULL,
+  `CUENTACONTABLEESPECIAL` char(19) DEFAULT NULL,
+  PRIMARY KEY (`PRODUCTO`,`ALMACEN`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_clientes`
+--
+
+DROP TABLE IF EXISTS `import_clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_clientes` (
+  `CODIGO` char(15) NOT NULL,
+  `NOMBRE` char(100) DEFAULT NULL,
+  `CONTACTO` char(45) DEFAULT NULL,
+  `RFC` char(15) DEFAULT NULL,
+  `DOMICILIO` char(50) DEFAULT NULL,
+  `COLONIA` char(50) DEFAULT NULL,
+  `CIUDAD` char(50) DEFAULT NULL,
+  `ESTADO` char(40) DEFAULT NULL,
+  `CP` char(5) DEFAULT NULL,
+  `PAIS` char(20) DEFAULT NULL,
+  `TELEFONO1` char(40) DEFAULT NULL,
+  `TELEFONO2` char(40) DEFAULT NULL,
+  `TELEFONO3` char(40) DEFAULT NULL,
+  `FAX` char(40) DEFAULT NULL,
+  `CLASIFICACION` char(20) DEFAULT NULL,
+  `ZONA` char(20) DEFAULT NULL,
+  `IVADESGLOSADO` int(11) DEFAULT NULL,
+  `AGENTE` char(40) DEFAULT NULL,
+  `DESCUENTO` char(20) DEFAULT NULL,
+  `DIASCREDITO` int(11) DEFAULT NULL,
+  `LIMITECREDITO` double DEFAULT NULL,
+  `FECHAINICIORELACIONES` date DEFAULT NULL,
+  `FECHAULTIMOMOVIMIENTO` date DEFAULT NULL,
+  `CONCEPTO` char(50) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `BLOQUEADO` int(11) DEFAULT NULL,
+  `MOTIVOBLOQUEO` char(40) DEFAULT NULL,
+  `FECHAALTA` date DEFAULT NULL,
+  `PUBLICOGENERAL` int(11) DEFAULT NULL,
+  `GOLDMINE` char(20) DEFAULT NULL,
+  `EMAIL` char(50) DEFAULT NULL,
+  `PAGINAWEB` char(50) DEFAULT NULL,
+  `CODIGOADICIONAL` char(20) DEFAULT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `SUBALMACEN` char(20) DEFAULT NULL,
+  `INTERCOMPANIA` int(11) DEFAULT NULL,
+  `CUENTACONTABLECOSTOVENTAS` char(19) DEFAULT NULL,
+  `CUENTACONTABLEVENTAS` char(19) DEFAULT NULL,
+  `AUTORIZADOPOR` char(50) DEFAULT NULL,
+  `FECHAAUTORIZACION` date DEFAULT NULL,
+  `NIVELRIESGO` char(5) DEFAULT NULL,
+  `COMENTARIOSCREDITO` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO4` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO5` char(50) DEFAULT NULL,
+  `CUENTACONTABLEORDEN` char(19) DEFAULT NULL,
+  `AGENTECOBRANZA` char(40) DEFAULT NULL,
+  `COBRARIVA` int(11) DEFAULT NULL,
+  `CURP` char(20) DEFAULT NULL,
+  `RLUNES` int(11) DEFAULT NULL,
+  `RMARTES` int(11) DEFAULT NULL,
+  `RMIERCOLES` int(11) DEFAULT NULL,
+  `RJUEVES` int(11) DEFAULT NULL,
+  `RVIERNES` int(11) DEFAULT NULL,
+  `RSABADO` int(11) DEFAULT NULL,
+  `RDOMINGO` int(11) DEFAULT NULL,
+  `PLUNES` int(11) DEFAULT NULL,
+  `PMARTES` int(11) DEFAULT NULL,
+  `PMIERCOLES` int(11) DEFAULT NULL,
+  `PJUEVES` int(11) DEFAULT NULL,
+  `PVIERNES` int(11) DEFAULT NULL,
+  `PSABADO` int(11) DEFAULT NULL,
+  `PDOMINGO` int(11) DEFAULT NULL,
+  `NOMBRECOMERCIAL` char(80) DEFAULT NULL,
+  `ENTRECALLE1` char(60) DEFAULT NULL,
+  `ENTRECALLE2` char(60) DEFAULT NULL,
+  `HORARIO` char(40) DEFAULT NULL,
+  `DELEGACION` char(50) DEFAULT NULL,
+  `ESPECIFICACIONFECHAREVISION` char(70) DEFAULT NULL,
+  `ESPECIFICACIONFECHAPAGO` char(70) DEFAULT NULL,
+  `HORAINICIOREVISION` time DEFAULT NULL,
+  `HORAFINALREVISION` time DEFAULT NULL,
+  `HORAINICIOPAGO` time DEFAULT NULL,
+  `HORAFINALPAGO` time DEFAULT NULL,
+  `NUMEROEXTERIOR` char(20) DEFAULT NULL,
+  `NUMEROINTERIOR` char(20) DEFAULT NULL,
+  `COORDENADASDOMICILIO` char(30) DEFAULT NULL,
+  `GEOCERCA` char(6) DEFAULT NULL,
+  `DISTANCIAMASDEUNAHORA` int(11) DEFAULT NULL,
+  `NIVELACCESO` char(1) DEFAULT NULL,
+  `NIVELRIESGOACCESO` char(1) DEFAULT NULL,
+  `ESTACIONAMIENTO` char(1) DEFAULT NULL,
+  `COORDENADASESTACIONAMIENTO` char(30) DEFAULT NULL,
+  `ELUNES` int(11) DEFAULT NULL,
+  `EMARTES` int(11) DEFAULT NULL,
+  `EMIERCOLES` int(11) DEFAULT NULL,
+  `EJUEVES` int(11) DEFAULT NULL,
+  `EVIERNES` int(11) DEFAULT NULL,
+  `ESABADO` int(11) DEFAULT NULL,
+  `EDOMINGO` int(11) DEFAULT NULL,
+  `HORAINICIOENTREGALUNES` time DEFAULT NULL,
+  `HORAFINALENTREGALUNES` time DEFAULT NULL,
+  `HORAINICIOENTREGAMARTES` time DEFAULT NULL,
+  `HORAFINALENTREGAMARTES` time DEFAULT NULL,
+  `HORAINICIOENTREGAMIERCOLES` time DEFAULT NULL,
+  `HORAFINALENTREGAMIERCOLES` time DEFAULT NULL,
+  `HORAINICIOENTREGAJUEVES` time DEFAULT NULL,
+  `HORAFINALENTREGAJUEVES` time DEFAULT NULL,
+  `HORAINICIOENTREGAVIERNES` time DEFAULT NULL,
+  `HORAFINALENTREGAVIERNES` time DEFAULT NULL,
+  `HORAINICIOENTREGASABADO` time DEFAULT NULL,
+  `HORAFINALENTREGASABADO` time DEFAULT NULL,
+  `HORAINICIOENTREGADOMINGO` time DEFAULT NULL,
+  `HORAFINALENTREGADOMINGO` time DEFAULT NULL,
+  `GEOCERCAESTACIONAMIENTO` char(6) DEFAULT NULL,
+  `METODOPAGO` int(11) DEFAULT NULL,
+  `DATOSCUENTAPAGO` char(20) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_oentrega`
+--
+
+DROP TABLE IF EXISTS `import_oentrega`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_oentrega` (
+  `CODIGO` int(11) NOT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `CLIENTE` char(15) DEFAULT NULL,
+  `SALDO` double DEFAULT NULL,
+  `AGENTE` char(40) DEFAULT NULL,
+  `DIASCREDITO` int(11) DEFAULT NULL,
+  `FECHAEMBARQUE` date DEFAULT NULL,
+  `DOMICILIOEMBARQUE` char(60) DEFAULT NULL,
+  `FLETEPOR` int(11) DEFAULT NULL,
+  `CLIENTERETIRA` char(50) DEFAULT NULL,
+  `DESCUENTOGLOBAL` double DEFAULT NULL,
+  `IVADESGLOSADO` int(11) DEFAULT NULL,
+  `DOCUMENTO1` char(20) DEFAULT NULL,
+  `DOCUMENTO2` char(20) DEFAULT NULL,
+  `DOCUMENTO3` char(20) DEFAULT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `STATUS` int(11) DEFAULT NULL,
+  `USUARIO` char(50) DEFAULT NULL,
+  `TOTAL` double DEFAULT NULL,
+  `DESCUENTO` double DEFAULT NULL,
+  `IVA` double DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `FECHAVENCIMIENTO` date DEFAULT NULL,
+  `COSTOFINANCIERO` double DEFAULT NULL,
+  `CONDICIONES` char(1) DEFAULT NULL,
+  `MODIFICARCONDICIONES` int(11) DEFAULT NULL,
+  `AUTORIZO` char(50) DEFAULT NULL,
+  `MONEDA` char(20) DEFAULT NULL,
+  `COTIZACION` double DEFAULT NULL,
+  `NOAFECTAPRODUCCION` int(11) DEFAULT NULL,
+  `RETENCIONIVA` double DEFAULT NULL,
+  `RETENCIONISR` double DEFAULT NULL,
+  `RETENCIONIE` double DEFAULT NULL,
+  `HORAEMBARQUE` time DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_paroen`
+--
+
+DROP TABLE IF EXISTS `import_paroen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_paroen` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `PRODUCTO` char(20) NOT NULL,
+  `PRECIOUNITARIO` double DEFAULT NULL,
+  `DESCUENTO` double DEFAULT NULL,
+  `IVA` double DEFAULT NULL,
+  `TOTALPARTIDA` double DEFAULT NULL,
+  `SALDOCANTIDAD` double DEFAULT NULL,
+  `SALDOIMPORTE` double DEFAULT NULL,
+  `CODIGOPEDIDO` int(11) DEFAULT NULL,
+  `PARTIDAPEDIDO` int(11) DEFAULT NULL,
+  `SALDOCANTIDADFACTURAR` double DEFAULT NULL,
+  `SALDOCANCELADO` double DEFAULT NULL,
+  `DOCUMENTO1` char(20) DEFAULT NULL,
+  `DOCUMENTO2` char(20) DEFAULT NULL,
+  `DOCUMENTO3` char(20) DEFAULT NULL,
+  `RETENCIONIVA` int(11) DEFAULT NULL,
+  `RETENCIONISR` int(11) DEFAULT NULL,
+  `RETENCIONIE` int(11) DEFAULT NULL,
+  `PORCENTAJERETENCIONIVA` double DEFAULT NULL,
+  `PORCENTAJERETENCIONISR` double DEFAULT NULL,
+  `PORCENTAJERETENCIONIE` double DEFAULT NULL,
+  `NOAFECTAPRODUCCION` int(11) DEFAULT NULL,
+  `DOCTOADICIONALFECHA` date DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_partran`
+--
+
+DROP TABLE IF EXISTS `import_partran`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_partran` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `FECHA` date NOT NULL,
+  `MES` int(11) NOT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `PRODUCTO` char(20) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `COSTO` double DEFAULT NULL,
+  `COSTOPROMEDIO` double DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `APLICACION` char(20) DEFAULT NULL,
+  `COSTOINDIRECTO` double DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`,`FECHA`,`MES`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_producto`
+--
+
+DROP TABLE IF EXISTS `import_producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_producto` (
+  `IDENTIFICACION` char(20) NOT NULL,
+  `DESCRIPCION` char(60) DEFAULT NULL,
+  `CLASIFICACION` char(20) DEFAULT NULL,
+  `UNIDAD` char(20) DEFAULT NULL,
+  `PROVEEDOR` char(60) DEFAULT NULL,
+  `TASA` char(30) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `SEVENDE` int(11) DEFAULT NULL,
+  `SECOMPRA` int(11) DEFAULT NULL,
+  `ESMANUFACTURABLE` int(11) DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `CLASE` char(3) DEFAULT NULL,
+  `ORDEN` char(20) DEFAULT NULL,
+  `FAMILIA` char(30) DEFAULT NULL,
+  `LINEA` char(30) DEFAULT NULL,
+  `PRESENTACION` char(30) DEFAULT NULL,
+  `SUBPRESENTACION` char(30) DEFAULT NULL,
+  `TASACOMPRAS` char(30) DEFAULT NULL,
+  `USAPEDIMENTO` int(11) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL,
+  `UMVENTA` char(20) DEFAULT NULL,
+  `UMCOMPRA` char(20) DEFAULT NULL,
+  `METODOIDENTIFICACION` char(20) DEFAULT NULL,
+  `TIEMPOSURTIDO` int(11) DEFAULT NULL,
+  `PROVEEDOR2` char(60) DEFAULT NULL,
+  `PROVEEDOR3` char(60) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `COSTOESTANDAR` double DEFAULT NULL,
+  `COLOR` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO4` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO5` char(50) DEFAULT NULL,
+  `RETENCIONIVA` char(30) DEFAULT NULL,
+  `RETENCIONISR` char(30) DEFAULT NULL,
+  `RETENCIONIE` char(30) DEFAULT NULL,
+  `RETENCIONIVACLIENTES` char(30) DEFAULT NULL,
+  `RETENCIONISRCLIENTES` char(30) DEFAULT NULL,
+  `RETENCIONIECLIENTES` char(30) DEFAULT NULL,
+  `KIT` int(11) DEFAULT NULL,
+  `PORCENTAJECOMISION` double DEFAULT NULL,
+  `NODEDUCIBLEIETU` int(11) DEFAULT NULL,
+  `ANCHO` double DEFAULT NULL,
+  `LARGO` double DEFAULT NULL,
+  `PROFUNDIDAD` double DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IDENTIFICACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_ptransf`
+--
+
+DROP TABLE IF EXISTS `import_ptransf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_ptransf` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `FECHA` date NOT NULL,
+  `MES` int(11) NOT NULL,
+  `ALMACENSALIDA` char(20) DEFAULT NULL,
+  `ALMACENENTRADA` char(20) DEFAULT NULL,
+  `PRODUCTO` char(20) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `CODIGOPEDIMENTOSALIDA` int(11) DEFAULT NULL,
+  `PARTIDAPEDIMENTOSALIDA` int(11) DEFAULT NULL,
+  `CODIGOPEDIMENTOENTRADA` int(11) DEFAULT NULL,
+  `PARTIDAPEDIMENTOENTRADA` int(11) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(20) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  `CAMPOUSUARIO1` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`,`FECHA`,`MES`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_transac`
+--
+
+DROP TABLE IF EXISTS `import_transac`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_transac` (
+  `CODIGO` int(11) NOT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `ESTATUS` int(11) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `REFERENCIA` char(50) DEFAULT NULL,
+  `USUARIO` char(50) DEFAULT NULL,
+  `CODIGOSUJETO` char(15) DEFAULT NULL,
+  `TIPOSUJETO` char(1) DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(20) DEFAULT NULL,
+  `EMPRESA` int(11) DEFAULT NULL,
+  `FECHACANCELACION` date DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `import_transfer`
+--
+
+DROP TABLE IF EXISTS `import_transfer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_transfer` (
+  `CODIGO` int(11) NOT NULL,
+  `FECHA` date DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `CODIGOSUJETO` char(15) DEFAULT NULL,
+  `TIPOSUJETO` char(1) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `importa_almacen`
+--
+
+DROP TABLE IF EXISTS `importa_almacen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `importa_almacen` (
+  `IDENTIFICACION` char(20) DEFAULT NULL,
+  `DESCRIPCION` char(40) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `lances`
+--
+
+DROP TABLE IF EXISTS `lances`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lances` (
+  `Idlance` int(11) NOT NULL AUTO_INCREMENT,
+  `NumLance` int(11) DEFAULT NULL,
+  `Horno` int(11) DEFAULT NULL,
+  `Consecutivo` int(11) DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `ALEACION` varchar(255) DEFAULT NULL,
+  `OBS` mediumtext,
+  PRIMARY KEY (`Idlance`)
+) ENGINE=InnoDB AUTO_INCREMENT=14628 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `maq_pieza_prodadic`
+--
+
+DROP TABLE IF EXISTS `maq_pieza_prodadic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `maq_pieza_prodadic` (
+  `Id` int(11) DEFAULT NULL,
+  `IDENTIFICACION` varchar(20) DEFAULT NULL,
+  `FECHA ALTA` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `USUARIO` varchar(255) DEFAULT NULL,
+  `Peso Molde` double DEFAULT NULL,
+  `Yield Metal` double DEFAULT NULL,
+  `TipoMoldeo` varchar(1) DEFAULT NULL,
+  `ALMACEN` varchar(6) DEFAULT NULL,
+  `No ANAQUEL` varchar(255) DEFAULT NULL,
+  `No PLACA` varchar(255) DEFAULT NULL,
+  `ALMASIONO` varchar(255) DEFAULT NULL,
+  `FILTROSIoNO` varchar(255) DEFAULT NULL,
+  `CAMISASIoNO` varchar(255) DEFAULT NULL,
+  `TEMPERATURA` int(11) DEFAULT NULL,
+  `PzxCaja` int(11) DEFAULT NULL,
+  `Cic_Varel` double DEFAULT NULL,
+  `Area_Act` varchar(2) DEFAULT NULL,
+  `IT` varchar(4) DEFAULT NULL,
+  `LLeva_Maquinado` varchar(4) DEFAULT NULL,
+  `completo_almas` tinyint(4) DEFAULT NULL,
+  `Fecha Actualizado` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Completo Moldeo` tinyint(4) DEFAULT NULL,
+  `AlmacenModelo` varchar(20) DEFAULT NULL,
+  `PosicionRackModelo` varchar(20) DEFAULT NULL,
+  `Plantilla` varchar(2) DEFAULT NULL,
+  `AlmacenCajaAlmas` varchar(20) DEFAULT NULL,
+  `PosicionRackCajaAlmas` varchar(20) DEFAULT NULL,
+  `NoCajas` int(11) DEFAULT NULL,
+  `CantModelos` int(11) DEFAULT NULL,
+  `IdentificacionModelo` varchar(30) DEFAULT NULL,
+  `Cic_Pint` int(11) DEFAULT NULL,
+  `PropietarioModelo` varchar(50) DEFAULT NULL,
+  `Obs` longtext,
+  `Cliente` varchar(255) DEFAULT NULL,
+  `PiezasMolde` varchar(255) DEFAULT NULL,
+  `PesoCasting` varchar(255) DEFAULT NULL,
+  `PesoArana` varchar(255) DEFAULT NULL,
+  `Aleacion` varchar(255) DEFAULT NULL,
+  `CiclosKloster` varchar(255) DEFAULT NULL,
+  `CodigoCliente` varchar(255) DEFAULT NULL,
+  `maquinado` tinyint(4) DEFAULT NULL,
+  `t_termicos` tinyint(4) DEFAULT NULL,
+  `FactorTiempoDesmoldeo` double DEFAULT NULL,
+  `TiempoDesmoldeoCalculado` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `maq_piezas`
+--
+
+DROP TABLE IF EXISTS `maq_piezas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `maq_piezas` (
+  `IDENTIFICACION` varchar(20) NOT NULL,
+  `DESCRIPCION` varchar(60) DEFAULT NULL,
+  `TMaquinado` float DEFAULT NULL,
+  `TP` varchar(2) DEFAULT NULL,
+  `Observaciones` varchar(255) DEFAULT NULL,
+  `Activo` tinyint(4) DEFAULT NULL,
+  `Hold` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`IDENTIFICACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `maquina`
+--
+
+DROP TABLE IF EXISTS `maquina`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `maquina` (
+  `Maquina` varchar(255) DEFAULT NULL,
+  `Descripcion` varchar(255) DEFAULT NULL,
+  `TiempoDisponible` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `maquina_operador`
+--
+
+DROP TABLE IF EXISTS `maquina_operador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `maquina_operador` (
+  `operador` int(11) NOT NULL,
+  `maquina` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `maquinas_dux`
+--
+
+DROP TABLE IF EXISTS `maquinas_dux`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `maquinas_dux` (
+  `CODIGO` char(15) NOT NULL,
+  `IDENTIFICACION` char(20) DEFAULT NULL,
+  `DESCRIPCION` char(80) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `materialescat`
+--
+
+DROP TABLE IF EXISTS `materialescat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materialescat` (
+  `IdMaterial` int(11) NOT NULL AUTO_INCREMENT,
+  `Descrip` varchar(255) DEFAULT NULL,
+  `CODIGO` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IdMaterial`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `materialvac`
+--
+
+DROP TABLE IF EXISTS `materialvac`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materialvac` (
+  `IdMaterialVac` int(11) NOT NULL AUTO_INCREMENT,
+  `IDLANCE` int(11) DEFAULT NULL,
+  `PRODUCTO` int(11) DEFAULT NULL,
+  `OTROS` varchar(255) DEFAULT NULL,
+  `CANT` double DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `HORA` datetime DEFAULT NULL,
+  `ALEA` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IdMaterialVac`)
+) ENGINE=InnoDB AUTO_INCREMENT=314861 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `moldeado`
+--
+
+DROP TABLE IF EXISTS `moldeado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `moldeado` (
+  `Idmoldeado` int(11) NOT NULL AUTO_INCREMENT,
+  `Operador` int(11) DEFAULT NULL,
+  `Producto` varchar(20) DEFAULT NULL,
+  `CavEnUso` int(11) DEFAULT NULL,
+  `TiempoInicio` datetime DEFAULT NULL,
+  `TiempoFin` datetime DEFAULT NULL,
+  `Mold` int(11) DEFAULT NULL,
+  `Mold Defec` int(11) DEFAULT NULL,
+  `Mold Defec x descarga` int(11) DEFAULT NULL,
+  `IdControldeFallas` int(11) DEFAULT NULL,
+  `idprogdeprod` int(11) DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `FECHA1` datetime DEFAULT NULL,
+  `OBS` longtext,
+  `EFIC_MOLD` double DEFAULT NULL,
+  `MoldAProd` double DEFAULT NULL,
+  `FechaFinEsp` datetime DEFAULT NULL,
+  `TMTotal` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Idmoldeado`)
+) ENGINE=InnoDB AUTO_INCREMENT=6755 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `oentrega`
+--
+
+DROP TABLE IF EXISTS `oentrega`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `oentrega` (
+  `CODIGO` int(11) NOT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `CLIENTE` char(15) DEFAULT NULL,
+  `SALDO` double DEFAULT NULL,
+  `AGENTE` char(40) DEFAULT NULL,
+  `DIASCREDITO` int(11) DEFAULT NULL,
+  `FECHAEMBARQUE` date DEFAULT NULL,
+  `DOMICILIOEMBARQUE` char(60) DEFAULT NULL,
+  `FLETEPOR` int(11) DEFAULT NULL,
+  `CLIENTERETIRA` char(50) DEFAULT NULL,
+  `DESCUENTOGLOBAL` double DEFAULT NULL,
+  `IVADESGLOSADO` int(11) DEFAULT NULL,
+  `DOCUMENTO1` char(20) DEFAULT NULL,
+  `DOCUMENTO2` char(20) DEFAULT NULL,
+  `DOCUMENTO3` char(20) DEFAULT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `STATUS` int(11) DEFAULT NULL,
+  `USUARIO` char(50) DEFAULT NULL,
+  `TOTAL` double DEFAULT NULL,
+  `DESCUENTO` double DEFAULT NULL,
+  `IVA` double DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `FECHAVENCIMIENTO` date DEFAULT NULL,
+  `COSTOFINANCIERO` double DEFAULT NULL,
+  `CONDICIONES` char(1) DEFAULT NULL,
+  `MODIFICARCONDICIONES` int(11) DEFAULT NULL,
+  `AUTORIZO` char(50) DEFAULT NULL,
+  `MONEDA` char(20) DEFAULT NULL,
+  `COTIZACION` double DEFAULT NULL,
+  `NOAFECTAPRODUCCION` int(11) DEFAULT NULL,
+  `RETENCIONIVA` double DEFAULT NULL,
+  `RETENCIONISR` double DEFAULT NULL,
+  `RETENCIONIE` double DEFAULT NULL,
+  `HORAEMBARQUE` time DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ordenesprod`
+--
+
+DROP TABLE IF EXISTS `ordenesprod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ordenesprod` (
+  `ordenprod` int(11) NOT NULL AUTO_INCREMENT,
+  `Fecha` datetime DEFAULT NULL,
+  `Prog` tinyint(4) DEFAULT NULL,
+  `nombre` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ordenprod`)
+) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `paroen`
+--
+
+DROP TABLE IF EXISTS `paroen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paroen` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `PRODUCTO` char(20) NOT NULL,
+  `PRECIOUNITARIO` double DEFAULT NULL,
+  `DESCUENTO` double DEFAULT NULL,
+  `IVA` double DEFAULT NULL,
+  `TOTALPARTIDA` double DEFAULT NULL,
+  `SALDOCANTIDAD` double DEFAULT NULL,
+  `SALDOIMPORTE` double DEFAULT NULL,
+  `CODIGOPEDIDO` int(11) DEFAULT NULL,
+  `PARTIDAPEDIDO` int(11) DEFAULT NULL,
+  `SALDOCANTIDADFACTURAR` double DEFAULT NULL,
+  `SALDOCANCELADO` double DEFAULT NULL,
+  `DOCUMENTO1` char(20) DEFAULT NULL,
+  `DOCUMENTO2` char(20) DEFAULT NULL,
+  `DOCUMENTO3` char(20) DEFAULT NULL,
+  `RETENCIONIVA` int(11) DEFAULT NULL,
+  `RETENCIONISR` int(11) DEFAULT NULL,
+  `RETENCIONIE` int(11) DEFAULT NULL,
+  `PORCENTAJERETENCIONIVA` double DEFAULT NULL,
+  `PORCENTAJERETENCIONISR` double DEFAULT NULL,
+  `PORCENTAJERETENCIONIE` double DEFAULT NULL,
+  `NOAFECTAPRODUCCION` int(11) DEFAULT NULL,
+  `DOCTOADICIONALFECHA` date DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `parordenesprod`
+--
+
+DROP TABLE IF EXISTS `parordenesprod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parordenesprod` (
+  `parordenprod` int(11) NOT NULL AUTO_INCREMENT,
+  `ordenprod` int(11) DEFAULT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `SERIE` varchar(3) DEFAULT NULL,
+  `PRODUCTO` varchar(20) DEFAULT NULL,
+  `CANTIDAD` decimal(11,2) DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `Codynumpar` varchar(20) DEFAULT NULL,
+  `RESUMIDO` bit(1) NOT NULL DEFAULT b'0',
+  `FECHA REQ` datetime DEFAULT NULL,
+  PRIMARY KEY (`parordenprod`)
+) ENGINE=InnoDB AUTO_INCREMENT=4477 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `parsobre`
+--
+
+DROP TABLE IF EXISTS `parsobre`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parsobre` (
+  `CODIGORECIBO` int(11) NOT NULL,
+  `CODIGOEMPLEADO` char(15) NOT NULL,
+  `CODIGOMOVTO` int(11) NOT NULL,
+  `FECHA` date DEFAULT NULL,
+  `PERDEC` char(25) DEFAULT NULL,
+  `TIPOPERDEC` char(1) DEFAULT NULL,
+  `ACUMULADOANTERIOR` double DEFAULT NULL,
+  `ACUMULADOANTERIOMESANTERIOR` double DEFAULT NULL,
+  `ACUMULADOEMPRESAANTERIOR` double DEFAULT NULL,
+  `ACUMUALDOEMPRESAMESANTERIOR` double DEFAULT NULL,
+  `FORMULA` char(100) DEFAULT NULL,
+  `CAPTURADA` int(11) DEFAULT NULL,
+  `MONTO` double DEFAULT NULL,
+  `MONTOEXCENTOISR` double DEFAULT NULL,
+  `MONTOGRAVABLEISR` double DEFAULT NULL,
+  `MONTOGRAVABLEIMSSMESANTERIOR` double DEFAULT NULL,
+  `MONTOGRAVABLEIMSSMESACTUAL` double DEFAULT NULL,
+  `ORDENCALCULO` int(11) DEFAULT NULL,
+  PRIMARY KEY (`CODIGORECIBO`,`CODIGOEMPLEADO`,`CODIGOMOVTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `partran`
+--
+
+DROP TABLE IF EXISTS `partran`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `partran` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `FECHA` date NOT NULL,
+  `MES` int(11) NOT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `PRODUCTO` char(20) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `COSTO` double DEFAULT NULL,
+  `COSTOPROMEDIO` double DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `APLICACION` char(20) DEFAULT NULL,
+  `COSTOINDIRECTO` double DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`,`FECHA`,`MES`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_cta`
+--
+
+DROP TABLE IF EXISTS `pdp_cta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_cta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Pieza` varchar(50) DEFAULT NULL,
+  `Cantidad` int(11) DEFAULT NULL,
+  `Maquina` varchar(10) DEFAULT NULL,
+  `Minutos` int(11) DEFAULT NULL,
+  `Semana` int(11) DEFAULT NULL,
+  `Aio` int(11) DEFAULT NULL,
+  `CTA` int(11) DEFAULT NULL,
+  `SemEntrega` varchar(8) DEFAULT NULL,
+  `Prioridad` int(11) DEFAULT NULL,
+  `Programado` tinyint(4) DEFAULT NULL,
+  `hecho` int(11) DEFAULT '0',
+  `op` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_cta_dia`
+--
+
+DROP TABLE IF EXISTS `pdp_cta_dia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_cta_dia` (
+  `maquina` varchar(10) DEFAULT NULL,
+  `semana` int(11) DEFAULT NULL,
+  `dia` date NOT NULL DEFAULT '0000-00-00',
+  `pieza` varchar(50) NOT NULL DEFAULT '',
+  `cantidad` int(11) DEFAULT NULL,
+  `min` int(11) DEFAULT NULL,
+  `operador` int(11) DEFAULT NULL,
+  `op` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`dia`,`pieza`,`op`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_maquina`
+--
+
+DROP TABLE IF EXISTS `pdp_maquina`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_maquina` (
+  `Maquina` varchar(255) NOT NULL,
+  `Descripcion` varchar(255) DEFAULT NULL,
+  `TiempoDisponible` float DEFAULT NULL,
+  `Area` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`Maquina`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_maquina_pieza`
+--
+
+DROP TABLE IF EXISTS `pdp_maquina_pieza`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_maquina_pieza` (
+  `id` int(11) DEFAULT NULL,
+  `Pieza` varchar(255) NOT NULL DEFAULT '',
+  `Maquina` varchar(255) NOT NULL DEFAULT '',
+  `Minutos` double DEFAULT NULL,
+  `Minutos1maquinado` double DEFAULT NULL,
+  `OP` smallint(6) NOT NULL DEFAULT '0',
+  `Celda` tinyint(4) DEFAULT NULL,
+  `siguiente` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Pieza`,`Maquina`,`OP`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_maquina_turno_dia`
+--
+
+DROP TABLE IF EXISTS `pdp_maquina_turno_dia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_maquina_turno_dia` (
+  `dia` date NOT NULL DEFAULT '0000-00-00',
+  `op` varchar(10) NOT NULL DEFAULT '',
+  `maquina` varchar(10) NOT NULL DEFAULT '',
+  `turno` varchar(10) NOT NULL DEFAULT '',
+  `minutos` int(11) DEFAULT NULL,
+  PRIMARY KEY (`dia`,`maquina`,`turno`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_maquina_turnos`
+--
+
+DROP TABLE IF EXISTS `pdp_maquina_turnos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_maquina_turnos` (
+  `id_maquina_turnos` int(11) NOT NULL AUTO_INCREMENT,
+  `semana` tinyint(4) DEFAULT NULL,
+  `maquina` varchar(7) DEFAULT NULL,
+  `Matutino` int(11) DEFAULT NULL,
+  `Vespertino` int(11) DEFAULT NULL,
+  `Nocturno` int(11) DEFAULT NULL,
+  `Minutos` int(11) DEFAULT NULL,
+  `Minutos_o` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_maquina_turnos`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_maquinado_bl`
+--
+
+DROP TABLE IF EXISTS `pdp_maquinado_bl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_maquinado_bl` (
+  `pieza` varchar(30) NOT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pieza`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_ops`
+--
+
+DROP TABLE IF EXISTS `pdp_ops`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_ops` (
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `op` tinyint(4) DEFAULT NULL,
+  `Descripcion` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pdp_pieza`
+--
+
+DROP TABLE IF EXISTS `pdp_pieza`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pdp_pieza` (
+  `Producto` varchar(255) NOT NULL,
+  `TMaquinado` double DEFAULT NULL,
+  `Descripcion` varchar(255) DEFAULT NULL,
+  `Peso` double DEFAULT NULL,
+  `Aleacion` varchar(255) DEFAULT NULL,
+  `Observaciones` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`Producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `perdec`
+--
+
+DROP TABLE IF EXISTS `perdec`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `perdec` (
+  `IDENTIFICACION` char(25) NOT NULL,
+  `DESCRIPCION` char(50) DEFAULT NULL,
+  `SOLOLECTURA` int(11) DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `ABREVIATURA` char(5) DEFAULT NULL,
+  `FORMA` int(11) DEFAULT NULL,
+  `CONTENIDO` char(25) DEFAULT NULL,
+  `USAMONTO` int(11) DEFAULT NULL,
+  `MONTOFORMULA` char(200) DEFAULT NULL,
+  `GRAVAISR` char(1) DEFAULT NULL,
+  `TIPOISR` char(15) DEFAULT NULL,
+  `PARTEEXCENTAISR` char(200) DEFAULT NULL,
+  `GRAVAIMSS` char(1) DEFAULT NULL,
+  `PARTEEXCENTAIMSS` char(80) DEFAULT NULL,
+  `GRAVAINFONAVIT` char(1) DEFAULT NULL,
+  `GRAVAIE` char(1) DEFAULT NULL,
+  `FORMAACUMULAR` int(11) DEFAULT NULL,
+  `CONTABILIZARSEGUNFORMA` int(11) DEFAULT NULL,
+  `CUENTACONTABLEEXCENTA` char(19) DEFAULT NULL,
+  `CUENTACONTABLEGRAVABLE` char(19) DEFAULT NULL,
+  `ORDENCALCULO` int(11) DEFAULT NULL,
+  `ESTATUS` char(15) DEFAULT NULL,
+  `NOIMPRIMIBLE` int(11) DEFAULT NULL,
+  `NOACUMULABLE` int(11) DEFAULT NULL,
+  `GRAVAISCAS` char(1) DEFAULT NULL,
+  `NOCONTABILIZAR` int(11) DEFAULT NULL,
+  `IDENTIFICADORTIPOPERDEC` char(4) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IDENTIFICACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `pmolina`
+--
+
+DROP TABLE IF EXISTS `pmolina`;
+/*!50001 DROP VIEW IF EXISTS `pmolina`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `pmolina` (
+  `SERIE` char(3),
+  `NUMERO` int(11),
+  `ALMACEN` char(20),
+  `PRODUCTO` char(20),
+  `DESCRIPCION` char(60),
+  `FECHA` date,
+  `MES` int(11),
+  `CANTIDAD` double,
+  `COSTO` double,
+  `COSTOPROMEDIO` double,
+  `TIPO` char(1),
+  `ESTATUS` int(11),
+  `CAMPOUSUARIO1` char(50),
+  `CAMPOUSUARIO3` char(50),
+  `USUARIO` char(50)
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `producto`
+--
+
+DROP TABLE IF EXISTS `producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `producto` (
+  `IDENTIFICACION` char(20) NOT NULL DEFAULT '',
+  `DESCRIPCION` char(60) DEFAULT NULL,
+  `CLASIFICACION` char(20) DEFAULT NULL,
+  `UNIDAD` char(20) DEFAULT NULL,
+  `PROVEEDOR` char(60) DEFAULT NULL,
+  `TASA` char(30) DEFAULT NULL,
+  `EXISTENCIA` double DEFAULT NULL,
+  `SEVENDE` int(11) DEFAULT NULL,
+  `SECOMPRA` int(11) DEFAULT NULL,
+  `ESMANUFACTURABLE` int(11) DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `CLASE` char(3) DEFAULT NULL,
+  `ORDEN` char(20) DEFAULT '0' COMMENT '0',
+  `FAMILIA` char(30) DEFAULT NULL,
+  `LINEA` char(30) DEFAULT NULL,
+  `PRESENTACION` char(30) DEFAULT NULL,
+  `SUBPRESENTACION` char(30) DEFAULT NULL,
+  `TASACOMPRAS` char(30) DEFAULT NULL,
+  `USAPEDIMENTO` int(11) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL,
+  `UMVENTA` char(20) DEFAULT NULL,
+  `UMCOMPRA` char(20) DEFAULT NULL,
+  `METODOIDENTIFICACION` char(20) DEFAULT NULL,
+  `TIEMPOSURTIDO` int(11) DEFAULT '0',
+  `PROVEEDOR2` char(60) DEFAULT NULL,
+  `PROVEEDOR3` char(60) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `COSTOESTANDAR` double DEFAULT NULL,
+  `COLOR` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT '0',
+  `CAMPOUSUARIO2` char(50) DEFAULT '0',
+  `CAMPOUSUARIO3` char(50) DEFAULT '0',
+  `CAMPOUSUARIO4` char(50) DEFAULT '0',
+  `CAMPOUSUARIO5` char(50) DEFAULT '0',
+  `RETENCIONIVA` char(30) DEFAULT NULL,
+  `RETENCIONISR` char(30) DEFAULT NULL,
+  `RETENCIONIE` char(30) DEFAULT NULL,
+  `RETENCIONIVACLIENTES` char(30) DEFAULT NULL,
+  `RETENCIONISRCLIENTES` char(30) DEFAULT NULL,
+  `RETENCIONIECLIENTES` char(30) DEFAULT NULL,
+  `KIT` int(11) DEFAULT NULL,
+  `PORCENTAJECOMISION` double DEFAULT NULL,
+  `NODEDUCIBLEIETU` int(11) DEFAULT NULL,
+  `ANCHO` double DEFAULT NULL,
+  `LARGO` double DEFAULT NULL,
+  `PROFUNDIDAD` double DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IDENTIFICACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `progdeprod`
+--
+
+DROP TABLE IF EXISTS `progdeprod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `progdeprod` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `PRODUCTO` varchar(20) DEFAULT NULL,
+  `CANT` int(11) DEFAULT NULL,
+  `ADIC` int(11) DEFAULT NULL,
+  `CLIE` varchar(255) DEFAULT NULL,
+  `Saldo exist` int(11) DEFAULT NULL,
+  `Ciclos Molde` smallint(6) DEFAULT NULL,
+  `Peso Molde` double DEFAULT NULL,
+  `Peso Araña` double DEFAULT NULL,
+  `Yield Metal` double DEFAULT NULL,
+  `Piezas Molde` smallint(6) DEFAULT NULL,
+  `Moldeo Normal` varchar(255) DEFAULT NULL,
+  `Moldeo Especial` varchar(255) DEFAULT NULL,
+  `Peso Pieza` double DEFAULT NULL,
+  `Alea` varchar(255) DEFAULT NULL,
+  `totalH` int(11) DEFAULT NULL,
+  `TotMoldProg` int(11) DEFAULT NULL,
+  `Orden` int(11) DEFAULT NULL,
+  `STATUS` varchar(10) DEFAULT 'ABIERTO',
+  `Peso Casting` double DEFAULT NULL,
+  `CAMPOUSUARIO5` varchar(20) DEFAULT NULL,
+  `SELEC` bit(1) DEFAULT b'0',
+  `FECHAENVIO` datetime DEFAULT NULL,
+  `OC` varchar(255) DEFAULT NULL,
+  `codynumpar` varchar(11) DEFAULT NULL,
+  `XENVIAR` int(11) DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `FECHA1` datetime DEFAULT NULL,
+  `saldoExistCast` int(11) DEFAULT NULL,
+  `PLB` int(11) DEFAULT NULL,
+  `PMB` int(11) DEFAULT NULL,
+  `PTB` int(11) DEFAULT NULL,
+  `TRB` int(11) DEFAULT NULL,
+  `PCC` int(11) DEFAULT NULL,
+  `ENV1` int(11) DEFAULT NULL,
+  `ENV2` int(11) DEFAULT NULL,
+  `Fecha_Cerrado` datetime DEFAULT NULL,
+  `Hora_Cerrado` datetime DEFAULT NULL,
+  `Cerrado_por` varchar(255) DEFAULT NULL,
+  `Cerrado_pc` varchar(255) DEFAULT NULL,
+  `CTB` int(11) DEFAULT NULL,
+  `FECHA_CASTING` datetime DEFAULT NULL,
+  `FECHA_MAQ` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5373 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `proveed`
+--
+
+DROP TABLE IF EXISTS `proveed`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `proveed` (
+  `CODIGO` char(15) NOT NULL,
+  `NOMBRE` char(60) DEFAULT NULL,
+  `CONTACTO` char(45) DEFAULT NULL,
+  `RFC` char(15) DEFAULT NULL,
+  `DOMICILIO` char(40) DEFAULT NULL,
+  `COLONIA` char(40) DEFAULT NULL,
+  `CIUDAD` char(40) DEFAULT NULL,
+  `ESTADO` char(40) DEFAULT NULL,
+  `CP` char(5) DEFAULT NULL,
+  `PAIS` char(20) DEFAULT NULL,
+  `TELEFONO1` char(40) DEFAULT NULL,
+  `TELEFONO2` char(40) DEFAULT NULL,
+  `TELEFONO3` char(40) DEFAULT NULL,
+  `FAX` char(40) DEFAULT NULL,
+  `CLASIFICACION` char(20) DEFAULT NULL,
+  `ZONA` char(20) DEFAULT NULL,
+  `IVADESGLOSADO` int(11) DEFAULT NULL,
+  `AGENTE` char(40) DEFAULT NULL,
+  `DESCUENTO` char(20) DEFAULT NULL,
+  `DIASCREDITO` int(11) DEFAULT NULL,
+  `LIMITECREDITO` double DEFAULT NULL,
+  `FECHAINICIORELACIONES` date DEFAULT NULL,
+  `FECHAULTIMOMOVIMIENTO` date DEFAULT NULL,
+  `CONCEPTO` char(50) DEFAULT NULL,
+  `CUENTACONTABLE` char(19) DEFAULT NULL,
+  `BLOQUEADO` int(11) DEFAULT NULL,
+  `MOTIVOBLOQUEO` char(40) DEFAULT NULL,
+  `FECHAALTA` date DEFAULT NULL,
+  `PUBLICOGENERAL` int(11) DEFAULT NULL,
+  `GOLDMINE` char(20) DEFAULT NULL,
+  `EMAIL` char(50) DEFAULT NULL,
+  `PAGINAWEB` char(50) DEFAULT NULL,
+  `PROVEEFLETES` int(11) DEFAULT NULL,
+  `MEDIOPAGO` char(40) DEFAULT NULL,
+  `ANTICIPO` double DEFAULT NULL,
+  `TIEMPOENTREGA` int(11) DEFAULT NULL,
+  `CONDICIONES` char(1) DEFAULT NULL,
+  `ALMACEN` char(20) DEFAULT NULL,
+  `SUBALMACEN` char(20) DEFAULT NULL,
+  `INTERCOMPANIA` int(11) DEFAULT NULL,
+  `FECHAMODIFICACION` date DEFAULT NULL,
+  `CUENTACONTABLEORDEN` char(19) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO4` char(50) DEFAULT NULL,
+  `CAMPOUSUARIO5` char(50) DEFAULT NULL,
+  `CURP` char(20) DEFAULT NULL,
+  `TIPOPROVEEDOR` char(1) DEFAULT NULL,
+  `TIPOOPERACION` char(1) DEFAULT NULL,
+  `NUMEROIDFISCAL` char(40) DEFAULT NULL,
+  `PAISORIGEN` char(2) DEFAULT NULL,
+  `NACIONALIDAD` char(12) DEFAULT NULL,
+  `NOMBRECOMERCIAL` char(80) DEFAULT NULL,
+  `ENTRECALLE1` char(60) DEFAULT NULL,
+  `ENTRECALLE2` char(60) DEFAULT NULL,
+  `CODIGOADICIONAL` char(20) DEFAULT NULL,
+  `REGIMENFISCAL` char(30) DEFAULT NULL,
+  `TIPOFACTURA` char(20) DEFAULT NULL,
+  `NUMEROEXTERIOR` char(20) DEFAULT NULL,
+  `NUMEROINTERIOR` char(20) DEFAULT NULL,
+  `COORDENADAS` char(30) DEFAULT NULL,
+  `RELACIONGPS` int(11) DEFAULT NULL,
+  `GEOCERCA` char(6) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ptransf`
+--
+
+DROP TABLE IF EXISTS `ptransf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ptransf` (
+  `CODIGO` int(11) NOT NULL,
+  `NUMERO` int(11) NOT NULL,
+  `FECHA` date NOT NULL,
+  `MES` int(11) NOT NULL,
+  `ALMACENSALIDA` char(20) DEFAULT NULL,
+  `ALMACENENTRADA` char(20) DEFAULT NULL,
+  `PRODUCTO` char(20) DEFAULT NULL,
+  `CANTIDAD` double DEFAULT NULL,
+  `CODIGOPEDIMENTOSALIDA` int(11) DEFAULT NULL,
+  `PARTIDAPEDIMENTOSALIDA` int(11) DEFAULT NULL,
+  `CODIGOPEDIMENTOENTRADA` int(11) DEFAULT NULL,
+  `PARTIDAPEDIMENTOENTRADA` int(11) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(20) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  `CAMPOUSUARIO1` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`,`NUMERO`,`FECHA`,`MES`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `selecparoentrega`
+--
+
+DROP TABLE IF EXISTS `selecparoentrega`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `selecparoentrega` (
+  `iDtransf_Oentrega` int(11) NOT NULL AUTO_INCREMENT,
+  `CODIGOOENTREGA` int(11) DEFAULT '0',
+  `PARTIDAOENTREGA` int(11) DEFAULT '0',
+  `Selec` bit(1) DEFAULT b'0',
+  `aplicado` bit(1) DEFAULT b'0',
+  `fechayhoraselec` datetime DEFAULT NULL,
+  `fechayhoraaplicado` datetime DEFAULT NULL,
+  `No_parte` varchar(20) DEFAULT '',
+  `SALDOCANTIDAD` decimal(11,2) DEFAULT NULL,
+  PRIMARY KEY (`iDtransf_Oentrega`),
+  UNIQUE KEY `UNQ_OENTREGAPAROEN` (`CODIGOOENTREGA`,`PARTIDAOENTREGA`)
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `semanas`
+--
+
+DROP TABLE IF EXISTS `semanas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `semanas` (
+  `Idsem` int(11) NOT NULL AUTO_INCREMENT,
+  `numsem` int(11) NOT NULL,
+  `id_Progdeprod` int(11) NOT NULL,
+  `MoldxProd` int(11) DEFAULT NULL,
+  `Pr` int(11) DEFAULT NULL,
+  `PPr` int(11) DEFAULT NULL,
+  `H` int(11) DEFAULT NULL,
+  `fecha_prog` datetime DEFAULT NULL,
+  `PRODUCTO` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`numsem`,`id_Progdeprod`),
+  UNIQUE KEY `Idsem_UNIQUE` (`Idsem`)
+) ENGINE=InnoDB AUTO_INCREMENT=5461 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sobres`
+--
+
+DROP TABLE IF EXISTS `sobres`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sobres` (
+  `CODIGORECIBO` int(11) NOT NULL,
+  `NOMBRECOMPLETO` char(90) DEFAULT NULL,
+  `CODIGOEMPLEADOPUESTO` int(11) DEFAULT NULL,
+  `PUESTO` char(50) DEFAULT NULL,
+  `DEPARTAMENTO` char(25) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `PERIODICIDAD` char(25) DEFAULT NULL,
+  `HORASTRABAJADAS` double DEFAULT NULL,
+  `DIASTRABAJADOS` double DEFAULT NULL,
+  `DIASPAGADOS` double DEFAULT NULL,
+  `FORMAPAGO` char(1) DEFAULT NULL,
+  `HORASEXTRAS` double DEFAULT NULL,
+  `TOTALPERCEPCIONES` double DEFAULT NULL,
+  `TOTALDEDUCCIONES` double DEFAULT NULL,
+  `BASEGRAVABLEISRP` double DEFAULT NULL,
+  `BASEGRAVABLEISR86` double DEFAULT NULL,
+  `BASEGRAVABLEIMSS` double DEFAULT NULL,
+  `BASEGRAVABLEINFONAVIT` double DEFAULT NULL,
+  `BASEGRAVABLEIE` double DEFAULT NULL,
+  `BASEGRAVABLEISCAS` double DEFAULT NULL,
+  `BASEGRAVABLEISR113` double DEFAULT NULL,
+  `CENTRODECOSTOS` char(20) DEFAULT NULL,
+  `TIMBRADO` int(11) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGORECIBO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `temperaturas`
+--
+
+DROP TABLE IF EXISTS `temperaturas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `temperaturas` (
+  `IdTemperatura` int(11) NOT NULL AUTO_INCREMENT,
+  `IdLance` int(11) DEFAULT NULL,
+  `NoOlla/Horno` int(11) DEFAULT NULL,
+  `TempVac` double DEFAULT NULL,
+  `HoraVac` datetime DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  PRIMARY KEY (`IdTemperatura`)
+) ENGINE=InnoDB AUTO_INCREMENT=87643 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `transac`
+--
+
+DROP TABLE IF EXISTS `transac`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `transac` (
+  `CODIGO` int(11) NOT NULL,
+  `SERIE` char(3) DEFAULT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `ESTATUS` int(11) DEFAULT NULL,
+  `FECHA` date DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `REFERENCIA` char(50) DEFAULT NULL,
+  `USUARIO` char(50) DEFAULT NULL,
+  `CODIGOSUJETO` char(15) DEFAULT NULL,
+  `TIPOSUJETO` char(1) DEFAULT NULL,
+  `TIPO` char(1) DEFAULT NULL,
+  `CAMPOUSUARIO1` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO2` char(20) DEFAULT NULL,
+  `CAMPOUSUARIO3` char(20) DEFAULT NULL,
+  `EMPRESA` int(11) DEFAULT NULL,
+  `FECHACANCELACION` date DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`CODIGO`),
+  KEY `IDX_SERIE` (`SERIE`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `transfer`
+--
+
+DROP TABLE IF EXISTS `transfer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `transfer` (
+  `CODIGO` int(11) NOT NULL,
+  `FECHA` date DEFAULT NULL,
+  `MES` int(11) DEFAULT NULL,
+  `CODIGOSUJETO` char(15) DEFAULT NULL,
+  `TIPOSUJETO` char(1) DEFAULT NULL,
+  `OBSERVACIONES` varchar(255) DEFAULT NULL,
+  `Prueba_campo` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`CODIGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `union_oentrega_transacc`
+--
+
+DROP TABLE IF EXISTS `union_oentrega_transacc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `union_oentrega_transacc` (
+  `iDtransf_Oentrega` int(11) NOT NULL AUTO_INCREMENT,
+  `CODIGOOENTREGA` int(11) NOT NULL,
+  `PARTIDAOENTREGA` int(11) NOT NULL,
+  `CODIGOTRANSAC` int(11) NOT NULL,
+  `PARTIDATRANSAC` int(11) NOT NULL,
+  `Selec` bit(1) NOT NULL DEFAULT b'0',
+  `aplicado` bit(1) DEFAULT b'0',
+  `fechayhoraselec` datetime DEFAULT NULL,
+  `fechayhoraaplicado` datetime DEFAULT NULL,
+  `No_parte` varchar(20) DEFAULT NULL,
+  `revisado` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`iDtransf_Oentrega`),
+  UNIQUE KEY `UNQ_TRANSAC` (`CODIGOTRANSAC`,`PARTIDATRANSAC`) USING BTREE,
+  KEY `idx_no_parte` (`No_parte`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `v_maquina_pieza_op`
+--
+
+DROP TABLE IF EXISTS `v_maquina_pieza_op`;
+/*!50001 DROP VIEW IF EXISTS `v_maquina_pieza_op`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `v_maquina_pieza_op` (
+  `pieza` varchar(255),
+  `maquina` varchar(255),
+  `op` smallint(6)
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `v_prod_ped`
+--
+
+DROP TABLE IF EXISTS `v_prod_ped`;
+/*!50001 DROP VIEW IF EXISTS `v_prod_ped`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `v_prod_ped` (
+  `producto` char(20),
+  `entrega` date,
+  `nivelriesgo` char(5),
+  `totcantidad` double,
+  `totsaldo` double
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `v_producto_en_cta`
+--
+
+DROP TABLE IF EXISTS `v_producto_en_cta`;
+/*!50001 DROP VIEW IF EXISTS `v_producto_en_cta`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `v_producto_en_cta` (
+  `PRODUCTO` char(20),
+  `existencia_cta` double
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `vaciado`
+--
+
+DROP TABLE IF EXISTS `vaciado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vaciado` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `iddia_sem` int(11) DEFAULT NULL,
+  `Producto` varchar(50) DEFAULT NULL,
+  `CODIGO CLIENTE` varchar(50) DEFAULT NULL,
+  `Lote` int(11) DEFAULT NULL,
+  `NumSem` int(11) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `vacOK` int(11) DEFAULT NULL,
+  `VacRec` int(11) DEFAULT NULL,
+  `VacObs` mediumtext,
+  `NumLance` int(11) DEFAULT NULL,
+  `hora` datetime DEFAULT NULL,
+  `Olla` int(11) DEFAULT NULL,
+  `Temperatura` int(11) DEFAULT NULL,
+  `Pzas` mediumtext,
+  `idprogdeprod` int(11) DEFAULT NULL,
+  `fecha1` datetime DEFAULT NULL,
+  `idlance` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18907 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Final view structure for view `existenciasporalmacen`
+--
+
+/*!50001 DROP TABLE IF EXISTS `existenciasporalmacen`*/;
+/*!50001 DROP VIEW IF EXISTS `existenciasporalmacen`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`avilla`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `existenciasporalmacen` AS select `producto`.`IDENTIFICACION` AS `IDENTIFICACION`,`producto`.`DESCRIPCION` AS `DESCRIPCION`,`almprod`.`ALMACEN` AS `ALMACEN`,`almprod`.`EXISTENCIA` AS `EXISTENCIA` from (`almprod` join `producto` on((`producto`.`IDENTIFICACION` = `almprod`.`PRODUCTO`))) where (`almprod`.`ALMACEN` in ('PLB','CTB','PMB','PTB')) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `pmolina`
+--
+
+/*!50001 DROP TABLE IF EXISTS `pmolina`*/;
+/*!50001 DROP VIEW IF EXISTS `pmolina`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`avilla`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `pmolina` AS select `transac`.`SERIE` AS `SERIE`,`transac`.`NUMERO` AS `NUMERO`,`partran`.`ALMACEN` AS `ALMACEN`,`partran`.`PRODUCTO` AS `PRODUCTO`,`producto`.`DESCRIPCION` AS `DESCRIPCION`,`partran`.`FECHA` AS `FECHA`,`partran`.`MES` AS `MES`,`partran`.`CANTIDAD` AS `CANTIDAD`,`partran`.`COSTO` AS `COSTO`,`partran`.`COSTOPROMEDIO` AS `COSTOPROMEDIO`,`partran`.`TIPO` AS `TIPO`,`transac`.`ESTATUS` AS `ESTATUS`,`producto`.`CAMPOUSUARIO1` AS `CAMPOUSUARIO1`,`producto`.`CAMPOUSUARIO3` AS `CAMPOUSUARIO3`,`transac`.`USUARIO` AS `USUARIO` from ((`transac` join `partran` on((`partran`.`CODIGO` = `transac`.`CODIGO`))) join `producto` on((`producto`.`IDENTIFICACION` = `partran`.`PRODUCTO`))) where ((`partran`.`ALMACEN` in ('PTA','CTA')) and (`partran`.`FECHA` >= '2014-11-01') and (`transac`.`USUARIO` in ('LAATA','LAACA','NICOMPM','NICOPM','CALLAPT'))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_maquina_pieza_op`
+--
+
+/*!50001 DROP TABLE IF EXISTS `v_maquina_pieza_op`*/;
+/*!50001 DROP VIEW IF EXISTS `v_maquina_pieza_op`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`avilla`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_maquina_pieza_op` AS select `pdp_maquina_pieza`.`Pieza` AS `pieza`,`pdp_maquina_pieza`.`Maquina` AS `maquina`,`pdp_maquina_pieza`.`OP` AS `op` from `pdp_maquina_pieza` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_prod_ped`
+--
+
+/*!50001 DROP TABLE IF EXISTS `v_prod_ped`*/;
+/*!50001 DROP VIEW IF EXISTS `v_prod_ped`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`avilla`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_prod_ped` AS select `almprod`.`PRODUCTO` AS `producto`,`paroen`.`DOCTOADICIONALFECHA` AS `entrega`,`clientes`.`NIVELRIESGO` AS `nivelriesgo`,sum(`paroen`.`CANTIDAD`) AS `totcantidad`,sum(`paroen`.`SALDOCANTIDAD`) AS `totsaldo` from (((`almprod` join `paroen`) join `oentrega`) join `clientes`) where ((`almprod`.`PRODUCTO` = `paroen`.`PRODUCTO`) and (`oentrega`.`CODIGO` = `paroen`.`CODIGO`) and (`oentrega`.`CLIENTE` = `clientes`.`CODIGO`) and (`almprod`.`ALMACEN` in ('CTA','PMA','PMA2')) and (`paroen`.`DOCTOADICIONALFECHA` >= '2014-01-01')) group by `almprod`.`PRODUCTO`,`paroen`.`DOCTOADICIONALFECHA`,`clientes`.`NIVELRIESGO` order by `paroen`.`DOCTOADICIONALFECHA` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `v_producto_en_cta`
+--
+
+/*!50001 DROP TABLE IF EXISTS `v_producto_en_cta`*/;
+/*!50001 DROP VIEW IF EXISTS `v_producto_en_cta`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`avilla`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_producto_en_cta` AS select `almprod`.`PRODUCTO` AS `PRODUCTO`,sum(`almprod`.`EXISTENCIA`) AS `existencia_cta` from `almprod` where ((`almprod`.`EXISTENCIA` <> 0) and (`almprod`.`ALMACEN` in ('CTA','PMA','PMA2'))) group by `almprod`.`PRODUCTO` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-03-24 10:40:27

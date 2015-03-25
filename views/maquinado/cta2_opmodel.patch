@@ -1,0 +1,81 @@
+--- C:/Users/eedel/AppData/Local/Temp/MaquinadoCTA2.php-rev136.svn000.tmp.php	jue. mar.  5 16:44:25 2015
++++ C:/wamp/Fimex/fimex/frontend/models/maquinado/MaquinadoCTA2.php	mié. mar. 11 08:56:26 2015
+@@ -20,14 +20,14 @@ Class MaquinadoCTA2 extends Model {
+ 				select 
+ 				prod.producto,
+ 				
+-				CASE 
+-						WHEN get_programacion_cta(prod.producto,$se1) is null THEN pdp_maquina_pieza.Maquina
+-						ELSE get_programacion_cta(prod.producto,$se1) 					
+-				END 
+-				     as maquina1,
++				pdp_maquina_pieza.Maquina  as maquina1,
+ 				
+ 				pdp_maquina_pieza.Minutos,
++				pdp_maquina_pieza.Minutos as minop,
++				pdp_maquina_pieza.Minutos1maquinado as setup,
+ 				
++				pdp_maquina_pieza.op,
++				
+ 				CASE 
+ 						WHEN get_programacion_cta_prio(prod.producto,$se1) is not null THEN get_programacion_cta_prio(prod.producto,$se1) 
+ 						WHEN get_programacion_cta_prio(prod.producto,$se2) is not null THEN get_programacion_cta_prio(prod.producto,$se2) 
+@@ -38,15 +38,15 @@ Class MaquinadoCTA2 extends Model {
+ 				     as prioridad,
+ 				
+ 				
+-				almpla.existencia+almpla2.existencia as PLA,
+-				almpma.existencia+almpma2.existencia as PMA,
++				IFNULL(almpla.existencia,0)+IFNULL(almpla2.existencia,0) as PLA,
++				IFNULL(almpma.existencia,0)+IFNULL(almpma2.existencia,0) as PMA,
+ 				almcta.existencia as CTA,
+ 				almpta.existencia as PTA,
+ 							
+ 				DATE_FORMAT( dux1.fechaemb ,'%U') as sem1entrega,
+ 				DATE_FORMAT( dux2.fechaemb ,'%U') as sem12entrega,
+-         dux1.cantidad as sem1,
+-				 dux2.cantidad as sem2,
++				dux1.cantidad as sem1,
++				dux2.cantidad as sem2,
+ 				
+ 				get_programacion_cta_cantidad(prod.producto,$se1 ) as s1,
+ 				get_programacion_cta_cantidad(prod.producto,$se2) as s2,
+@@ -54,8 +54,6 @@ Class MaquinadoCTA2 extends Model {
+ 				get_programacion_cta_cantidad(prod.producto,$se4) as s4,
+ 				maq_piezas.Hold
+ 				
+-				
+-				
+ 				from 
+ 				(				select  distinct almprod.PRODUCTO 
+ 								from almprod 
+@@ -72,11 +70,10 @@ Class MaquinadoCTA2 extends Model {
+ 				
+ 				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
+ 				
+-				LEFT JOIN (
++				 Left JOIN (
+ 						SELECT *
+ 						FROM 	pdp_maquina_pieza 
+-						WHERE OP = 10
+-						GROUP BY Pieza
++						
+ 				) AS	pdp_maquina_pieza  on pdp_maquina_pieza.Pieza = prod.PRODUCTO 
+ 				
+ 				LEFT JOIN(
+@@ -162,10 +159,11 @@ Class MaquinadoCTA2 extends Model {
+ 				LEFT JOIN pdp_cta on pdp_cta.Pieza = prod.producto and  pdp_cta.semana = $se1
+ 				 where prod.PRODUCTO  in (select pieza from pdp_maquinado_bl)
+ 				ORDER BY 
+-				Hold,maquina1,prioridad desc,
+-				producto,
+-				
+-									
++				Hold,
++				pdp_maquina_pieza.op asc,
++				maquina1,
++				prioridad desc,
++				producto,			
+ 				dux1.fechaemb,
+ 				dux2.fechaemb
+ 				     

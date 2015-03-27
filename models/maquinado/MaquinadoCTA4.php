@@ -413,20 +413,52 @@ Class MaquinadoCTA4 extends Model {
 			$a = date('Y');
 			$datarec=null;
 			
-			
 			foreach ($datos as $data){
 			
 					$datarec['Maquina'] = $data->{'Maquina'};
 					$datarec['Pieza'] = $data->{'Pieza'};
 					$datarec['op'] = $data->{'op'};
 					$datarec['sem'] = $sem;
+					
 					// echo "prepara:";print_r ($data);
+					
+					// 'maquina' => $data['maquina'], 
+					// 'dia' => $data['dia'],
+					// 'turno' => $data['turno'],
+					// 'minutos' => $data['minutos'],
+					// 'op' => $data['operador']
+					// traeOpSemanal($data,$dia,$turno,$multiple=0)
+					 
+					$data_rec2['maquina'] =$datarec['Maquina'];
+					
+					 
 					if($data->{'lun_prg'} != '' && $data->{'lun_prg'} != 'n') {
 						$datarec['fecha'] = $this->semana2fecha($a,$sem,'lun');
 						$datarec['cantidad'] = $data->{'lun_prg'};
 						$datarec['min'] = $data->{'lun_min'};
 						
 						$this->save($datarec);
+						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						
+						 // $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						echo "ops: ";print_r($ops);
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 						
 					}
 					if($data->{'mar_prg'} != '' && $data->{'mar_prg'} != 'n') {
@@ -436,6 +468,25 @@ Class MaquinadoCTA4 extends Model {
 						
 						$this->save($datarec);
 						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						echo "ops: ";print_r($ops);
+						
+						 $data_rec2['minutos'] = $datarec['min'];
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 					}
 					if($data->{'mie_prg'} != '' && $data->{'mie_prg'} != 'n') {
 						$datarec['fecha'] = $this->semana2fecha($a,$sem,'mie');
@@ -444,6 +495,25 @@ Class MaquinadoCTA4 extends Model {
 						
 						$this->save($datarec);
 						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						echo "ops: ";print_r($ops);
+						// $data_rec2['minutos'] = $ops['Minutos'];
+						$data_rec2['minutos'] = $datarec['min'];
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 					}
 					if($data->{'jue_prg'} != '' && $data->{'jue_prg'} != 'n') {
 						$datarec['fecha'] = $this->semana2fecha($a,$sem,'jue');
@@ -451,6 +521,26 @@ Class MaquinadoCTA4 extends Model {
 						$datarec['min'] = $data->{'jue_min'};
 						
 						$this->save($datarec);
+						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						
+						// $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						echo "ops: ";print_r($ops);
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
 						
 						
 					}
@@ -461,6 +551,26 @@ Class MaquinadoCTA4 extends Model {
 						
 						$this->save($datarec);
 						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						
+						// $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						echo "ops: ";print_r($ops);
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 						
 					}
 					if($data->{'sab_prg'} != '' && $data->{'sab_prg'} != 'n') {
@@ -470,6 +580,26 @@ Class MaquinadoCTA4 extends Model {
 						
 						$this->save($datarec);
 						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						echo "ops: ";print_r($ops);
+						// $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 					}
 					if($data->{'dom_prg'} != '' && $data->{'dom_prg'} != 'n') {
 						$datarec['fecha'] = $this->semana2fecha($a,$sem,'dom');
@@ -478,8 +608,28 @@ Class MaquinadoCTA4 extends Model {
 						
 						$this->save($datarec);
 						
+						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						echo "ops: ";print_r($ops);
+						// $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						
+						$data_rec2['dia'] = $datarec['fecha']; 
+						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
+						
+							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['turno'] = 'Matutino';
+							$this->save_opturno_p2( $data_rec2);
+
+							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['turno'] = 'Vespertino';
+							$this->save_opturno_p2( $data_rec2);
+						
+							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+						
 					}
-					print_r($datarec);
+					
 			}
 		
 		}
@@ -513,7 +663,7 @@ Class MaquinadoCTA4 extends Model {
 														'pieza' => $data['Pieza']
 													])->execute();
 												// ])->getRawSql();
-												 print_r($result);
+												 // print_r($result);
 										
 				
 					return true; //corta ejecucion y sale
@@ -534,8 +684,7 @@ Class MaquinadoCTA4 extends Model {
 			
 									
 		  }
-			print_r($result);
-
+			
 		}
 		
 		public function exist($dia,$pieza,$op) {
@@ -623,6 +772,52 @@ Class MaquinadoCTA4 extends Model {
 			
 		}
 		
+		public function traeOpSemanal($maquina,$dia,$turno,$multiple=0){
+			$maq = $maquina;
+			echo "$maq -  $dia";
+			$sql = "
+			
+			select Matutino,Vespertino,Nocturno,Minutos
+			from pdp_maquina_turnos
+			where
+			maquina = '$maq' and
+			semana =  week('$dia',1)
+			
+			";
+			
+			$command = \Yii::$app->db_mysql;
+			
+			$result =$command->createCommand($sql)->queryAll();
+		
+			$op = 0;
+			$opa = [
+			'Matutino'   => '---', 
+			'Vespertino' => '---',
+			'Nocturno'   => '---'
+			];
+			
+		
+			
+				if( $result[0]['Matutino'] != null ){ 
+					$op = $result[0]['Matutino'];
+					$opa['Matutino'] = $result[0]['Matutino'];
+				}
+				if( $result[0]['Vespertino'] != null ){  
+					$op = $result[0]['Vespertino'];
+					$opa['Vespertino'] = $result[0]['Vespertino'];
+				}
+				if( $result[0]['Nocturno'] != null ){ 
+					$op = $result[0]['Nocturno'];
+					$opa['Nocturno'] = $result[0]['Nocturno'];
+				} 
+			$opa['Minutos']= $result[0]['Minutos'];
+			print_r($opa);
+			if ($multiple == 0)
+					return $op;
+			else
+					return $opa;
+		}
+		
 		public function exist_turno($dia,$maquina,$turno) {
 			
 				$command = \Yii::$app->db_mysql;
@@ -635,8 +830,8 @@ Class MaquinadoCTA4 extends Model {
 					where maquina ='$maquina'  and dia = '$dia' and turno = '$turno'
 					
 					")->queryAll();
-					
-		
+					$tmp = $result[0]['m'];
+		echo " existe ?  $tmp";
 		return $result[0]['m'] >  0 ? true : false;
 			
 		}
@@ -646,11 +841,12 @@ Class MaquinadoCTA4 extends Model {
 			
 			 
 			$command = \Yii::$app->db_mysql;
-			
+			echo "turno :"; print_r($data);
 		
+		// echo "save_opturno_p2";print_r($data);
 			
 		if (!$this->exist_turno($data['dia'],$data['maquina'],$data['turno'] ) ){
-			if ( $data['turno'] == '---') return ;
+			if ( $data['turno'] == '---' || $data['operador'] == '---' ) return ;
 			
 			$result =$command->createCommand()->insert('pdp_maquina_turno_dia',[
 									'maquina' => $data['maquina'], 
@@ -659,42 +855,44 @@ Class MaquinadoCTA4 extends Model {
 									'minutos' => $data['minutos'],
 									'op' => $data['operador']
 				])->execute();
-			// ])->getRawSql();
-			
+				// ])->getRawSql();
+				// echo $result;
 		}else{
 		  //echo ' existe se actualiza';
-		  
-			  if($data['turno'] == '---'  ){
+			  if ($data['cantidad_prog'] == 0 )  $data['turno'] = '---' ;
+			  if ( $data['turno'] == '---' || $data['operador'] == '---' ||  $data['operador'] == 0 ) {
 					
 				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
 														'dia' => $data['dia'],
-														'maquina' => $data['maquina']
-													])->execute();
-												// ])->getRawSql();
-												
+														'maquina' => $data['maquina'],
+														'turno' => $data['turno'],
+													// ])->execute();
+													])->getRawSql();
+													echo $result;
 										
 				
 					return true; //corta ejecucion y sale
 				}
 			  
 			  $result =$command->createCommand()->update('pdp_maquina_turno_dia',[
-										'turno' => $data['turno'],
 										'minutos' => $data['minutos'],
 										'op' => $data['operador']
 										], 	[
+										'turno' => $data['turno'],
 										'dia' => $data['dia'],
 										'maquina' => $data['maquina']
 										]
-									)->execute();
-								// )->getRawSql();
-			
+									// )->execute();
+								)->getRawSql();
+								echo $result;
 									
 		  }
-			
-		
-			
+		  
 			
 		}
+			
+			
+		
 		
 		/// operadores
 		public function GetInfo_diaop($fecha){

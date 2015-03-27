@@ -11,20 +11,21 @@ use common\models\Grid;
 use frontend\models\maquinado\maquinadocta4;
 
 $id = "diariopanel";
-
 $tmp = explode('W',$semana);
-$tmp_s = substr($tmp[1],1);
-$se1 =  $tmp_s +0; 
+
+$se1 =  $tmp[1]; 
+$aio = substr($tmp[0],0,4);
+
 $sem1 = $tmp[1];
 $model = new MaquinadoCTA4;
 
-		 $lun = $model->semana2fecha($tmp[0],$se1,'lun');
-		 $mar = $model->semana2fecha($tmp[0],$se1,'mar');
-		 $mie = $model->semana2fecha($tmp[0],$se1,'mie');
-		 $jue = $model->semana2fecha($tmp[0],$se1,'jue');
-		 $vie = $model->semana2fecha($tmp[0],$se1,'vie');
-		 $sab = $model->semana2fecha($tmp[0],$se1,'sab');
-		 $dom = $model->semana2fecha($tmp[0],$se1,'dom');
+		 $lun = $model->semana2fecha($aio,$se1,'lun');
+		 $mar = $model->semana2fecha($aio,$se1,'mar');
+		 $mie = $model->semana2fecha($aio,$se1,'mie');
+		 $jue = $model->semana2fecha($aio,$se1,'jue');
+		 $vie = $model->semana2fecha($aio,$se1,'vie');
+		 $sab = $model->semana2fecha($aio,$se1,'sab');
+		 $dom = $model->semana2fecha($aio,$se1,'dom');
 
 
 
@@ -176,7 +177,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Lunes',
-								'fecha' => '2015-03-16',
+								'fecha' => $lun,
 								'idOpMaq'  => '1',
 								'idOP'  => '2'
 							]);?>
@@ -185,7 +186,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Martes',
-								'fecha' => '2015-03-17',
+								'fecha' => $mar,
 								'idOpMaq'  => '2',
 								'idOP'  => '3'
 							]);?>
@@ -194,7 +195,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Miercoles',
-								'fecha' => '2015-03-18',
+								'fecha' => $mie,
 								'idOpMaq'  => '3',
 								'idOP'  => '4'
 							]);?>
@@ -202,7 +203,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Jueves',
-								'fecha' => '2015-03-19',
+								'fecha' => $jue,
 								'idOpMaq'  => '4',
 								'idOP'  => '5'
 							]);?>
@@ -210,7 +211,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Viernes',
-								'fecha' => '2015-03-20',
+								'fecha' => $vie,
 								'idOpMaq'  => '5',
 								'idOP'  => '6'
 							]);?>
@@ -218,7 +219,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Sabado',
-								'fecha' => '2015-03-21',
+								'fecha' => $sab,
 								'idOpMaq'  => '6',
 								'idOP'  => '7'
 							]);?>
@@ -226,7 +227,7 @@ data-options="
 			<div class="hbox" >
 				<?= $this->render('cta5',[
 								'dia'=> 'Domingo',
-								'fecha' => '2015-03-15',
+								'fecha' => $dom,
 								'idOpMaq'  => '7',
 								'idOP'  => '8'
 							]);?>
@@ -438,7 +439,7 @@ data-options="
 							}
 						}
 					);
-				//this.recargaSigGrid(grid);
+				this.recargaSigGrid(grid);
 				this.editIndex2 = undefined;
 				$(this.grid).datagrid('endEdit', this.editIndex2);
 				this.deshacerfila2();

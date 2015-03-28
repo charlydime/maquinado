@@ -143,6 +143,7 @@ use common\models\Grid;
 			<th data-options="field:'op',width:40">OP</th>
 			<th data-options="field:'NOMBRECOMPLETO',width:140">Nombre</th>
 			<th data-options="field:'maquina',width:70">Maquina</th>
+			<th data-options="field:'minutos',width:60">Min</th>
 			<th data-options="field:'turno',width:60">turno</th>
 		</tr>
 		

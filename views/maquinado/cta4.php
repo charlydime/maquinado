@@ -17,6 +17,7 @@ $se1 =  $tmp[1];
 $aio = substr($tmp[0],0,4);
 
 $sem1 = $tmp[1];
+$sem2 = $tmp[1]+1;
 $model = new MaquinadoCTA4;
 
 		 $lun = $model->semana2fecha($aio,$se1,'lun');
@@ -77,20 +78,21 @@ $model = new MaquinadoCTA4;
 	
 				<tr>
 				<th colspan= 2></th>
-				<th colspan= 2>Opeaciones</th>
-				<th colspan= 2</th>
+				<th colspan= 2>Opeacion</th>
+				<th colspan= 1></th>
+				<th colspan= 2>Embaques</th>
 				<th colspan= 4>Almacenes</th>
 				<th colspan= 2>Sem <?=$sem1?></th>
-				<th colspan=2>Lunes</th>
-				<th colspan=2>Martes</th>
-				<th colspan=2>Miercoles</th>
-				<th colspan=2>Jueves</th>
-				<th colspan=2>Viernes</th>
-				<th colspan=2>Sabado</th>
-				<th colspan=2>Domingo</th>
+				<th colspan=3>Lunes</th>
+				<th colspan=3>Martes</th>
+				<th colspan=3>Miercoles</th>
+				<th colspan=3>Jueves</th>
+				<th colspan=3>Viernes</th>
+				<th colspan=3>Sabado</th>
+				<th colspan=3>Domingo</th>
 				<th colspan=2>Tot Prod</th>
 				<th colspan=2>Tot Min</th>
-				
+				<th colspan= 2>SetUp</th>
 				</tr>
 				<tr>
 					
@@ -99,7 +101,8 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'op',width:40">num</th>
 					<th data-options="field:'minmaq',width:53">Min</th>
 					<th data-options="field:'p_t',width:53">pz*dia</th>
-					<th data-options="field:'sem1',width:50">em<?=$sem1?></th>
+					<th data-options="field:'e0',width:50">Sem<?=$sem1?></th>
+					<th data-options="field:'e1',width:50">Sem<?=$sem2?></th>
 					<th data-options="field:'PLA',width:50">PLAs</th>
 					<th data-options="field:'CTA',width:50">CTAs</th>
 					<th data-options="field:'PMA',width:50">PMAs</th>
@@ -109,24 +112,31 @@ $model = new MaquinadoCTA4;
 										
 					<th id = "lun_prg" data-options="field:'lun_prg',width:35,editor:'numberbox'">Prg</th>
 					<th data-options="field:'lun_min',width:40">Min</th>
+					<th data-options="field:'lun_set',width:40">setup</th>
 		
 					<th id = "mar_prg" data-options="field:'mar_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'mar_min',width:40">Min</th>
+					<th data-options="field:'mar_set',width:40">setup</th>
 
 					<th  id = "mie_prg" data-options="field:'mie_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'mie_min',width:40">Min</th>
+					<th data-options="field:'mie_set',width:40">setup</th>
 		
 					<th  id = "jue_prg" data-options="field:'jue_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'jue_min',width:40">Min</th>
+					<th data-options="field:'jue_set',width:40">set</th>
 	
 					<th id = "vie_prg" data-options="field:'vie_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'vie_min',width:40">Min</th>
+					<th data-options="field:'vie_set',width:40">setup</th>
 					
 					<th id = "sab_prg" data-options="field:'sab_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'sab_min',width:40">Min</th>
+					<th data-options="field:'sab_set',width:40">setup</th>
 					
 					<th id = "dom_prg" data-options="field:'dom_prg',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'dom_min',width:40">Min</th>
+					<th data-options="field:'dom_set',width:40">setup</th>
 					
 					<th data-options="field:'sum',width:40">Sum</th>
 					<th data-options="field:'rest',width:40">Rest</th>
@@ -134,6 +144,8 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'sum_min',width:40">Sum</th>
 					<th data-options="field:'rest_min',width:40">Rest</th>
 					
+					<th data-options="field:'setup',width:40,hidden:0">min</th>
+					<th id = "maq1" data-options="field:'maq1',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'Maquina',width:80,hidden:1">Maquina</th>
 				</tr>
 			</thead>
@@ -341,6 +353,7 @@ data-options="
 				var ed_vie = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'vie_prg'});
 				var ed_sab = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'sab_prg'});
 				var ed_dom = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'dom_prg'});
+				var ed_maq1 = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'maq1'});
 										
 				if (
 				ed_lun == null || 
@@ -362,6 +375,7 @@ data-options="
 				vie_prg = $(ed_vie.target).numberbox('getValue');
 				sab_prg = $(ed_sab.target).numberbox('getValue');
 				dom_prg = $(ed_dom.target).numberbox('getValue');
+				maq1    = $(ed_maq1.target).numberbox('getValue');
 				
 				var row = $(this.grid).datagrid('getRows')[this.editIndex2]; 
 				
@@ -401,7 +415,19 @@ data-options="
 				vie = parseInt(vie_prg) ? parseInt(vie_prg) : 0; 
 				sab = parseInt(sab_prg) ? parseInt(sab_prg) : 0; 
 				dom = parseInt(dom_prg) ? parseInt(dom_prg) : 0;
-
+				
+				var setup_poner = 0 ;
+				
+				if (maq1 == 1){
+					if(lun != 0                    ){$(this.grid).datagrid('getRows')[this.editIndex2]['lun_set'] = 1;setup_poner = 1 ;}
+					if(mar != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['mar_set'] = 1;setup_poner = 1 ;}
+					if(mie != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['mie_set'] = 1;setup_poner = 1 ;}
+					if(jue != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['jue_set'] = 1;setup_poner = 1 ;}
+					if(vie != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['vie_set'] = 1;setup_poner = 1 ;}
+					if(sab != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['sab_set'] = 1;setup_poner = 1 ;}
+					if(dom != 0&& setup_poner == 0){$(this.grid).datagrid('getRows')[this.editIndex2]['dom_set'] = 1;setup_poner = 1 ;}
+				}
+				
 				
 				$(this.grid).datagrid('getRows')[this.editIndex2]['lun_min'] = (lun * min) / can;
 				$(this.grid).datagrid('getRows')[this.editIndex2]['mar_min'] = (mar * min) / can;

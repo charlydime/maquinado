@@ -196,16 +196,16 @@ $this->registerJS("
 										
 										
 										<th id= "thsem1" data-options="field:'s1',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s1_min',width:50">min</th>
+										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda">min</th>
 										<th id= "thsem2" data-options="field:'s2',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s2_min',width:50">min</th>
+										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda">min</th>
 										<th id= "thsem3" data-options="field:'s3',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s3_min',width:50">min</th>
+										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda">min</th>
 										<th id= "thsem4" data-options="field:'s4',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s4_min',width:50">min</th>
+										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda">min</th>
 									
 										<th data-options="field:'tot_pza',width:50">pza</th>
-										<th data-options="field:'tot_min',width:50">min</th>
+										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda">min</th>
 										
 										
 										
@@ -760,5 +760,12 @@ data-options="
 				
 		}
 		
+		function formateo_sem_celda(val,row,inx){
+			
+			 
+				return 'background-color:lightgrey;';
+			
+
+		}
 
 	</script>

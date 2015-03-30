@@ -54,7 +54,6 @@ $model = new MaquinadoCTA4;
 				singleSelect: true,
 				onClickRow:function(inx,row){ control<?php echo $sem1 ?>.onClickRow2(inx,row); },
 				rowStyler:formateo_dia,
-				//styler:formateo_dia_celda,
 				showFooter: true,
 				
 				
@@ -65,7 +64,8 @@ $model = new MaquinadoCTA4;
 				view:groupview,
 				groupField:'Maquina',
 				groupFormatter:function(value,rows){			
-								   return value ;
+								  return value ;
+								 
 										},				
 				
 				
@@ -112,38 +112,38 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'Minutos',width:35">Min</th>
 										
 					<th id = "lun_prg" data-options="field:'lun_prg',width:35,editor:'numberbox'">Prg</th>
-					<th data-options="field:'lun_min',width:40">Min</th>
+					<th data-options="field:'lun_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'lun_set',width:40">setup</th>
 		
 					<th id = "mar_prg" data-options="field:'mar_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'mar_min',width:40">Min</th>
+					<th data-options="field:'mar_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'mar_set',width:40">setup</th>
 
 					<th  id = "mie_prg" data-options="field:'mie_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'mie_min',width:40">Min</th>
+					<th data-options="field:'mie_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'mie_set',width:40">setup</th>
 		
 					<th  id = "jue_prg" data-options="field:'jue_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'jue_min',width:40">Min</th>
+					<th data-options="field:'jue_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'jue_set',width:40">set</th>
 	
 					<th id = "vie_prg" data-options="field:'vie_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'vie_min',width:40">Min</th>
+					<th data-options="field:'vie_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'vie_set',width:40">setup</th>
 					
 					<th id = "sab_prg" data-options="field:'sab_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'sab_min',width:40">Min</th>
+					<th data-options="field:'sab_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'sab_set',width:40">setup</th>
 					
 					<th id = "dom_prg" data-options="field:'dom_prg',width:40,editor:'numberbox'">Prg</th>
-					<th data-options="field:'dom_min',width:40">Min</th>
+					<th data-options="field:'dom_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'dom_set',width:40">setup</th>
 					
 					<th data-options="field:'sum',width:40">Sum</th>
 					<th data-options="field:'rest',width:40">Rest</th>
 					
-					<th data-options="field:'sum_min',width:40">Sum</th>
-					<th data-options="field:'rest_min',width:40">Rest</th>
+					<th data-options="field:'sum_min',width:40, styler:formateo_dia_celda">Sum</th>
+					<th data-options="field:'rest_min',width:40, styler:formateo_dia_celda">Rest</th>
 					
 					<th data-options="field:'setup',width:40,hidden:0">min</th>
 					<th id = "maq1" data-options="field:'maq1',width:40,editor:'numberbox'">Prg</th>
@@ -691,9 +691,8 @@ function formateo_dia(index,row){
 		
 		function formateo_dia_celda(val,row,inx){
 			
-			var lun_min =  parseInt(row.lun_min) ? parseInt(row.lun_min) : 0;
-			var minstyle = 'font-weight:bold; color: grey;';
-			if (lun_min > 0 )	return minstyle;
+			 
+				return 'background-color:lightgrey;';
 			
 
 		}

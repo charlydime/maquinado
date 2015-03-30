@@ -163,10 +163,11 @@ class MaquinadoController extends Controller
 			 // "prioridad":"","sem_actual":"2015-W05"}
 
 			 // ');
-			 
+			// echo "cta1------------------------";print_r ($datos);
 			 //programar busqueda cuantas operaciones tiene la pieza
 			 
 			foreach ($datos as $data){ 
+			echo "for------------------------";print_r ($data);
 					if ($data->{'maquina1'} == '') exit;
 			 
 					$maquina=explode('-',$data->{'maquina1'});
@@ -176,7 +177,7 @@ class MaquinadoController extends Controller
 					
 					$datos_a_grabar['producto']= $data->{'producto'}; 
 					// $datos_a_grabar['minutos']= $model->p1tiempos($data->{'producto'},$data->{'maquina1'},$data->{'opx'});
-					$datos_a_grabar['minutos']= $data->{'Minutos'};;
+					$datos_a_grabar['minutos']= $data->{'Minutos'};
 					$datos_a_grabar['maquina']= $maquina[0];
 					
 					$datos_a_grabar['aio']= 	$semana[0] ;
@@ -185,13 +186,22 @@ class MaquinadoController extends Controller
 					$datos_a_grabar['opx']= $data->{'opx'};
 					$datos_a_grabar['programado']= substr($semana[1],1);
 					
-					//grabo hold  lo actualiza con su valor capturado
-					$model->hold($data); 
+					
 					// print_r($data);
 					
+						//grabo recibiendo de diario
+						if($data->{'diario'} != '' && $data->{'diario'} != 'n') {
+							 $datos_a_grabar['cantidad'] =$data->{'diario'};
+							 $datos_a_grabar['semana']= substr($semana[1],1)-0;
+							 $model->p1save($datos_a_grabar);
+							echo "dia datos_a_grabar------------"; print_r($datos_a_grabar);
+							
+						}else{
+							//grabo hold  lo actualiza con su valor capturado
+							$model->hold($data); 
+							
+						}	
 					//grabo  solo si alguna de las semanas  tiene capturado algo de piezas 
-						
-						
 				
 						if($data->{'s1'} != '' && $data->{'s1'} != 'n') {
 							$datos_a_grabar['cantidad'] =$data->{'s1'};

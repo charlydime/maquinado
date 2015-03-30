@@ -443,6 +443,7 @@ data-options="
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['Hold'] = hold;
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['maquina1'] = maq1;
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['prioridad'] = prioridad;
+				 
 				// $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['Minutos'] = mismaMaq(row);
 				
 				var op = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['opx'];
@@ -472,6 +473,7 @@ data-options="
 					 // sem = sem.concat( tmp[0].toString() ,'W', tmp1.toString()); 
 					
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['sem_actual'] = sem_actual;
+					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['diario'] = 'n'; // diferencia entre alctualizacion desde mensual 
 					data.push ( $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i] );
 
 					i++;

@@ -54,6 +54,7 @@ $model = new MaquinadoCTA4;
 				singleSelect: true,
 				onClickRow:function(inx,row){ control<?php echo $sem1 ?>.onClickRow2(inx,row); },
 				rowStyler:formateo_dia,
+				//styler:formateo_dia_celda,
 				showFooter: true,
 				
 				
@@ -439,6 +440,7 @@ data-options="
 				
 				sum = lun+mar+mie+jue+vie+sab+dom
 				
+				
 				$(this.grid).datagrid('getRows')[this.editIndex2+i]['sum'] = sum ;
 				$(this.grid).datagrid('getRows')[this.editIndex2+i]['rest'] = can-sum;
 				
@@ -450,6 +452,82 @@ data-options="
 				
 				$(this.grid).datagrid('refreshRow',this.editIndex2);
 				
+				
+				if (sum > can ){
+					var resp = confirm("Exede la cantidad programada en el mensual \n actualizar programacion mensual?");
+					if (resp == true){
+						
+							var producto = $(this.grid).datagrid('getRows')[this.editIndex2]['Pieza'] ;
+							var Maquina  = $(this.grid).datagrid('getRows')[this.editIndex2]['Maquina'] ;
+							var diario = $(this.grid).datagrid('getRows')[this.editIndex2]['sum'] ;
+							var minutos = $(this.grid).datagrid('getRows')[this.editIndex2]['sum_min'] 
+							var opx = $(this.grid).datagrid('getRows')[this.editIndex2]['op'] ;
+							var prioridad = $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] ? $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] : 0; 
+							var sem_actual =  "<?php echo $semana ?>";
+						
+						var data2 = {
+							obj:{
+									producto: producto,
+									maquina1: Maquina,
+									diario:   diario,
+									Minutos:  minutos,
+									opx:      opx,
+									prioridad:prioridad,
+									sem_actual: sem_actual,
+									s1: 'n',
+									s2: 'n',
+									s3: 'n',
+									s4: 'n'
+									
+							}
+						};
+									// 'Pieza' => $data['producto'], //captura row
+									// 'Maquina' => $data['Maquina'], // captura row  maquina1 maquina2 maquina3
+									//  diario 'sum' => $data['cantidad'],// captura row s1 s2 s3 s4
+									// 'sum_min' => $data['minutos'], // hacer funcion para sacar de maquina_pieza
+									// ok 'sem_actual' => $data['semana'], // de inpul cal
+									// 'op' => $data['opx'],
+									// 'prio' => $data['prioridad'],
+									
+									// 'aio' => $data['aio'],// scaar año de sem actual
+									// 'semEntrega' => $fsemana,
+									// 'programado' => $data['programado'],
+									
+									// 'maquina' => $data['maquina'],
+										// 'prioridad' => $data['prioridad'],
+										// 'cantidad' => $data['cantidad'] 
+										// ], 	[
+										
+										// 'pieza' => $data['producto'],
+										// 'op' => $data['opx'],
+										// 'semana' => $data['semana']
+						
+						
+						$.post('ctap1',
+							{Data: JSON.stringify(data2),sem_actual: <?php echo $sem1 ?>},
+							function(data,status){
+								if(status == 'success' ){
+									$(grid).datagrid('load');
+									
+									console.log(data);
+									$var = $(grid).datagrid('getChanges');
+								}else{
+									reject('#$id');
+									alert('Error al guardar los datos');
+								}
+							}
+						);
+						
+						alert("Actualizado programacion mensual");
+					}else{
+						this.recargaSigGrid(grid);
+						this.editIndex2 = undefined;
+						$(this.grid).datagrid('endEdit', this.editIndex2);
+						this.deshacerfila2();
+						return;
+					}
+					
+				}
 				
 					$.post(this.url,
 						{Data: JSON.stringify(data),semana: <?php echo $sem1 ?>},
@@ -602,12 +680,22 @@ function formateo_dia(index,row){
 			if (  minutos_m  == 0  )
 				 return ;
 			if ( minutos_o == minutos_m )
-				return 'background-color:lightgreen;font-weight:bold;';
+				return 'background-color:lightgreen;';
 			if ( minutos_o <= minutos_m )
-				return 'background-color:IndianRed;font-weight:bold;';
+				return 'background-color:IndianRed;';
 			if ( minutos_o >= minutos_m )
-				return 'background-color: lightblue;font-weight:bold;';
+				return 'background-color: lightblue;';
 		
+		}
+		
+		
+		function formateo_dia_celda(val,row,inx){
+			
+			var lun_min =  parseInt(row.lun_min) ? parseInt(row.lun_min) : 0;
+			var minstyle = 'font-weight:bold; color: grey;';
+			if (lun_min > 0 )	return minstyle;
+			
+
 		}
 		
 	</script>

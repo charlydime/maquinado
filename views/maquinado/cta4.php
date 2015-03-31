@@ -104,10 +104,10 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'p_t',width:53">pz*dia</th>
 					<th data-options="field:'e0',width:50">Sem<?=$sem1?></th>
 					<th data-options="field:'e1',width:50">Sem<?=$sem2?></th>
-					<th data-options="field:'PLA',width:50">PLAs</th>
-					<th data-options="field:'CTA',width:50">CTAs</th>
-					<th data-options="field:'PMA',width:50">PMAs</th>
-					<th data-options="field:'PTA',width:50">PTA</th>
+					<th data-options="field:'PLB',width:50">PLBs</th>
+					<th data-options="field:'CTB',width:50">CTBs</th>
+					<th data-options="field:'PMB',width:50">PMBs</th>
+					<th data-options="field:'PTB',width:50">PTB</th>
 					<th data-options="field:'Cantidad',width:35">Prg</th>
 					<th data-options="field:'Minutos',width:35">Min</th>
 										

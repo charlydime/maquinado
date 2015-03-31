@@ -247,6 +247,9 @@ Class MaquinadoCTA4 extends Model {
 				
 				where semana = $se1 
 				
+				order by Maquina
+				
+				
 			")->queryAll();
 			
 			if(count($result)!=0){
@@ -269,7 +272,33 @@ Class MaquinadoCTA4 extends Model {
 				$tdp = 0;
 				$tdm = 0;
 				$rows=0;
+				
+				$gp = 0;
+				$gm = 0;
+				$glp = 0;
+				$glm = 0;
+				$gmp = 0;
+				$gmm = 0;
+				$gip = 0;
+				$gim = 0;
+				$gjp = 0;
+				$gjm = 0;
+				$gvp = 0;
+				$gvm = 0;
+				$gsp = 0;
+				$gsm = 0;
+				$gdp = 0;
+				$gdm = 0;
+				
+				$congrupo = [];
+				foreach($result as &$rini){
+				
+				$m = $rini['Maquina'] ; break;
+				}
+				
 				foreach($result as &$r){
+					
+					//sumas totales
 					$tp += $r["Cantidad"];
 					$tm += $r["Minutos"];
 					
@@ -322,6 +351,8 @@ Class MaquinadoCTA4 extends Model {
 					
 					$r["p_t"] = number_format($r["p_t"],2);
 					
+					
+					// asunto de 0s para que no se deplieguen en grid
 					if ($r['CTA'] ==  0) $r['CTA'] = ''; 
 					if ($r['PLA'] ==  0) $r['PLA'] = ''; 
 					if ($r['PMA'] ==  0) $r['PMA'] = ''; 
@@ -330,6 +361,76 @@ Class MaquinadoCTA4 extends Model {
 					if ($r['rest'] ==  0) $r['rest'] = ''; 
 					if ($r['rest_min'] ==  0) $r['rest_min'] = ''; 
 					if ($r['sum_min'] ==  0) $r['sum_min'] = ''; 
+					
+					//grupal
+					
+					
+					 
+						
+						$gp += $r["Cantidad"];
+						$gm += $r["Minutos"];
+						$glp += $r["lun_prg"];
+						$glm += $r["lun_min"];
+						$gmp += $r["mar_prg"];
+						$gmm += $r["mar_min"];
+						$gip += $r["mie_prg"];
+						$gim += $r["mie_min"];
+						$gjp += $r["jue_prg"];
+						$gjm += $r["jue_min"];
+						$gvp += $r["vie_prg"];
+						$gvm += $r["vie_min"];
+						$gsp += $r["sab_prg"];
+						$gsm += $r["sab_min"];
+						$gdp += $r["dom_prg"];
+						$gdm += $r["dom_min"];
+						
+					if(  $r["Maquina"] != $m  ){
+						
+						
+					
+						array_push ($congrupo , [
+						
+						'Cantidad' => $gp,
+						'Minutos' => $tm,
+						'Maquina' => $m,
+						'Pieza' => "Totales - ".$r['Maquina'],
+						"lun_prg" => $glp ,
+						"lun_min" => $glm ,
+						"mar_prg" => $gmp ,
+						"mar_min" => $gmm ,
+						"mie_prg" => $gip ,
+						"mie_min" => $gim ,
+						"jue_prg" => $gjp ,
+						"jue_min" => $gjm ,
+						"vie_prg" => $gvp ,
+						"vie_min" => $gvm  ,
+						"sab_prg" => $gsp ,
+						"sab_min" => $gsm ,
+						"dom_prg" => $gdp ,
+						"dom_min" => $gdm,
+						"ordenGrupo" => 1
+						]);
+						$m = $r['Maquina'] ;
+						$gp = 0;
+						$gm = 0;
+						$glp = 0;
+						$glm = 0;
+						$gmp = 0;
+						$gmm = 0;
+						$gip = 0;
+						$gim = 0;
+						$gjp = 0;
+						$gjm = 0;
+						$gvp = 0;
+						$gvm = 0;
+						$gsp = 0;
+						$gsm = 0;
+						$gdp = 0;
+						$gdm = 0;
+					}
+					
+					array_push($congrupo , $r);
+					//conteo 
 					$rows++;
 				}
 				
@@ -436,10 +537,11 @@ Class MaquinadoCTA4 extends Model {
 				$totales[4]['Pieza'] = 'Totales Piezas:';
 			}
 			
-		$datos['rows'] = $result;
+		// $datos['rows'] = $result;
+		$datos['rows'] = $congrupo;
 		$datos['footer'] = $totales;
 		$datos['total'] = $rows;
-        
+        //print_r($congrupo);
           return $datos; 
         }   
 		

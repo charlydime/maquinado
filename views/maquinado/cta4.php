@@ -78,22 +78,22 @@ $model = new MaquinadoCTA4;
 			<thead>
 	
 				<tr>
-				<th colspan= 2></th>
-				<th colspan= 2>Opeacion</th>
-				<th colspan= 1></th>
-				<th colspan= 2>Embaques</th>
-				<th colspan= 4>Almacenes</th>
-				<th colspan= 2>Sem <?=$sem1?></th>
-				<th colspan=3>Lunes</th>
-				<th colspan=3>Martes</th>
-				<th colspan=3>Miercoles</th>
-				<th colspan=3>Jueves</th>
-				<th colspan=3>Viernes</th>
-				<th colspan=3>Sabado</th>
-				<th colspan=3>Domingo</th>
-				<th colspan=2>Tot Prod</th>
-				<th colspan=2>Tot Min</th>
-				<th colspan= 2>SetUp</th>
+					<th colspan= 2></th>
+					<th colspan= 2>Opeacion</th>
+					<th colspan= 1></th>
+					<th colspan= 2>Embaques</th>
+					<th colspan= 4>Almacenes</th>
+					<th colspan= 2>Sem <?=$sem1?></th>
+					<th colspan=3>Lunes</th>
+					<th colspan=3>Martes</th>
+					<th colspan=3>Miercoles</th>
+					<th colspan=3>Jueves</th>
+					<th colspan=3>Viernes</th>
+					<th colspan=3>Sabado</th>
+					<th colspan=3>Domingo</th>
+					<th colspan=2>Tot Prod</th>
+					<th colspan=2>Tot Min</th>
+					<th colspan= 2>SetUp</th>
 				</tr>
 				<tr>
 					
@@ -148,6 +148,7 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'setup',width:40,hidden:0">min</th>
 					<th id = "maq1" data-options="field:'maq1',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'Maquina',width:80,hidden:1">Maquina</th>
+					<th data-options="field:'ordenGrupo',width:80,hidden:1">resumen</th>
 				</tr>
 			</thead>
 	</table>
@@ -663,10 +664,11 @@ var control<?php echo $sem1 ?> = new control('#<?php echo $id ?>');
 function formateo_dia(index,row){
 		var m = row.sum;
 		var o = row.Cantidad;
-		
-		
+
 		var minutos_m =  parseInt(m) ? parseInt(m) : 0;
 		var minutos_o =  parseInt(o) ? parseInt(o) : 0;
+		
+		var ordenGrupo =  parseInt(row.ordenGrupo) ? parseInt(row.ordenGrupo) : 0;
 				
 		if (row.lun_prg == null
 		&& row.mar_prg == null
@@ -677,6 +679,8 @@ function formateo_dia(index,row){
 		&& row.dom_prg == null
 		
 		) return;
+			if (ordenGrupo ==  1 )
+				return 'background-color:grey;';
 			if (  minutos_m  == 0  )
 				 return ;
 			if ( minutos_o == minutos_m )
@@ -686,13 +690,15 @@ function formateo_dia(index,row){
 			if ( minutos_o >= minutos_m )
 				return 'background-color: lightblue;';
 		
-		}
+	}
 		
 		
 		function formateo_dia_celda(val,row,inx){
 			
-			 
+			 if ( row.ordenGrupo != 1) 
 				return 'background-color:lightgrey;';
+			 else 
+				 return false;
 			
 
 		}

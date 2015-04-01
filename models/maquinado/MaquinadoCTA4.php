@@ -364,9 +364,7 @@ Class MaquinadoCTA4 extends Model {
 					
 					//grupal
 					
-					
-					 
-						
+
 						$gp += $r["Cantidad"];
 						$gm += $r["Minutos"];
 						$glp += $r["lun_prg"];

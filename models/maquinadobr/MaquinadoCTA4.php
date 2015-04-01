@@ -888,7 +888,7 @@ Class MaquinadoCTA4 extends Model {
 										sum(min) as min,
 										sum(min/60) as min_hrs,
 										sum( (min/60)/8 ) as min_t8 
-						from pdp_cta_dia 
+						from pdp_ctb_dia 
 						where dia = '$fecha' 
 						GROUP BY maquina
 						)as d

@@ -100,7 +100,7 @@ $this->registerJS("
 </style>
 <div class="easyui-panel" title="Maquina-pieza" style="width:100%;height:auto;padding:10px;">
 
-							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:400px;"
+							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:550px;"
 
 									data-options="
 										url:'cta2d?fecha=<?=$semana?>',
@@ -690,9 +690,9 @@ data-options="
 			
 		}
 		function formatmaq(val,row,inx){
-			var op =  parseInt(row.op) ? parseInt(row.op) : 0;
-			if (op == 0 )
-			   return 'font-weight:bold;background-color: Yellow ;';
+			// var op =  parseInt(row.op) ? parseInt(row.op) : 0;
+			// if (op == 0 )
+			   // return 'font-weight:bold;background-color: Yellow ;';
 			
 			
 			

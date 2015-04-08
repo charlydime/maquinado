@@ -17,58 +17,53 @@ Class MaquinadoCTA2 extends Model {
         $command = \Yii::$app->db_mysql;
         $result =$command->createCommand("
  				
-				select 
+ 
+  select 
 				prod.producto,
 				
-				CASE
-					WHEN pdp_cta.Maquina is null THEN pdp_maquina_pieza.Maquina
-					ELSE  pdp_cta.Maquina
-				END
-				  as maquina1,
- 				
-
+				cta.maquina as maquina1,
  				
 				pdp_maquina_pieza.op as opx,
 				
-				CASE 
-						WHEN get_programacion_cta_prio(prod.producto,$se1) is not null THEN get_programacion_cta_prio(prod.producto,$se1) 
-						WHEN get_programacion_cta_prio(prod.producto,$se2) is not null THEN get_programacion_cta_prio(prod.producto,$se2) 
-						WHEN get_programacion_cta_prio(prod.producto,$se3) is not null THEN get_programacion_cta_prio(prod.producto,$se3) 
-						WHEN get_programacion_cta_prio(prod.producto,$se4) is not null THEN get_programacion_cta_prio(prod.producto,$se4) 
-						ELSE '' 
-				END 
-				     as prioridad,
+				can_s1.cantidad as s1,
+				can_s2.cantidad as s2,
+				can_s3.cantidad as s3,			
+				can_s4.cantidad as s4,
 				
-				IFNULL(almpla.existencia,0)+IFNULL(almpla2.existencia,0) as PLA,
-				IFNULL(almpma.existencia,0)+IFNULL(almpma2.existencia,0) as PMA,
-				IFNULL(almcta.existencia,0)+IFNULL(almcta2.existencia,0) as CTA,
+				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
+				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
+				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
 				
 				almpta.existencia as PTA,
 							
-				DATE_FORMAT( dux1.fechaemb ,'%U') as sem1entrega,
-				DATE_FORMAT( dux2.fechaemb ,'%U') as sem12entrega,
+				datepart(week ,dux1.fechaemb ) as sem1entrega,
+				datepart(week ,dux2.fechaemb ) as sem12entrega,
 				dux1.cantidad as sem1,
 				 dux2.cantidad as sem2,
 				
-				get_programacion_cta_cantidad(prod.producto,$se1,pdp_maquina_pieza.op ) as s1,
-				get_programacion_cta_cantidad(prod.producto,$se2,pdp_maquina_pieza.op) as s2,
-				get_programacion_cta_cantidad(prod.producto,$se3,pdp_maquina_pieza.op) as s3,
-				get_programacion_cta_cantidad(prod.producto,$se4,pdp_maquina_pieza.op) as s4,
+				CASE 
+						WHEN can_s1.prioridad is not null THEN can_s1.prioridad
+						WHEN can_s2.prioridad is not null THEN can_s2.prioridad
+						WHEN can_s3.prioridad is not null THEN can_s3.prioridad
+						WHEN can_s4.prioridad is not null THEN can_s4.prioridad
+						ELSE '' 
+				END 
+				     as prioridad,
+
 				maq_piezas.Hold
-				
 				
 				
 				from 
 				(				select  distinct almprod.PRODUCTO 
 								from almprod 
 								 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
-								where almprod.ALMACEN = 'CTA' and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'ACE'
+								where almprod.ALMACEN in ('CTA','CTA2','PLA','PLA2','PMA','PMA2') and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'ACE'
 								
 								Union 
 								
 								select DISTINCT pdp_cta.Pieza 
 								from pdp_cta
-								where pdp_cta.Semana between $se1 and $se4  
+								where pdp_cta.Semana between $se1  and $se2   
 								and hecho = 0
 				) as prod
 				
@@ -76,11 +71,10 @@ Class MaquinadoCTA2 extends Model {
 				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
 				
 				 Left JOIN (
-						SELECT pieza,maquina,op
+						SELECT pieza,op
 						FROM 	pdp_maquina_pieza
+						where op <> 0
 						GROUP BY pieza ,OP
-						
-							
 						
 				) AS	pdp_maquina_pieza  on pdp_maquina_pieza.Pieza = prod.PRODUCTO 
 				
@@ -93,10 +87,10 @@ Class MaquinadoCTA2 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATE_FORMAT( PAROEN.doctoadicionalfecha ,'%U') = $se1
+						datepart( week,PAROEN.doctoadicionalfecha)  =  $se1
 						and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
-						order by ALMPROD.producto
+						
 				) as dux1 on prod.PRODUCTO = dux1.producto 
 
 				LEFT JOIN(
@@ -105,10 +99,10 @@ Class MaquinadoCTA2 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATE_FORMAT( PAROEN.doctoadicionalfecha ,'%U') = $se2
+						datepart( week,PAROEN.doctoadicionalfecha) = $se2
 						and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
-						order by ALMPROD.producto
+						
 				) as dux2 on prod.PRODUCTO = dux2.producto 
 
 				
@@ -175,20 +169,74 @@ Class MaquinadoCTA2 extends Model {
 					ALMPROD.ALMACEN =   'PMA2'
 					GROUP BY almprod.producto
 				) as almpma2 on prod.PRODUCTO = almpma2.producto
+
 				
-				LEFT JOIN pdp_cta on pdp_cta.Pieza = prod.producto and  pdp_cta.semana = $se1 and pdp_cta.op = pdp_maquina_pieza.op
-				 where prod.PRODUCTO  in (select pieza from pdp_maquinado_bl)
+				LEFT JOIN pdp_cta as cta on cta.Pieza = prod.producto and  
+				((cta.semana = $se1)) and 
+				cta.op = pdp_maquina_pieza.op
+
+
+				LEFT JOIN(
+				SELECT   
+				  Cantidad,pieza,semana,op,maquina,prioridad
+				FROM pdp_cta
+				
+				) as can_s1 on 
+					   can_s1.pieza = prod.PRODUCTO and  
+					   can_s1.Semana = $se1  and 
+					   can_s1.op = pdp_maquina_pieza.op 
+					
+
+				LEFT JOIN(
+				SELECT   
+				  Cantidad,pieza,semana,op,maquina,prioridad
+				FROM pdp_cta
+				
+				) as can_s2 on 
+					   can_s2.pieza = prod.PRODUCTO and  
+					   can_s2.Semana = $se2  and 
+					   can_s2.op = pdp_maquina_pieza.op 
+					 
+
+				LEFT JOIN(
+				SELECT   
+				  Cantidad,pieza,semana,op,maquina,prioridad
+				FROM pdp_cta
+				
+				) as can_s3 on 
+					   can_s3.pieza = prod.PRODUCTO and  
+					   can_s3.Semana = $se3  and 
+					   can_s3.op = pdp_maquina_pieza.op 
+					 
+
+				LEFT JOIN(
+				SELECT   
+				  Cantidad,pieza,semana,op,maquina,prioridad
+				FROM pdp_cta
+				
+				) as can_s4 on 
+					   can_s4.pieza = prod.PRODUCTO and  
+					   can_s4.Semana = $se4  and 
+					   can_s4.op = pdp_maquina_pieza.op 
+					  
+				
+
+				
+				
+				where prod.PRODUCTO  in (select pieza from pdp_maquinado_bl)
+				
 				ORDER BY 
 
 				Hold,
-				
-				pdp_maquina_pieza.op asc,
-				maquina1,
 				prioridad desc,
 				producto,						
 				
+				pdp_maquina_pieza.op asc,
+			
+				
 				dux1.fechaemb,
  				dux2.fechaemb
+				     
 				     
  
 				
@@ -204,11 +252,16 @@ Class MaquinadoCTA2 extends Model {
 			 $cta=0;
 			 $rows = 0;
 				foreach($result as &$r){
-					$maquina=explode('-',$r['maquina1']);
+					//echo " producto : ".$r['producto']." op : ".$r['opx'];
+					
+					if ($r['maquina1'] == null)	
+						$r['maquina1']=$this->maquina($r['producto'],$r['opx']);
+					
 					$min =  $this->p1tiempos($r['producto'], $r['maquina1'],$r['opx']);
 						//echo '('.$min.')     p'.$r['producto'].'   m'.$r['maquina1'].'  s'.$r["s1"].' ' .$r["s2"].' '.$r["s3"].' '.$r["s4"];			  
 					
 					$r['Minutos'] =  $this->p1tiempos($r['producto'], $r['maquina1'],$r['opx']);
+					$r['Minutos'] = number_format ($r['Minutos']);
 					$r['op'] =  $this->p1ops($r['producto'], $r['maquina1']);
 					
 					$r['s1_min'] = $min * $r["s1"];
@@ -238,6 +291,12 @@ Class MaquinadoCTA2 extends Model {
 						$cta +=  $r["CTA"] * $min;
 					}
 					
+				$r['CTA'] = (real)$r['CTA'] ;
+				$r['PLA'] = (real)$r['PLA'] ;
+				$r['PMA'] = (real)$r['PMA'] ;
+				$r['PTA'] = (real)$r['PTA'] ;
+				$r['sem1'] = (real)$r['sem1'] ;
+				$r['sem2'] = (real)$r['sem2'] ;
 				if ($r['s4_min'] ==  0) $r['s4_min'] = ''; 
 				if ($r['s3_min'] ==  0) $r['s3_min'] = ''; 
 				if ($r['s2_min'] ==  0) $r['s2_min'] = ''; 
@@ -251,6 +310,8 @@ Class MaquinadoCTA2 extends Model {
 				if ($r['PLA'] ==  0) $r['PLA'] = ''; 
 				if ($r['PMA'] ==  0) $r['PMA'] = ''; 
 				if ($r['PTA'] ==  0) $r['PTA'] = ''; 
+				if ($r['sem1'] ==  0) $r['sem1'] = ''; 
+				if ($r['sem2'] ==  0) $r['sem2'] = ''; 
 				 $rows++; 
 				}
 				
@@ -270,21 +331,21 @@ Class MaquinadoCTA2 extends Model {
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
-				$totales[2]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/8,2) ;
-				$totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/8,2) ;
-				$totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/8,2) ;
-				$totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/8,2) ;
-				$totales[2]['CTA'] = $cta == 0 ? $cta : number_format(($cta/60)/8,2) ;
+				// $totales[2]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/8,2) ;
+				// $totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/8,2) ;
+				// $totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/8,2) ;
+				// $totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/8,2) ;
+				// $totales[2]['CTA'] = $cta == 0 ? $cta : number_format(($cta/60)/8,2) ;
 	
-				$totales[2]['maquina1'] = 'Turno 8H';
+				// $totales[2]['maquina1'] = 'Turno 8H';
 				
-				$totales[3]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/9,2) ;
-				$totales[3]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/9,2) ;
-				$totales[3]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/9,2) ;
-				$totales[3]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/9,2) ;
-				$totales[3]['CTA'] = $cta == 0 ? $cta : number_format(($cta/60)/9,2) ;
+				$totales[2]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/9,2) ;
+				$totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/9,2) ;
+				$totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/9,2) ;
+				$totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/9,2) ;
+				$totales[2]['CTA'] = $cta == 0 ? $cta : number_format(($cta/60)/9,2) ;
 			
-				$totales[3]['maquina1'] = 'Turno 9H';
+				$totales[2]['maquina1'] = 'Turno 9H';
 	
 			
 		$datos['rows'] = $result;
@@ -322,9 +383,9 @@ t.turno*8  as horas_o,
 from pdp_maquina_turnos 
 LEFT JOIN 
 		(	Select    
-			ifnull( ifnull(pdp_maquina_turnos.Matutino,0)/ifnull(pdp_maquina_turnos.Matutino,0) ,0) +
-			ifnull( ifnull(pdp_maquina_turnos.Vespertino,0)/ifnull(pdp_maquina_turnos.Vespertino ,0),0) +
-			ifnull( ifnull(pdp_maquina_turnos.Nocturno,0)/ifnull(pdp_maquina_turnos.Nocturno,0) ,0)
+			isnull( isnull(pdp_maquina_turnos.Matutino,0)/isnull(pdp_maquina_turnos.Matutino,1) ,0) +
+			isnull( isnull(pdp_maquina_turnos.Vespertino,0)/isnull(pdp_maquina_turnos.Vespertino ,1),0) +
+			isnull( isnull(pdp_maquina_turnos.Nocturno,0)/isnull(pdp_maquina_turnos.Nocturno,1) ,0)
 			as turno,
 			pdp_maquina_turnos.maquina
 
@@ -463,7 +524,7 @@ public function GetInfo_Operador($semana){
 			'Noc' as titulo ,Nocturno as turno from pdp_maquina_turnos
 				where semana = $s AND Nocturno is not null
 		) as turnos
-		JOIN empleado where turnos.turno = empleado.CODIGOANTERIOR
+		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR
 	
 	";
 	
@@ -540,6 +601,26 @@ public function  GetInfo_pza_op($semana){
 	
 	
    }
+   
+   
+   public function maquina($pieza,$op){
+		$command = \Yii::$app->db_mysql;
+		
+		if ($op == '') $op = 10;
+		$sql = "
+				Select maquina
+					from pdp_maquina_pieza where pieza ='$pieza' and op = $op
+				";
+		
+
+		$result =$command
+					->createCommand($sql)
+					->queryAll();
+		
+		
+		
+		return $result ? $result[0]['maquina'] : 0;
+	}
    
    
    public function getOperaciones(){
@@ -913,7 +994,7 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		$result =$command
 					->createCommand("
-							Select distinct maquina 
+							Select distinct maquina,minutos
 							from pdp_maquina_pieza 
 							where pieza ='$pieza' and op = $op 
 							order by minutos ASC
@@ -941,6 +1022,8 @@ public function  GetInfo_pza_op($semana){
 		$result =$command
 					->createCommand($sql)
 					->queryAll();
+		
+		//$result[0]['minutos'] =  (double)$result[0]['minutos'];
 		
 		return $result ? $result[0]['minutos'] : null;
 	}

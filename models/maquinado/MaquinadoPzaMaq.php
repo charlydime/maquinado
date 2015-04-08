@@ -128,9 +128,9 @@ Class MaquinadoPzaMaq extends Model {
 									'celda' => $data['celda'],
 									'siguiente' => $data['siguiente']
 									
-				// ])->execute();
-			])->getRawSql();
-			print_r($result);
+				])->execute();
+			// ])->getRawSql();
+			// print_r($result);
 			
 		}else{
 			 $result =$command->createCommand()->update('pdp_maquina_pieza',[
@@ -143,9 +143,9 @@ Class MaquinadoPzaMaq extends Model {
 										'op' => $data['OP'], 
 										'pieza' => $data['pieza']
 										]
-									// )->execute();
-								)->getRawSql();
-								print_r($result);
+									)->execute();
+								// )->getRawSql();
+								// print_r($result);
 			
 									
 		  }
@@ -165,9 +165,9 @@ Class MaquinadoPzaMaq extends Model {
 													'maquina'  =>  $data['maquina'], 
 													'pieza' =>  $data['pieza'] ,
 													'OP' =>  $data['OP'] 
-											// ])->execute();
-											])->getRawSql();
-											print_r($result);
+											])->execute();
+											// ])->getRawSql();
+											// print_r($result);
 		
 	}
 

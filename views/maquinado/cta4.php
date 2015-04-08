@@ -46,7 +46,7 @@ $model = new MaquinadoCTA4;
 
 <div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;">
 	
-	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:400px;"
+	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:550px;"
 
 			data-options="
 				url:'cta4data?fecha=<?=$semana?>',

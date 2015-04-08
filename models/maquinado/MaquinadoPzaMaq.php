@@ -51,7 +51,7 @@ Class MaquinadoPzaMaq extends Model {
 				identificacion as pieza,
 				CONCAT( identificacion,'-',descripcion ) as descripcion
 			from maq_piezas
-			where 	TP = 'BR'		
+			where 	TP = 'AC'		
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();

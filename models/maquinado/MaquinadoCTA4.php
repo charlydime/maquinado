@@ -36,8 +36,8 @@ Class MaquinadoCTA4 extends Model {
 				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
 				almcta.existencia as CTA,
 				almpta.existencia as PTA,
-				dux1.fechaemb as e0,
-				dux2.fechaemb as e1,
+				dux1.cantidad as e0,
+				dux2.cantidad as e1,
 				mp.Minutos1Maquinado as setup,
 				
 				lun.cantidad as lun_prg,
@@ -295,7 +295,10 @@ Class MaquinadoCTA4 extends Model {
 				}
 				
 				foreach($result as &$r){
-					
+					if ( $r["setup"] == 0)	$r["setup"] = '';
+					if ( $r["maq1"] == 0)	$r["maq1"] = '';
+					 $r["setup"] =  (int)$r["setup"]; 
+								
 					//sumas totales
 					$tp += $r["Cantidad"];
 					$tm += $r["Minutos"];
@@ -347,15 +350,17 @@ Class MaquinadoCTA4 extends Model {
 					$tsum += $r["sum"];
 					$tsum_min += $r["sum_min"];
 					
-					$r["p_t"] = number_format($r["p_t"],2);
+					$r["p_t"] = number_format($r["p_t"]);
 					
 					
 					// asunto de 0s para que no se deplieguen en grid
-					if ($r['CTA'] ==  0) $r['CTA'] = ''; 
-					if ($r['PLA'] ==  0) $r['PLA'] = ''; 
-					if ($r['PMA'] ==  0) $r['PMA'] = ''; 
-					if ($r['PTA'] ==  0) $r['PTA'] = ''; 
-					if ($r['sum'] ==  0) $r['sum'] = ''; 
+					if ($r['CTA'] ==  0) $r['CTA'] = ''; else $r['CTA'] = (int)$r['CTA']  ;
+					if ($r['PLA'] ==  0) $r['PLA'] = ''; else $r['PLA'] = (int)$r['PLA']  ;
+					if ($r['PMA'] ==  0) $r['PMA'] = ''; else $r['PMA'] = (int)$r['PMA']  ;
+					if ($r['PTA'] ==  0) $r['PTA'] = ''; else $r['PTA'] = (int)$r['PTA']  ;
+					if ($r['sum'] ==  0) $r['sum'] = ''; else $r['sum'] = (int)$r['sum']  ;
+					if ($r['e0'] ==  0) $r['e0'] = ''; else $r['e0'] = (int)$r['e0']  ;
+					if ($r['e1'] ==  0) $r['e1'] = ''; else $r['e1'] = (int)$r['e1']  ;
 					if ($r['rest'] ==  0) $r['rest'] = ''; 
 					if ($r['rest_min'] ==  0) $r['rest_min'] = ''; 
 					if ($r['sum_min'] ==  0) $r['sum_min'] = ''; 
@@ -371,7 +376,7 @@ Class MaquinadoCTA4 extends Model {
 						'Cantidad' => $gp,
 						'Minutos' => $gm,
 						'Maquina' => $m,
-						'Pieza' => "Totales - ".$r['Maquina'],
+						'Pieza' => "Totales - ".$m,
 						"lun_prg" => $glp ,
 						"lun_min" => $glm ,
 						"mar_prg" => $gmp ,
@@ -431,13 +436,15 @@ Class MaquinadoCTA4 extends Model {
 				
 					//conteo 
 					$rows++;
+					
+					
 				}
 					array_push ($congrupo , [
 						
 						'Cantidad' => $gp,
 						'Minutos' => $gm,
 						'Maquina' => $m,
-						'Pieza' => "Totales - ".$r['Maquina'],
+						'Pieza' => "Totales - ".$m,
 						"lun_prg" => $glp ,
 						"lun_min" => $glm ,
 						"mar_prg" => $gmp ,

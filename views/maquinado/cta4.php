@@ -104,46 +104,46 @@ $model = new MaquinadoCTA4;
 					<th data-options="field:'p_t',width:53">pz*dia</th>
 					<th data-options="field:'e0',width:50">Sem<?=$sem1?></th>
 					<th data-options="field:'e1',width:50">Sem<?=$sem2?></th>
-					<th data-options="field:'PLB',width:50">PLBs</th>
-					<th data-options="field:'CTB',width:50">CTBs</th>
-					<th data-options="field:'PMB',width:50">PMBs</th>
-					<th data-options="field:'PTB',width:50">PTB</th>
+					<th data-options="field:'PLA',width:50">PLAs</th>
+					<th data-options="field:'CTA',width:50">CTAs</th>
+					<th data-options="field:'PMA',width:50">PMAs</th>
+					<th data-options="field:'PTA',width:50">PTA</th>
 					<th data-options="field:'Cantidad',width:35">Prg</th>
 					<th data-options="field:'Minutos',width:35">Min</th>
 										
-					<th id = "lun_prg" data-options="field:'lun_prg',width:35,editor:'numberbox'">Prg</th>
+					<th id = "lun_prg" data-options="field:'lun_prg',width:35,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'lun_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'lun_set',width:40">setup</th>
+					<th data-options="field:'lun_set',width:25">SU</th>
 		
-					<th id = "mar_prg" data-options="field:'mar_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "mar_prg" data-options="field:'mar_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mar_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'mar_set',width:40">setup</th>
+					<th data-options="field:'mar_set',width:25">SU</th>
 
-					<th  id = "mie_prg" data-options="field:'mie_prg',width:40,editor:'numberbox'">Prg</th>
+					<th  id = "mie_prg" data-options="field:'mie_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mie_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'mie_set',width:40">setup</th>
+					<th data-options="field:'mie_set',width:25">SU</th>
 		
-					<th  id = "jue_prg" data-options="field:'jue_prg',width:40,editor:'numberbox'">Prg</th>
+					<th  id = "jue_prg" data-options="field:'jue_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'jue_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'jue_set',width:40">set</th>
+					<th data-options="field:'jue_set',width:25">SU</th>
 	
-					<th id = "vie_prg" data-options="field:'vie_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "vie_prg" data-options="field:'vie_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'vie_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'vie_set',width:40">setup</th>
+					<th data-options="field:'vie_set',width:25">SU</th>
 					
-					<th id = "sab_prg" data-options="field:'sab_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "sab_prg" data-options="field:'sab_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'sab_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'sab_set',width:40">setup</th>
+					<th data-options="field:'sab_set',width:25">SU</th>
 					
-					<th id = "dom_prg" data-options="field:'dom_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "dom_prg" data-options="field:'dom_prg',width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'dom_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'dom_set',width:40">setup</th>
+					<th data-options="field:'dom_set',width:25">SU</th>
 					
 					<th data-options="field:'sum',width:40">Sum</th>
 					<th data-options="field:'rest',width:40">Rest</th>
 					
-					<th data-options="field:'sum_min',width:40, styler:formateo_dia_celda">Sum</th>
-					<th data-options="field:'rest_min',width:40, styler:formateo_dia_celda">Rest</th>
+					<th data-options="field:'sum_min',width:40">Sum</th>
+					<th data-options="field:'rest_min',width:40">Rest</th>
 					
 					<th data-options="field:'setup',width:40,hidden:0">min</th>
 					<th id = "maq1" data-options="field:'maq1',width:40,editor:'numberbox'">Prg</th>
@@ -680,7 +680,7 @@ function formateo_dia(index,row){
 		
 		) return;
 			if (ordenGrupo ==  1 )
-				return 'background-color:grey;';
+				return 'color:grey;font-weight: bold;';
 			if (  minutos_m  == 0  )
 				 return ;
 			if ( minutos_o == minutos_m )
@@ -694,12 +694,53 @@ function formateo_dia(index,row){
 		
 		
 		function formateo_dia_celda(val,row,inx){
+			var v =  parseInt(val) ? parseInt(val) : 0;
+			var pt =  parseInt(row.p_t) ? parseInt(row.p_t) : 0;
+		 // turno de 9 acero t9  min por dia  t8= 480  t9 = 540
+			var t = 540;
+			 if ( (t  < v) && (pt >  0) ) {
+				
+				return 'color:red;font-weight: bold;';
+			 
+			 }
+			
 			
 			 if ( row.ordenGrupo != 1) 
-				return 'background-color:lightgrey;';
+				return 'color:grey;font-weight: bold;';
 			 else 
 				 return false;
 			
+
+		}
+		function formateo_prg(val,row,inx){
+			
+			var pt =  parseInt(row.p_t) ? parseInt(row.p_t) : 0;
+			var v =  parseInt(val) ? parseInt(val) : 0;
+		 
+			
+			 if ( (pt  < v) && (pt >  0) ) {
+				 // var out = "INFORME: ";
+				// out =  out.concat("inx: ",inx," pt : ", row.p_t," val : ",val," ",row.Pieza);
+				// console.log(out );
+				return 'color:red;font-weight: bold;';
+			 
+			 }
+
+		}
+		
+		function formateo_min(val,row,inx){
+			
+			
+			var v =  parseInt(val) ? parseInt(val) : 0;
+		 // turno de 9 acero t9  min por dia  t8= 480  t9 =
+			var t = 300;
+			 if ( (t  < v) && (pt >  0) ) {
+				 var out = "INFORME: ";
+				out =  out.concat("inx: ",inx," pt : ", row.p_t," val : ",val," ",row.Pieza);
+				console.log(out );
+				return 'color:red;font-weight: bold;';
+			 
+			 }
 
 		}
 		

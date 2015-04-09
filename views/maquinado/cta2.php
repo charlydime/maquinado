@@ -176,6 +176,7 @@ $this->registerJS("
 															remoteSort:false,
 															multiSort:true,
 															method:'get'
+															
 	
 														}
 													}
@@ -183,8 +184,8 @@ $this->registerJS("
 										">Maquina</th>
 										
 									
-										<th data-options="field:'opx',width:50">num</th>
-										<th data-options="field:'Minutos',width:50">min</th>
+										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes">num</th>
+										<th data-options="field:'Minutos',width:50, styler:formateo_celda_faltantes">min</th>
 										
 									   
 										<th data-options="field:'sem1',width:50">sem<?=$s1 ?></th>
@@ -693,6 +694,10 @@ data-options="
 			// var op =  parseInt(row.op) ? parseInt(row.op) : 0;
 			// if (op == 0 )
 			   // return 'font-weight:bold;background-color: Yellow ;';
+		   
+		 
+			if (row.maquina1 == 0 )
+			   return 'font-weight:bold;background-color: Yellow ;';
 			
 			
 			
@@ -761,9 +766,20 @@ data-options="
 		}
 		
 		function formateo_sem_celda(val,row,inx){
-			
 			 
-				return 'background-color:lightgrey;';
+				return 'color:grey;font-weight: bold;';
+
+		}
+		
+		function formateo_celda_faltantes(val,row,inx){
+			
+			if (inx > row.length) return 'background-color: blue';
+			
+		   if (row.opx == null )
+			   return 'font-weight:bold;background-color: Yellow ;';
+		   
+		   if (row.Minutos == null )
+			   return 'font-weight:bold;background-color: Yellow ;';
 			
 
 		}

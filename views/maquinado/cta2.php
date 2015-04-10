@@ -109,6 +109,9 @@ $this->registerJS("
 										showFooter: true,
 										rowStyler:formateo,
 										
+										view:groupview,
+										remoteSort:false,
+										
 										collapsible:true,
 
 										rownumbers:true,
@@ -160,11 +163,11 @@ $this->registerJS("
 										width:50,
 										align:'center',
 										formatter:cellStyler,
-										
+										sortable:true,
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
-										<th data-options="field:'maquina1',width:100,
+										<th data-options="field:'maquina1',width:100,sortable:true,
 													
 													styler:formatmaq,
 													editor:{
@@ -173,8 +176,7 @@ $this->registerJS("
 															valueField:'maquina',
 															textField:'maquina',
 															url:'cta2',
-															remoteSort:false,
-															multiSort:true,
+															
 															method:'get'
 															
 	
@@ -184,34 +186,34 @@ $this->registerJS("
 										">Maquina</th>
 										
 									
-										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes">num</th>
+										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes,sortable:true">num</th>
 										<th data-options="field:'Minutos',width:50, styler:formateo_celda_faltantes">min</th>
 										
 									   
-										<th data-options="field:'sem1',width:50">sem<?=$s1 ?></th>
-										<th data-options="field:'sem2',width:50">sem<?=$s2 ?></th>
-										<th data-options="field:'PLA',width:50">PLAs</th>
-										<th data-options="field:'CTA',width:50">CTAs</th>
-										<th data-options="field:'PMA',width:50">PMAs</th>
-										<th data-options="field:'PTA',width:50">PTA</th>
+										<th data-options="field:'sem1',width:50,sortable:true">sem<?=$s1 ?></th>
+										<th data-options="field:'sem2',width:50,sortable:true">sem<?=$s2 ?></th>
+										<th data-options="field:'PLA',width:50,sortable:true">PLAs</th>
+										<th data-options="field:'CTA',width:50,sortable:true">CTAs</th>
+										<th data-options="field:'PMA',width:50,sortable:true">PMAs</th>
+										<th data-options="field:'PTA',width:50,sortable:true">PTA</th>
 										
 										
-										<th id= "thsem1" data-options="field:'s1',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem2" data-options="field:'s2',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem3" data-options="field:'s3',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem4" data-options="field:'s4',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda">min</th>
+										<th id= "thsem1" data-options="field:'s1',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem2" data-options="field:'s2',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem3" data-options="field:'s3',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem4" data-options="field:'s4',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 									
-										<th data-options="field:'tot_pza',width:50">pza</th>
-										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda">min</th>
+										<th data-options="field:'tot_pza',width:50,sortable:true">pza</th>
+										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 										
 										
 										
-										<th data-options="field:'producto',width:200,sortable:true,hidden:1">Parte</th>
-										<th data-options="field:'op',width:50,hidden:1">op</th>
+										<th data-options="field:'producto',width:200,sortable:true,hidden:1,sortable:true">Parte</th>
+										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
 										
 										<!--
 										<th data-options="field:'s2',width:50,editor:'numberbox'">sem2</th>

@@ -144,7 +144,7 @@ $this->registerJS("
 								
 								<thead>
 									<tr>
-										<th colspan ="3"></th>
+										<th colspan ="4"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
 										<th colspan ="4">Almacenes</th>
@@ -166,6 +166,7 @@ $this->registerJS("
 										sortable:true,
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
+										<th data-options="field:'producto',width:100,sortable:true,hidden:0">Parte</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,sortable:true,
 													
@@ -198,21 +199,21 @@ $this->registerJS("
 										<th data-options="field:'PTA',width:50,sortable:true">PTA</th>
 										
 										
-										<th id= "thsem1" data-options="field:'s1',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th id= "thsem1" data-options="field:'s1',width:60, styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-										<th id= "thsem2" data-options="field:'s2',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th id= "thsem2" data-options="field:'s2',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-										<th id= "thsem3" data-options="field:'s3',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th id= "thsem3" data-options="field:'s3',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-										<th id= "thsem4" data-options="field:'s4',width:60,editor:'numberbox',sortable:true">pza</th>
+										<th id= "thsem4" data-options="field:'s4',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 									
-										<th data-options="field:'tot_pza',width:50,sortable:true">pza</th>
+										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
 										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 										
 										
 										
-										<th data-options="field:'producto',width:200,sortable:true,hidden:1,sortable:true">Parte</th>
+										
 										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
 										
 										<!--
@@ -699,7 +700,7 @@ data-options="
 		   
 		 
 			if (row.maquina1 == 0 )
-			   return 'font-weight:bold;background-color: Yellow ;';
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 			
 			
@@ -773,15 +774,21 @@ data-options="
 
 		}
 		
+		function formateo_sem_celda_pza(val,row,inx){
+			 
+				return 'font-weight: bold;';
+
+		}
+		
 		function formateo_celda_faltantes(val,row,inx){
 			
-			if (inx > row.length) return 'background-color: blue';
+			
 			
 		   if (row.opx == null )
-			   return 'font-weight:bold;background-color: Yellow ;';
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
 		   
 		   if (row.Minutos == null )
-			   return 'font-weight:bold;background-color: Yellow ;';
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 
 		}

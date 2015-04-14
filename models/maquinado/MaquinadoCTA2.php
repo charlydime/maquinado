@@ -315,10 +315,10 @@ Class MaquinadoCTA2 extends Model {
 				 $rows++; 
 				}
 				
-				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1/60) ;;
-				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2/60) ;;
-				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3/60) ;;
-				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4/60) ;;
+				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1) ;;
+				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
+				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
+				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;;
 				$totales[0]['CTA'] = $cta;
 			
 				$totales[0]['maquina1'] = 'Minutos';

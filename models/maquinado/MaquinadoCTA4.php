@@ -465,13 +465,13 @@ Class MaquinadoCTA4 extends Model {
 				
 				$totales[0]['Minutos'] = $tm;
 				
-				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm/60) ;
-				$totales[0]['mar_min'] = $tmm == 0 ? '' : number_format($tmm/60) ;
-				$totales[0]['mie_min'] = $tim == 0 ? '' : number_format($tim/60) ;
-				$totales[0]['jue_min'] = $tjm == 0 ? '' : number_format($tjm/60) ;
-				$totales[0]['vie_min'] = $tvm == 0 ? '' : number_format($tvm/60) ;
-				$totales[0]['sab_min'] = $tsm == 0 ? '' : number_format($tsm/60) ;
-				$totales[0]['dom_min'] = $tdm == 0 ? '' : number_format($tdm/60) ;
+				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm) ;
+				$totales[0]['mar_min'] = $tmm == 0 ? '' : number_format($tmm) ;
+				$totales[0]['mie_min'] = $tim == 0 ? '' : number_format($tim) ;
+				$totales[0]['jue_min'] = $tjm == 0 ? '' : number_format($tjm) ;
+				$totales[0]['vie_min'] = $tvm == 0 ? '' : number_format($tvm) ;
+				$totales[0]['sab_min'] = $tsm == 0 ? '' : number_format($tsm) ;
+				$totales[0]['dom_min'] = $tdm == 0 ? '' : number_format($tdm) ;
 				
 				$totales[0]['sum_min'] = $tsum_min ;
 				

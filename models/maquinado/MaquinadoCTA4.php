@@ -465,27 +465,27 @@ Class MaquinadoCTA4 extends Model {
 				
 				$totales[0]['Minutos'] = $tm;
 				
-				$totales[0]['lun_min'] = $tlm;
-				$totales[0]['mar_min'] = $tmm;
-				$totales[0]['mie_min'] = $tim;
-				$totales[0]['jue_min'] = $tjm;
-				$totales[0]['vie_min'] = $tvm;
-				$totales[0]['sab_min'] = $tsm;
-				$totales[0]['dom_min'] = $tdm;
+				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm/60) ;
+				$totales[0]['mar_min'] = $tmm == 0 ? '' : number_format($tmm/60) ;
+				$totales[0]['mie_min'] = $tim == 0 ? '' : number_format($tim/60) ;
+				$totales[0]['jue_min'] = $tjm == 0 ? '' : number_format($tjm/60) ;
+				$totales[0]['vie_min'] = $tvm == 0 ? '' : number_format($tvm/60) ;
+				$totales[0]['sab_min'] = $tsm == 0 ? '' : number_format($tsm/60) ;
+				$totales[0]['dom_min'] = $tdm == 0 ? '' : number_format($tdm/60) ;
 				
 				$totales[0]['sum_min'] = $tsum_min ;
 				
 				$totales[0]['Pieza'] = 'Totales Minutos:';
 				
-				$totales[1]['lun_min'] = number_format($tlm / 60);
-				$totales[1]['mar_min'] = number_format($tmm / 60);
-				$totales[1]['mie_min'] = number_format($tim /60);
-				$totales[1]['jue_min'] = number_format($tjm / 60);
-				$totales[1]['vie_min'] =number_format($tvm / 60);
-				$totales[1]['sab_min'] = number_format($tsm / 60) ;
-				$totales[1]['dom_min'] = number_format($tdm / 60);
+				$totales[1]['lun_min'] =  $tlm == 0 ? '' :number_format($tlm / 60);
+				$totales[1]['mar_min'] =  $tmm == 0 ? '' :number_format($tmm / 60);
+				$totales[1]['mie_min'] =  $tim == 0 ? '' :number_format($tim /60);
+				$totales[1]['jue_min'] =  $tjm == 0 ? '' :number_format($tjm / 60);
+				$totales[1]['vie_min'] = $tvm == 0 ? '' :number_format($tvm / 60);
+				$totales[1]['sab_min'] = $tsm == 0 ? '' : number_format($tsm / 60) ;
+				$totales[1]['dom_min'] =  $tdm == 0 ? '' :number_format($tdm / 60);
 				
-				$totales[1]['sum_min'] = number_format($tsum_min / 60);
+				$totales[1]['sum_min'] =  $tsum_min == 0 ? '' :number_format($tsum_min / 60);
 				
 				$totales[1]['Pieza'] = 'Totales horas:';
 				
@@ -509,33 +509,33 @@ Class MaquinadoCTA4 extends Model {
 				$totales[2]['Pieza'] = 'Totales turno T8:'; */
 				
 				
-				$totales[3]['lun_min'] = number_format(($tlm / 60)/9);
-				$totales[3]['mar_min'] = number_format(($tmm / 60)/9);
-				$totales[3]['mie_min'] = number_format(($tim /60)/9);
-				$totales[3]['jue_min'] = number_format(($tjm / 60)/9);
-				$totales[3]['vie_min'] = number_format(($tvm / 60)/9);
-				$totales[3]['sab_min'] = number_format(($tsm / 60)/9) ;
-				$totales[3]['dom_min'] = number_format(($tdm / 60)/9);
+				$totales[2]['lun_min'] = $tlm == 0 ? '' :number_format(($tlm / 60)/9);
+				$totales[2]['mar_min'] = $tmm == 0 ? '' :number_format(($tmm / 60)/9);
+				$totales[2]['mie_min'] = $tim == 0 ? '' :number_format(($tim /60)/9);
+				$totales[2]['jue_min'] = $tjm == 0 ? '' :number_format(($tjm / 60)/9);
+				$totales[2]['vie_min'] = $tvm == 0 ? '' :number_format(($tvm / 60)/9);
+				$totales[2]['sab_min'] = $tsm == 0 ? '' :number_format(($tsm / 60)/9) ;
+				$totales[2]['dom_min'] = $tdm == 0 ? '' :number_format(($tdm / 60)/9);
 				
-				$totales[3]['sum_min'] = ($tsum_min / 60)/9 ;
+				$totales[2]['sum_min'] = $tsum_min == 0 ? '' :number_format($tsum_min / 60)/9 ;
 				
-				$totales[3]['Pieza'] = 'Totales turno T9:';
+				$totales[2]['Pieza'] = 'Totales turno T9:';
 				
 				
-				$totales[4]['Cantidad'] = $tp;
-				$totales[4]['lun_prg'] = $tlp;
-				$totales[4]['mar_prg'] = $tmp;
-				$totales[4]['mie_prg'] = $tip;
-				$totales[4]['jue_prg'] = $tjp;
-				$totales[4]['vie_prg'] = $tvp;
-				$totales[4]['sab_prg'] = $tsp;
-				$totales[4]['dom_prg'] = $tdp;
+				$totales[3]['Cantidad'] =  $tp == 0 ? '' :$tp;
+				$totales[3]['lun_prg'] =  $tlp == 0 ? '' :$tlp;
+				$totales[3]['mar_prg'] =  $tmp == 0 ? '' :$tmp;
+				$totales[3]['mie_prg'] =  $tip == 0 ? '' :$tip;
+				$totales[3]['jue_prg'] =  $tjp == 0 ? '' :$tjp;
+				$totales[3]['vie_prg'] =  $tvp == 0 ? '' :$tvp;
+				$totales[3]['sab_prg'] =  $tsp == 0 ? '' :$tsp;
+				$totales[3]['dom_prg'] =  $tdp == 0 ? '' :$tdp;
 				
 				// $totales[0]['dom_min'] = $tdm;
 				
-				$totales[4]['sum'] = $tsum ;
+				$totales[3]['sum'] = $tsum ;
 				
-				$totales[4]['Pieza'] = 'Totales Piezas:';
+				$totales[3]['Pieza'] = 'Totales Piezas:';
 			}
 			
 		// $datos['rows'] = $result;

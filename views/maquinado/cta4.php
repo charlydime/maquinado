@@ -755,7 +755,7 @@ function formateo_dia(index,row){
 				return 'color:red;font-weight: bold;';
 			 
 			 }
-				return 'font-weight: bold;'
+				return 'color:darkgrey;'
 		}
 		
 		function formateo_min(val,row,inx){

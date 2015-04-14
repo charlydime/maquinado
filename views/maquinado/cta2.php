@@ -656,6 +656,10 @@ data-options="
 		function formateo(index,row){
 			
 			
+			if (row.Hold == 1){
+				
+					return 'background-color:lightgrey;';
+			}		
 			if (row.opx == 10){		
 					cta =  parseInt(row.CTA) ? parseInt(row.CTA) : 0;
 					pla =  parseInt(row.PLA) ? parseInt(row.PLA) : 0;
@@ -663,7 +667,7 @@ data-options="
 					s2 =  parseInt(row.s2) ? parseInt(row.s2) : 0;
 					s3 =  parseInt(row.s3) ? parseInt(row.s3) : 0;
 					s4 =  parseInt(row.s4) ? parseInt(row.s4) : 0;
-					 sum = s1 + s2 + s3 +s4;		
+					sum = s1 + s2 + s3 +s4;		
 			}
 			
 				if (  sum  == 0  )

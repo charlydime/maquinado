@@ -8,6 +8,7 @@ use frontend\models\maquinadobr\maquinadoMaqOp;
 use frontend\models\maquinadobr\maquinadocta;
 use frontend\models\maquinadobr\maquinadocta2;
 use frontend\models\maquinadobr\maquinadocta4;
+use frontend\models\maquinadobr\maquinadoPzaMaq;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -420,5 +421,86 @@ class MaquinadobrController extends Controller
 		
 		
 	}
+	
+	//-------------------MaquinaPza----------------------
+	
+	public function actionLstpzamaq(){
+		
+			$model = new MaquinadoPzaMaq;
+			
+			$r = $model->lstpzamaq();
+			
+			return json_encode($r,0);
+
+	}
+	public function actionPzamaq(){
+		
+	 return $this->render('pzamaq', []);
+	}
+	
+	public function actionPmpza(){
+		
+		$model = new MaquinadoPzaMaq;
+			
+		$r = $model->pmpza();
+			
+		return json_encode($r,0);
+
+		
+	}
+	
+	public function actionPmmaq(){
+		
+		$model = new MaquinadoPzaMaq;
+			
+		$r = $model->pmmaq();
+		
+		return json_encode($r,0);
+
+		
+	}
+	
+	public function actionPmsig(){
+		
+		$model = new MaquinadoPzaMaq;
+			
+		$r = $model->pmsig();
+		
+		return json_encode($r,0);
+
+	}
+	
+	public function actionPmop(){
+		
+		$model = new MaquinadoPzaMaq;
+			
+		$r = $model->pmop();
+		
+		return json_encode($r,0);
+
+	}
+	
+	public function actionPmsave(){
+		
+		$model = new MaquinadoPzaMaq;
+                
+		$data = json_decode($_POST['Data']);
+						
+		$model->pmsave($data);
+		
+		
+	}
+	
+	public function actionPmdel(){
+		
+		$model = new MaquinadoPzaMaq;
+                
+		$data = json_decode($_POST['Data']);
+						
+		$model->pmdel($data);
+		
+		
+	}
+	
 	
 }

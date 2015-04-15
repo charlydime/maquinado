@@ -21,7 +21,7 @@ use common\models\Grid;
 			onClickRow:function(inx,row){ controlpm.onClickRow2(inx,row); },
 			
 			view:groupview,
-				groupField:'pieza',
+				groupField:'casting',
 				groupFormatter:function(value,rows){			
 								  return value ;
 								 
@@ -57,6 +57,7 @@ use common\models\Grid;
 		
 			
 			<th data-options="field:'id',width:60,editor:'numberbox'">ID</th>
+			<th data-options="field:'casting',width:150">casting</th>
 			
 			<th data-options="field:'pieza',width:200,
 										
@@ -102,6 +103,7 @@ use common\models\Grid;
 						}
 				}
 			">OP</th>
+			
 			
 			
 			

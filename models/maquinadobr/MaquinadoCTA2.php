@@ -20,10 +20,10 @@ Class MaquinadoCTA2 extends Model {
  
   select 
 				prod.producto,
-				
-				cta.maquina as maquina1,
+				prod_dux.CAMPOUSUARIO5 as casting,
+				ctb.maquina as maquina1,
  				
-				pdp_maquina_pieza.op as opx,
+				pdp_maquina_piezabr.op as opx,
 				
 				can_s1.cantidad as s1,
 				can_s2.cantidad as s2,
@@ -57,7 +57,7 @@ Class MaquinadoCTA2 extends Model {
 				(				select  distinct almprod.PRODUCTO 
 								from almprod 
 								 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
-								where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2') and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'ACE'
+								where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2') and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
 								
 								Union 
 								
@@ -69,7 +69,7 @@ Class MaquinadoCTA2 extends Model {
 				
 				
 				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
-				
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = maq_piezas.IDENTIFICACION
 				 Left JOIN (
 						SELECT pieza,op
 						FROM 	pdp_maquina_piezabr
@@ -173,7 +173,7 @@ Class MaquinadoCTA2 extends Model {
 				
 				LEFT JOIN pdp_ctb as ctb on ctb.Pieza = prod.producto and  
 				((ctb.semana = $se1)) and 
-				ctb.op = pdp_maquina_pieza.op
+				ctb.op = pdp_maquina_piezabr.op
 
 
 				LEFT JOIN(
@@ -223,8 +223,8 @@ Class MaquinadoCTA2 extends Model {
 
 				
 				
-				where prod.PRODUCTO  in (select pieza from pdp_maquinado_blbr)
-				
+				-- where prod.PRODUCTO  in (select pieza from pdp_maquinado_blbr)
+				where prod_dux.CAMPOUSUARIO5 is not null 
 				ORDER BY 
 
 				Hold,
@@ -249,7 +249,7 @@ Class MaquinadoCTA2 extends Model {
 			 $ts2=0;
 			 $ts3=0;
 			 $ts4=0;
-			 $cta=0;
+			 $ctb=0;
 			 $rows = 0;
 				foreach($result as &$r){
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
@@ -288,7 +288,7 @@ Class MaquinadoCTA2 extends Model {
 						$ts2 +=  $r["s2"] * $min;
 						$ts3 +=  $r["s3"] * $min;
 						$ts4 +=  $r["s4"] * $min;
-						$cta +=  $r["CTB"] * $min;
+						$ctb +=  $r["CTB"] * $min;
 					}
 					
 				$r['CTB'] = (real)$r['CTB'] ;
@@ -319,7 +319,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[0]['s2_min'] = $ts2;
 				$totales[0]['s3_min'] = $ts3;
 				$totales[0]['s4_min'] = $ts4;
-				$totales[0]['CTB'] = $cta;
+				$totales[0]['CTB'] = $ctb;
 			
 				$totales[0]['maquina1'] = 'Minutos';
 				
@@ -327,7 +327,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[1]['s2_min'] = $ts2 == 0 ? $ts2 : number_format($ts2/60) ;
 				$totales[1]['s3_min'] = $ts3 == 0 ? $ts3 : number_format($ts3/60) ;
 				$totales[1]['s4_min'] = $ts4 == 0 ? $ts4 : number_format($ts4/60) ;
-				$totales[1]['CTB'] = $cta == 0 ? $cta : number_format($cta/60) ;
+				$totales[1]['CTB'] = $ctb == 0 ? $ctb : number_format($ctb/60) ;
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
@@ -343,7 +343,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/9,2) ;
 				$totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/9,2) ;
 				$totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/9,2) ;
-				$totales[2]['CTB'] = $ctb== 0 ? $ctb : number_format(($cta/60)/9,2) ;
+				$totales[2]['CTB'] = $ctb== 0 ? $ctb : number_format(($ctb/60)/9,2) ;
 			
 				$totales[2]['maquina1'] = 'Turno 9H';
 	
@@ -453,10 +453,10 @@ public function GetInfo_programacion($semana){
 		
 	
 		select 
-			cta.maquina,
-			cta.pieza, 
-			cta.cantidad, 
-			cta.prioridad,
+			ctb.maquina,
+			ctb.pieza, 
+			ctb.cantidad, 
+			ctb.prioridad,
 			pdp.hechas as buenas ,
 			pdp.rechazo as malas,
 			cta.minutos,

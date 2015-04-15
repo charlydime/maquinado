@@ -13,6 +13,7 @@ Class MaquinadoPzaMaq extends Model {
 		 $sql="
 			select 
 			id,
+				prod_dux.CAMPOUSUARIO5 as casting,
 				pieza, 
 				maquina, 
 				minutos,
@@ -21,6 +22,8 @@ Class MaquinadoPzaMaq extends Model {
 				celda, 
 				siguiente
 			from pdp_maquina_piezabr
+			LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = pdp_maquina_piezabr.pieza
+			order by CAMPOUSUARIO5,pieza,maquina,OP
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();
@@ -52,6 +55,7 @@ Class MaquinadoPzaMaq extends Model {
 				CONCAT( identificacion,'-',descripcion ) as descripcion
 			from maq_piezas
 			where 	TP = 'BR'		
+			order by identificacion
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();

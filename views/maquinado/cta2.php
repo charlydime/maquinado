@@ -100,7 +100,7 @@ $this->registerJS("
 </style>
 <div class="easyui-panel" title="Maquina-pieza" style="width:100%;height:auto;padding:10px;">
 
-							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:550px;"
+							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:560px;"
 
 									data-options="
 										url:'cta2d?fecha=<?=$semana?>',
@@ -774,7 +774,7 @@ data-options="
 		
 		function formateo_sem_celda(val,row,inx){
 			 
-				return 'color:grey;font-weight: bold;';
+				return 'color:#474747;font-weight: bold;';
 
 		}
 		
@@ -787,7 +787,7 @@ data-options="
 		function formateo_celda_faltantes(val,row,inx){
 			
 			
-			
+			// amarillo no tan grosero
 		   if (row.opx == null )
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 		   

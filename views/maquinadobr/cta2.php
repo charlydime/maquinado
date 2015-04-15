@@ -114,7 +114,7 @@ $this->registerJS("
 										rownumbers:true,
 										
 										view:groupview,
-										groupField:'producto',
+										groupField:'casting',
 										groupFormatter:function(value,rows){
 											
 										   return value ;
@@ -141,7 +141,7 @@ $this->registerJS("
 								
 								<thead>
 									<tr>
-										<th colspan ="3"></th>
+										<th colspan ="5"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
 										<th colspan ="4">Almacenes</th>
@@ -163,6 +163,8 @@ $this->registerJS("
 										
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
+										<th data-options="field:'casting',width:200,sortable:true">Casting</th>
+										<th data-options="field:'producto',width:200,sortable:true">Parte</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,
 													
@@ -209,7 +211,6 @@ $this->registerJS("
 										
 										
 										
-										<th data-options="field:'producto',width:200,sortable:true,hidden:1">Parte</th>
 										<th data-options="field:'op',width:50,hidden:1">op</th>
 										
 										<!--

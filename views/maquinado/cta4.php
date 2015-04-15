@@ -55,7 +55,7 @@ data-options="
                 }]"
 >
 	
-	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:550px;"
+	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:560px;"
 
 			data-options="
 				url:'cta4data?fecha=<?=$semana?>',
@@ -755,7 +755,7 @@ function formateo_dia(index,row){
 				return 'color:red;font-weight: bold;';
 			 
 			 }
-				return 'color:darkgrey;'
+				return 'color:#474747;'
 		}
 		
 		function formateo_min(val,row,inx){

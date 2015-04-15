@@ -106,7 +106,7 @@ use common\models\Grid;
 			
 			<th data-options="field:'min',width:60">Min</th>
 			<th data-options="field:'min_hrs',width:60">Hrs</th>
-			<th data-options="field:'min_t8',width:60">T8</th>
+			<th data-options="field:'min_t9',width:60">T9</th>
 			
 			
             

@@ -30,11 +30,11 @@ Class MaquinadoCTA4 extends Model {
 				pdp_ctb.Maquina,
 				pdp_ctb.op,
 				pdp_ctb.Minutos as minmaq,
-				round(480/pdp_cta.Minutos,0) as p_t,
+				round(480/pdp_ctb.Minutos,0) as p_t,
 				pdp_ctb.Minutos * pdp_ctb.Cantidad as Minutos,
-				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLA,
-				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMA,
-				isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) as CTA,
+				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLB,
+				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMB,
+				isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) as CTB,
 				almctb.existencia as CTB,
 				almptb.existencia as PTB,
 				dux1.cantidad as e0,
@@ -101,7 +101,7 @@ Class MaquinadoCTA4 extends Model {
 				
 				as sum_min,
 				
-				pdp_ctb.Minutos  * pdp_cta.Cantidad -
+				pdp_ctb.Minutos  * pdp_ctb.Cantidad -
 				(
 				isnull(lun.min,0)+
 				isnull(mar.min,0)+
@@ -187,7 +187,7 @@ Class MaquinadoCTA4 extends Model {
 					WHERE 
 					ALMPROD.ALMACEN =   'PLB'
 					GROUP BY almprod.producto
-				) as almpla on pdp_ctb.Pieza = almplb.producto
+				) as almplB on pdp_ctb.Pieza = almplb.producto
 
 				LEFT JOIN(
 					SELECT   
@@ -196,7 +196,7 @@ Class MaquinadoCTA4 extends Model {
 					WHERE 
 					ALMPROD.ALMACEN =   'PLB2'
 					GROUP BY almprod.producto
-				) as almpla2 on pdp_ctb.Pieza = almplb2.producto
+				) as almplB2 on pdp_ctb.Pieza = almplb2.producto
 	
 				LEFT JOIN(
 					SELECT   
@@ -205,7 +205,7 @@ Class MaquinadoCTA4 extends Model {
 					WHERE 
 					ALMPROD.ALMACEN =   'PMB'
 					GROUP BY almprod.producto
-				) as almpma on pdp_ctb.Pieza = almpmb.producto
+				) as almpmb on pdp_ctb.Pieza = almpmb.producto
 
 				LEFT JOIN(
 					SELECT   
@@ -217,43 +217,45 @@ Class MaquinadoCTA4 extends Model {
 				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as lun on pdp_ctb.Pieza = lun.pieza and pdp_ctb.op = lun.op and lun.dia = '$lun'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as mar on pdp_ctb.Pieza = mar.pieza and pdp_ctb.op = mar.op and mar.dia = '$mar'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as mie on pdp_ctb.Pieza = mie.pieza and pdp_ctb.op = mie.op and mie.dia = '$mie'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as jue on pdp_ctb.Pieza = jue.pieza and pdp_ctb.op = jue.op and jue.dia = '$jue'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as vie on pdp_ctb.Pieza = vie.pieza and pdp_ctb.op = vie.op and vie.dia = '$vie'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as sab on pdp_ctb.Pieza = sab.pieza and pdp_ctb.op = sab.op and sab.dia = '$sab'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
 				)as dom on pdp_ctb.Pieza = dom.pieza and pdp_ctb.op = dom.op and dom.dia = '$dom'
 				
 				LEFT JOIN 
-				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_cta.Maquina and  mp.OP = pdp_cta.OP
+				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_ctb.Maquina and  mp.OP = pdp_ctb.OP
 				
 				where semana = $se1
 				
 				order by Maquina
 				
 
-			")->queryAll();
-			
+			"
+			)->queryAll();
+			// )->getRawSql();
+			// echo $result;exit;
 			if(count($result)!=0){
 				$tsum= 0;
 				$tsum_min = 0;
@@ -291,6 +293,7 @@ Class MaquinadoCTA4 extends Model {
 				$gsm = 0;
 				$gdp = 0;
 				$gdm = 0;
+				
 				
 				$congrupo = [];
 				foreach($result as &$rini){
@@ -373,25 +376,6 @@ Class MaquinadoCTA4 extends Model {
 					//grupal
 					
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 									if(  $r["Maquina"] != $m  ){
 						
 						
@@ -402,20 +386,20 @@ Class MaquinadoCTA4 extends Model {
 						'Minutos' => $gm,
 						'Maquina' => $m,
 						'Pieza' => "Totales - ".$m,
-						"lun_prg" => $glp ,
-						"lun_min" => $glm ,
-						"mar_prg" => $gmp ,
-						"mar_min" => $gmm ,
-						"mie_prg" => $gip ,
-						"mie_min" => $gim ,
-						"jue_prg" => $gjp ,
-						"jue_min" => $gjm ,
-						"vie_prg" => $gvp ,
-						"vie_min" => $gvm  ,
-						"sab_prg" => $gsp ,
-						"sab_min" => $gsm ,
-						"dom_prg" => $gdp ,
-						"dom_min" => $gdm,
+						"lun_prg" => $glp == 0 ? '' : $glp ,
+						"lun_min" => $glm == 0 ? '' : $glm ,
+						"mar_prg" => $gmp == 0 ? '' : $gmp ,
+						"mar_min" => $gmm == 0 ? '' : $gmm ,
+						"mie_prg" => $gip == 0 ? '' : $gip ,
+						"mie_min" => $gim == 0 ? '' : $gim ,
+						"jue_prg" => $gjp == 0 ? '' : $gjp ,
+						"jue_min" => $gjm == 0 ? '' : $gjm ,
+						"vie_prg" => $gvp == 0 ? '' : $gvp ,
+						"vie_min" => $gvm == 0 ? '' : $gvm  ,
+						"sab_prg" => $gsp == 0 ? '' : $gsp ,
+						"sab_min" => $gsm == 0 ? '' : $gsm ,
+						"dom_prg" => $gdp == 0 ? '' : $gdp ,
+						"dom_min" => $gdm == 0 ? '' : $gdm,
 						"ordenGrupo" => 1
 						]);
 						$m = $r['Maquina'] ;
@@ -470,20 +454,20 @@ Class MaquinadoCTA4 extends Model {
 						'Minutos' => $gm,
 						'Maquina' => $m,
 						'Pieza' => "Totales - ".$m,
-						"lun_prg" => $glp ,
-						"lun_min" => $glm ,
-						"mar_prg" => $gmp ,
-						"mar_min" => $gmm ,
-						"mie_prg" => $gip ,
-						"mie_min" => $gim ,
-						"jue_prg" => $gjp ,
-						"jue_min" => $gjm ,
-						"vie_prg" => $gvp ,
-						"vie_min" => $gvm  ,
-						"sab_prg" => $gsp ,
-						"sab_min" => $gsm ,
-						"dom_prg" => $gdp ,
-						"dom_min" => $gdm,
+						"lun_prg" => $glp == 0 ? '' : $glp ,
+						"lun_min" => $glm == 0 ? '' : $glm ,
+						"mar_prg" => $gmp == 0 ? '' : $gmp ,
+						"mar_min" => $gmm == 0 ? '' : $gmm ,
+						"mie_prg" => $gip == 0 ? '' : $gip ,
+						"mie_min" => $gim == 0 ? '' : $gim ,
+						"jue_prg" => $gjp == 0 ? '' : $gjp ,
+						"jue_min" => $gjm == 0 ? '' : $gjm ,
+						"vie_prg" => $gvp == 0 ? '' : $gvp ,
+						"vie_min" => $gvm == 0 ? '' : $gvm  ,
+						"sab_prg" => $gsp == 0 ? '' : $gsp ,
+						"sab_min" => $gsm == 0 ? '' : $gsm ,
+						"dom_prg" => $gdp == 0 ? '' : $gdp ,
+						"dom_min" => $gdm == 0 ? '' : $gdm,
 						"ordenGrupo" => 1
 						]);
 				
@@ -491,40 +475,40 @@ Class MaquinadoCTA4 extends Model {
 				$totales[0]['Minutos'] = $tm;
 				
 
-				$totales[0]['lun_min'] = $tlm;
+				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm) ;
 
-				$totales[0]['mar_min'] = $tmm;
+				$totales[0]['mar_min'] = $tmm == 0 ? '' : number_format($tmm) ;
 
-				$totales[0]['mie_min'] = $tim;
+				$totales[0]['mie_min'] = $tim == 0 ? '' : number_format($tim) ;
 
-				$totales[0]['jue_min'] = $tjm;
+				$totales[0]['jue_min'] = $tjm == 0 ? '' : number_format($tjm) ;
 
-				$totales[0]['vie_min'] = $tvm;
+				$totales[0]['vie_min'] = $tvm == 0 ? '' : number_format($tvm) ;
 
-				$totales[0]['sab_min'] = $tsm;
+				$totales[0]['sab_min'] = $tsm == 0 ? '' : number_format($tsm) ;
 
-				$totales[0]['dom_min'] = $tdm;
+				$totales[0]['dom_min'] = $tdm == 0 ? '' : number_format($tdm) ;
 				
 				$totales[0]['sum_min'] = $tsum_min ;
 				
 				$totales[0]['Pieza'] = 'Totales Minutos:';
 				
 
-				$totales[1]['lun_min'] = number_format($tlm / 60);
+				$totales[1]['lun_min'] =  $tlm == 0 ? '' :number_format($tlm / 60);
 
-				$totales[1]['mar_min'] = number_format($tmm / 60);
+				$totales[1]['mar_min'] =  $tmm == 0 ? '' :number_format($tmm / 60);
 
-				$totales[1]['mie_min'] = number_format($tim /60);
+				$totales[1]['mie_min'] =  $tim == 0 ? '' :number_format($tim /60);
 
-				$totales[1]['jue_min'] = number_format($tjm / 60);
+				$totales[1]['jue_min'] =  $tjm == 0 ? '' :number_format($tjm / 60);
 
-				$totales[1]['vie_min'] =number_format($tvm / 60);
+				$totales[1]['vie_min'] = $tvm == 0 ? '' :number_format($tvm / 60);
 
-				$totales[1]['sab_min'] = number_format($tsm / 60) ;
+				$totales[1]['sab_min'] = $tsm == 0 ? '' : number_format($tsm / 60) ;
 
-				$totales[1]['dom_min'] = number_format($tdm / 60);
+				$totales[1]['dom_min'] =  $tdm == 0 ? '' :number_format($tdm / 60);
 				
-				$totales[1]['sum_min'] = number_format($tsum_min / 60);
+				$totales[1]['sum_min'] =  $tsum_min == 0 ? '' :number_format($tsum_min / 60);
 				
 				$totales[1]['Pieza'] = 'Totales horas:';
 				
@@ -549,45 +533,45 @@ Class MaquinadoCTA4 extends Model {
 				
 				
 
-				$totales[3]['lun_min'] = number_format(($tlm / 60)/9);
+				$totales[2]['lun_min'] = $tlm == 0 ? '' :number_format(($tlm / 60)/9);
 
-				$totales[3]['mar_min'] = number_format(($tmm / 60)/9);
+				$totales[2]['mar_min'] = $tmm == 0 ? '' :number_format(($tmm / 60)/9);
 
-				$totales[3]['mie_min'] = number_format(($tim /60)/9);
+				$totales[2]['mie_min'] = $tim == 0 ? '' :number_format(($tim /60)/9);
 
-				$totales[3]['jue_min'] = number_format(($tjm / 60)/9);
+				$totales[2]['jue_min'] = $tjm == 0 ? '' :number_format(($tjm / 60)/9);
 
-				$totales[3]['vie_min'] = number_format(($tvm / 60)/9);
+				$totales[2]['vie_min'] = $tvm == 0 ? '' :number_format(($tvm / 60)/9);
 
-				$totales[3]['sab_min'] = number_format(($tsm / 60)/9) ;
+				$totales[2]['sab_min'] = $tsm == 0 ? '' :number_format(($tsm / 60)/9) ;
 
-				$totales[3]['dom_min'] = number_format(($tdm / 60)/9);
+				$totales[2]['dom_min'] = $tdm == 0 ? '' :number_format(($tdm / 60)/9);
 				
-				$totales[3]['sum_min'] = ($tsum_min / 60)/9 ;
+				$totales[2]['sum_min'] = $tsum_min == 0 ? '' :number_format($tsum_min / 60)/9 ;
 				
-				$totales[3]['Pieza'] = 'Totales turno T9:';
+				$totales[2]['Pieza'] = 'Totales turno T9:';
 				
 				
-				$totales[4]['Cantidad'] = $tp;
-				$totales[4]['lun_prg'] = $tlp;
+				$totales[3]['Cantidad'] =  $tp == 0 ? '' :$tp;
+				$totales[3]['lun_prg'] =  $tlp == 0 ? '' :$tlp;
 
-				$totales[4]['mar_prg'] = $tmp;
+				$totales[3]['mar_prg'] =  $tmp == 0 ? '' :$tmp;
 
-				$totales[4]['mie_prg'] = $tip;
+				$totales[3]['mie_prg'] =  $tip == 0 ? '' :$tip;
 
-				$totales[4]['jue_prg'] = $tjp;
+				$totales[3]['jue_prg'] =  $tjp == 0 ? '' :$tjp;
 
-				$totales[4]['vie_prg'] = $tvp;
+				$totales[3]['vie_prg'] =  $tvp == 0 ? '' :$tvp;
 
-				$totales[4]['sab_prg'] = $tsp;
+				$totales[3]['sab_prg'] =  $tsp == 0 ? '' :$tsp;
 
-				$totales[4]['dom_prg'] = $tdp;
+				$totales[3]['dom_prg'] =  $tdp == 0 ? '' :$tdp;
 				
 				// $totales[0]['dom_min'] = $tdm;
 				
-				$totales[4]['sum'] = $tsum ;
+				$totales[3]['sum'] = $tsum ;
 				
-				$totales[4]['Pieza'] = 'Totales Piezas:';
+				$totales[3]['Pieza'] = 'Totales Piezas:';
 			}
 			
 		// $datos['rows'] = $result;
@@ -859,7 +843,7 @@ Class MaquinadoCTA4 extends Model {
 		if (!$this->exist($data['fecha'],$data['Pieza'],$data['op'] ) ){
 			if ( $data['cantidad'] == 0) return ;
 			
-			$result =$command->createCommand()->insert('pdp_cta_dia',[
+			$result =$command->createCommand()->insert('pdp_ctb_dia',[
 									'maquina' => $data['Maquina'], 
 									'semana' => $data['sem'],
 									'dia' => $data['fecha'],
@@ -876,7 +860,7 @@ Class MaquinadoCTA4 extends Model {
 		 
 			  if($data['cantidad'] == 0  ){
 					
-				$result =$command->createCommand()->delete('pdp_cta_dia',[
+				$result =$command->createCommand()->delete('pdp_ctb_dia',[
 														'dia' => $data['fecha'],
 														'op' => $data['op'],
 														'pieza' => $data['Pieza']
@@ -888,7 +872,7 @@ Class MaquinadoCTA4 extends Model {
 					return true; //corta ejecucion y sale
 				}
 			  
-			  $result =$command->createCommand()->update('pdp_cta_dia',[
+			  $result =$command->createCommand()->update('pdp_ctb_dia',[
 										'maquina' => $data['Maquina'], 
 										'semana' => $data['sem'],
 										'cantidad' => $data['cantidad'],
@@ -915,7 +899,7 @@ Class MaquinadoCTA4 extends Model {
 					->createCommand("
 					
 					Select  count(Maquina) as m 
-					from pdp_cta_dia 
+					from pdp_ctb_dia 
 					where 
 					pieza ='$pieza'  
 					and dia = '$dia'
@@ -941,13 +925,13 @@ Class MaquinadoCTA4 extends Model {
 										sum(min) as min,
 										sum(min/60) as min_hrs,
 										sum( (min/60)/8 ) as min_t8 
-						from pdp_cta_dia 
+						from pdp_ctb_dia
 						where dia = '$fecha' 
 						GROUP BY maquina
 						)as d
-					LEFT JOIN  pdp_maquina_turno_dia as m on  d.maquina = m.maquina and   m.dia =  '$fecha' and m.turno = 'Matutino'  
-					LEFT JOIN  pdp_maquina_turno_dia as v on  d.maquina = v.maquina and   v.dia =  '$fecha' and v.turno = 'Vespertino'  
-					LEFT JOIN  pdp_maquina_turno_dia as n on  d.maquina = n.maquina and   n.dia =  '$fecha' and n.turno = 'Nocturno'  
+					LEFT JOIN  pdp_maquina_turno_diabr as m on  d.maquina = m.maquina and   m.dia =  '$fecha' and m.turno = 'Matutino'  
+					LEFT JOIN  pdp_maquina_turno_diabr as v on  d.maquina = v.maquina and   v.dia =  '$fecha' and v.turno = 'Vespertino'  
+					LEFT JOIN  pdp_maquina_turno_diabr as n on  d.maquina = n.maquina and   n.dia =  '$fecha' and n.turno = 'Nocturno'  
 			";
 			
 			$command = \Yii::$app->db_mysql;
@@ -1000,7 +984,7 @@ Class MaquinadoCTA4 extends Model {
 			$sql = "
 			
 			select Matutino,Vespertino,Nocturno,Minutos
-			from pdp_maquina_turnos
+			from pdp_maquina_turnosbr
 			where
 			maquina = '$maq' and
 			semana =  DATEpart(week,'$dia')
@@ -1048,7 +1032,7 @@ Class MaquinadoCTA4 extends Model {
 					->createCommand("
 					
 					Select  count(Maquina) as m 
-					from pdp_maquina_turno_dia 
+					from pdp_maquina_turno_diabr 
 					where maquina ='$maquina'  and dia = '$dia' and turno = '$turno'
 					
 					")->queryAll();
@@ -1070,7 +1054,7 @@ Class MaquinadoCTA4 extends Model {
 		if (!$this->exist_turno($data['dia'],$data['maquina'],$data['turno'] ) ){
 			if ( $data['turno'] == '---' || $data['operador'] == '---' ) return ;
 			
-			$result =$command->createCommand()->insert('pdp_maquina_turno_dia',[
+			$result =$command->createCommand()->insert('pdp_maquina_turno_diabr',[
 									'maquina' => $data['maquina'], 
 									'dia' => $data['dia'],
 									'turno' => $data['turno'],
@@ -1084,7 +1068,7 @@ Class MaquinadoCTA4 extends Model {
 			
 			  if ( $data['operador'] == '---' ||  $data['operador'] == 0 ) {
 					
-				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
+				$result =$command->createCommand()->delete('pdp_maquina_turno_diabr',[
 														'dia' => $data['dia'],
 														'maquina' => $data['maquina'],
 														'turno' => $data['turno'],
@@ -1098,7 +1082,7 @@ Class MaquinadoCTA4 extends Model {
 			  
 				if ( $data['cantidad_prog'] == 0  ) {
 					
-				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
+				$result =$command->createCommand()->delete('pdp_maquina_turno_diabr',[
 														'dia' => $data['dia'],
 														'maquina' => $data['maquina'],
 													])->execute();
@@ -1109,7 +1093,7 @@ Class MaquinadoCTA4 extends Model {
 					return true; //corta ejecucion y sale
 				}
 			  
-			  $result =$command->createCommand()->update('pdp_maquina_turno_dia',[
+			  $result =$command->createCommand()->update('pdp_maquina_turno_diabr',[
 										'minutos' => $data['minutos'],
 										'op' => $data['operador']
 										], 	[
@@ -1134,7 +1118,7 @@ Class MaquinadoCTA4 extends Model {
 			$sql = "
 				
 				select   d.op, e.NOMBRECOMPLETO ,d.maquina,D.turno,d.minutos
-				from pdp_maquina_turno_dia as d
+				from pdp_maquina_turno_diabr as d
 				left join  Empleado as e on e.CODIGOANTERIOR+0 = d.op+0
 				where d.dia = '$fecha'
 				

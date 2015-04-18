@@ -425,9 +425,9 @@ semana = $s
 		}
 		
 		
-		$totales[0]['minutos_m'] = number_format($minutos_m);
-		$totales[0]['horas_m'] = number_format($horas_m);
-		$totales[0]['t8_m'] = number_format($t8_m,1);
+		$totales[0]['minutos_m'] = $minutos_m == 0 ? '' : number_format($minutos_m,1);
+		$totales[0]['horas_m'] = $horas_m == 0 ? '': number_format($horas_m,1);
+		$totales[0]['t8_m'] = $t8_m ? '' : number_format($t8_m,1);
 		$totales[0]['maquina'] = 'Totales';
 		
 		$datos['rows'] = $result;

@@ -223,12 +223,15 @@ Class MaquinadoCTA2 extends Model {
 
 				
 				
-				-- where prod.PRODUCTO  in (select pieza from pdp_maquinado_blbr)
-				where prod_dux.CAMPOUSUARIO5 is not null 
+				where  prod_dux.CAMPOUSUARIO5 is not null 
+				 and prod.PRODUCTO  in (select pieza from pdp_maquinado_blbr)
+				-- and prod.PRODUCTO <> prod_dux.CAMPOUSUARIO5
 				ORDER BY 
 
 				Hold,
 				prioridad desc,
+				prod_dux.CAMPOUSUARIO5 ,
+				
 				producto,						
 				
 				pdp_maquina_piezabr.op asc,
@@ -315,35 +318,35 @@ Class MaquinadoCTA2 extends Model {
 				 $rows++; 
 				}
 				
-				$totales[0]['s1_min'] = $ts1;
-				$totales[0]['s2_min'] = $ts2;
-				$totales[0]['s3_min'] = $ts3;
-				$totales[0]['s4_min'] = $ts4;
+				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1) ;;
+				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
+				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
+				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;;
 				$totales[0]['CTB'] = $ctb;
 			
 				$totales[0]['maquina1'] = 'Minutos';
 				
-				$totales[1]['s1_min'] = $ts1 == 0 ? $ts1 : number_format($ts1/60) ;
-				$totales[1]['s2_min'] = $ts2 == 0 ? $ts2 : number_format($ts2/60) ;
-				$totales[1]['s3_min'] = $ts3 == 0 ? $ts3 : number_format($ts3/60) ;
-				$totales[1]['s4_min'] = $ts4 == 0 ? $ts4 : number_format($ts4/60) ;
-				$totales[1]['CTB'] = $ctb == 0 ? $ctb : number_format($ctb/60) ;
+				$totales[1]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1/60) ;
+				$totales[1]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2/60) ;
+				$totales[1]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3/60) ;
+				$totales[1]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4/60) ;
+				$totales[1]['CTB'] = $ctb == 0 ? '' : number_format($ctb/60) ;
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
-				// $totales[2]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/8,2) ;
-				// $totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/8,2) ;
-				// $totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/8,2) ;
-				// $totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/8,2) ;
-				// $totales[2]['CTB'] = $cta == 0 ? $cta : number_format(($cta/60)/8,2) ;
+				// $totales[2]['s1_min'] = $ts1 == 0 ? '' : number_format(($ts1/60)/8,1) ;
+				// $totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/8,1) ;
+				// $totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/8,1) ;
+				// $totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/8,1) ;
+				// $totales[2]['CTB'] = $cta == 0 ? $ctb : number_format(($ctb/60)/8,1) ;
 	
 				// $totales[2]['maquina1'] = 'Turno 8H';
 				
-				$totales[2]['s1_min'] = $ts1 == 0 ? $ts1 : number_format(($ts1/60)/9,2) ;
-				$totales[2]['s2_min'] = $ts2 == 0 ? $ts2 : number_format(($ts2/60)/9,2) ;
-				$totales[2]['s3_min'] = $ts3 == 0 ? $ts3 : number_format(($ts3/60)/9,2) ;
-				$totales[2]['s4_min'] = $ts4 == 0 ? $ts4 : number_format(($ts4/60)/9,2) ;
-				$totales[2]['CTB'] = $ctb== 0 ? $ctb : number_format(($ctb/60)/9,2) ;
+				$totales[2]['s1_min'] = $ts1 == 0 ? '' : number_format(($ts1/60)/9,1) ;
+				$totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/9,1) ;
+				$totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/9,1) ;
+				$totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/9,1) ;
+				$totales[2]['CTB'] = $ctb== 0 ? '' : number_format(($ctb/60)/9,1) ;
 			
 				$totales[2]['maquina1'] = 'Turno 9H';
 	
@@ -410,12 +413,12 @@ semana = $s
 		foreach($result as &$r ){
 			$mm = $r['minutos_m'];// problema ocn number format y suma
 			$r['minutos_m']=number_format($r['minutos_m'],0);
-			$r['horas_m']=number_format($r['horas_m'],2);
-			$r['t8_m']=number_format($r['t8_m'],2);
-			$r['t9_m']=number_format($r['t9_m'],2);
-			$r['t8_o']=number_format($r['t8_o'],2);
-			$r['horas_o']=number_format($r['horas_o'],2);
-			$r['minutos_o']=number_format($r['minutos_o'],2);
+			$r['horas_m']=number_format($r['horas_m'],1);
+			$r['t8_m']=number_format($r['t8_m'],1);
+			$r['t9_m']=number_format($r['t9_m'],1);
+			$r['t8_o']=number_format($r['t8_o'],1);
+			$r['horas_o']=number_format($r['horas_o'],1);
+			$r['minutos_o']=number_format($r['minutos_o'],1);
 			
 			$minutos_m += $mm; 
 			$horas_m +=$r['horas_m'] ;
@@ -425,9 +428,9 @@ semana = $s
 		}
 		
 		
-		$totales[0]['minutos_m'] = number_format($minutos_m);
-		$totales[0]['horas_m'] = number_format($horas_m);
-		$totales[0]['t8_m'] = number_format($t8_m,2);
+		$totales[0]['minutos_m'] = $minutos_m == 0 ? '' : number_format($minutos_m,1);
+		$totales[0]['horas_m'] = $horas_m == 0 ? '': number_format($horas_m,1);
+		$totales[0]['t8_m'] = $t8_m ? '' : number_format($t8_m,1);
 		$totales[0]['maquina'] = 'Totales';
 		
 		$datos['rows'] = $result;

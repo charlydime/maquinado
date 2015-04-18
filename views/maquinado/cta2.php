@@ -661,6 +661,7 @@ data-options="
 					return 'background-color:lightgrey;';
 			}		
 			if (row.opx == 10){		
+					pma =  parseInt(row.PMA) ? parseInt(row.PMA) : 0;
 					cta =  parseInt(row.CTA) ? parseInt(row.CTA) : 0;
 					pla =  parseInt(row.PLA) ? parseInt(row.PLA) : 0;
 					s1 =  parseInt(row.s1) ? parseInt(row.s1) : 0;
@@ -676,7 +677,7 @@ data-options="
 					return 'background-color:lightgreen;';
 				
 				if ( cta < sum ){
-					if (  pla + cta >= sum  )
+					if (  pla + cta + pma >= sum  )
 						return 'background-color:DarkOrange  ;';
 				return 'background-color:IndianRed ;'
 				};

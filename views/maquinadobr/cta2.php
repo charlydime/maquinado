@@ -100,7 +100,7 @@ $this->registerJS("
 </style>
 <div class="easyui-panel" title="Maquina-pieza" style="width:100%;height:auto;padding:10px;">
 
-							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:400px;"
+							<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:560px;"
 
 									data-options="
 										url:'cta2d?fecha=<?=$semana?>',
@@ -109,6 +109,8 @@ $this->registerJS("
 										showFooter: true,
 										rowStyler:formateo,
 										
+										view:groupview,
+										remoteSort:false,
 										collapsible:true,
 
 										rownumbers:true,
@@ -160,13 +162,14 @@ $this->registerJS("
 										width:50,
 										align:'center',
 										formatter:cellStyler,
+										sortable:true,
 										
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
 										<th data-options="field:'casting',width:200,sortable:true">Casting</th>
-										<th data-options="field:'producto',width:200,sortable:true">Parte</th>
+										<th data-options="field:'producto',width:200,sortable:true,">Parte</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
-										<th data-options="field:'maquina1',width:100,
+										<th data-options="field:'maquina1',width:100,sortable:true,
 													
 													styler:formatmaq,
 													editor:{
@@ -175,8 +178,7 @@ $this->registerJS("
 															valueField:'maquina',
 															textField:'maquina',
 															url:'cta2',
-															remoteSort:false,
-															multiSort:true,
+															
 															method:'get'
 	
 														}
@@ -185,26 +187,29 @@ $this->registerJS("
 										">Maquina</th>
 										
 									
-										<th data-options="field:'opx',width:50">num</th>
+										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes,sortable:true">num</th>
 										<th data-options="field:'Minutos',width:50">min</th>
 										
 									   
-										<th data-options="field:'sem1',width:50">sem<?=$s1 ?></th>
-										<th data-options="field:'sem2',width:50">sem<?=$s2 ?></th>
-										<th data-options="field:'PLB',width:50">PLBs</th>
-										<th data-options="field:'CTB',width:50">CTBs</th>
-										<th data-options="field:'PMB',width:50">PMBs</th>
-										<th data-options="field:'PTB',width:50">PTB</th>
+										<th data-options="field:'sem1',width:50,sortable:true">sem<?=$s1 ?></th>
+										<th data-options="field:'sem2',width:50,sortable:true">sem<?=$s2 ?></th>
+										<th data-options="field:'PLB',width:50,sortable:true">PLBs</th>
+										<th data-options="field:'CTB',width:50,sortable:true">CTBs</th>
+										<th data-options="field:'PMB',width:50,sortable:true">PMBs</th>
+										<th data-options="field:'PTB',width:50,sortable:true">PTB</th>
 										
 										
-										<th id= "thsem1" data-options="field:'s1',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem2" data-options="field:'s2',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem3" data-options="field:'s3',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda">min</th>
-										<th id= "thsem4" data-options="field:'s4',width:60,editor:'numberbox'">pza</th>
-										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda">min</th>
+										<th id= "thsem1" data-options="field:'s1',width:60, styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem2" data-options="field:'s2',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem3" data-options="field:'s3',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th id= "thsem4" data-options="field:'s4',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
+										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+									
+										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
+										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 									
 										<th data-options="field:'tot_pza',width:50">pza</th>
 										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda">min</th>
@@ -653,7 +658,12 @@ data-options="
 		function formateo(index,row){
 			
 			
+			if (row.Hold == 1){
+				
+					return 'background-color:lightgrey;';
+			}		
 			if (row.opx == 10){		
+					pmb =  parseInt(row.PMB) ? parseInt(row.PMB) : 0;
 					cta =  parseInt(row.CTB) ? parseInt(row.CTB) : 0;
 					pla =  parseInt(row.PLB) ? parseInt(row.PLB) : 0;
 					s1 =  parseInt(row.s1) ? parseInt(row.s1) : 0;
@@ -662,6 +672,7 @@ data-options="
 					s4 =  parseInt(row.s4) ? parseInt(row.s4) : 0;
 					 sum = s1 + s2 + s3 +s4;		
 			}
+			if(row.opx == null) return;
 			
 				if (  sum  == 0  )
 					 return ;
@@ -669,7 +680,7 @@ data-options="
 					return 'background-color:lightgreen;';
 				
 				if ( ctb < sum ){
-					if (  plb + ctb >= sum  )
+					if (  plb + ctb + pmb >= sum  )
 						return 'background-color:DarkOrange  ;';
 				return 'background-color:IndianRed ;'
 				};
@@ -691,9 +702,11 @@ data-options="
 			
 		}
 		function formatmaq(val,row,inx){
-			var op =  parseInt(row.op) ? parseInt(row.op) : 0;
-			if (op == 0 )
-			   return 'font-weight:bold;background-color: Yellow ;';
+			// var op =  parseInt(row.op) ? parseInt(row.op) : 0;
+			// if (op == 0 )
+			   // return 'font-weight:bold;background-color: Yellow ;';
+			if (row.maquina1 == 0 )
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 			
 			
@@ -762,9 +775,27 @@ data-options="
 		}
 		
 		function formateo_sem_celda(val,row,inx){
-			
+	 
+				return 'color:#474747;font-weight: bold;';
+
+		}
+		
+		function formateo_sem_celda_pza(val,row,inx){
 			 
-				return 'background-color:lightgrey;';
+				return 'font-weight: bold;';
+
+		}
+		
+		function formateo_celda_faltantes(val,row,inx){
+			
+			
+			// amarillo no tan grosero
+		   if (row.opx == null )
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
+		   
+		   if (row.Minutos == null )
+
+			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 
 		}

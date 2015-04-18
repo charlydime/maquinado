@@ -44,9 +44,18 @@ $model = new MaquinadoCTA4;
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.deshacerfila2()">Escape</a>
 </div>
 
-<div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;">
+<div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;"
+data-options="
+                tools:[{
+                    iconCls:'icon-reload',
+                    handler:function(){
+						control<?php echo $sem1 ?>.recargaGrid();
+                        
+                    }
+                }]"
+>
 	
-	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:400px;"
+	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:560px;"
 
 			data-options="
 				url:'cta4data?fecha=<?=$semana?>',
@@ -62,6 +71,8 @@ $model = new MaquinadoCTA4;
 				rownumbers:true,
 								
 				view:groupview,
+				remoteSort:false,
+				multiSort:true,
 				groupField:'Maquina',
 				groupFormatter:function(value,rows){			
 								  return value ;
@@ -98,53 +109,52 @@ $model = new MaquinadoCTA4;
 				<tr>
 					
 					<th data-options="field:'Pieza',width:170,sortable:true">Producto</th>
-					<th data-options="field:'prio',width:40">Prio</th>
-					<th data-options="field:'op',width:40">num</th>
-					<th data-options="field:'minmaq',width:53">Min</th>
-					<th data-options="field:'p_t',width:53">pz*dia</th>
-					<th data-options="field:'e0',width:50">Sem<?=$sem1?></th>
-					<th data-options="field:'e1',width:50">Sem<?=$sem2?></th>
-					<th data-options="field:'PLA',width:50">PLAs</th>
-					<th data-options="field:'CTA',width:50">CTAs</th>
-					<th data-options="field:'PMA',width:50">PMAs</th>
-					<th data-options="field:'PTA',width:50">PTA</th>
-					<th data-options="field:'Cantidad',width:35">Prg</th>
-					<th data-options="field:'Minutos',width:35">Min</th>
+					<th data-options="field:'prio',sortable:true,width:40">Prio</th>
+					<th data-options="field:'op',sortable:true,width:40">num</th>
+					<th data-options="field:'minmaq',sortable:true,width:53">Min</th>
+					<th data-options="field:'p_t',sortable:true,width:53">pz*dia</th>
+					<th data-options="field:'e0',sortable:true,width:50">Sem<?=$sem1?></th>
+					<th data-options="field:'e1',sortable:true,width:50">Sem<?=$sem2?></th>
+					<th data-options="field:'PLB',sortable:true,width:50">PLBs</th>
+					<th data-options="field:'CTB',sortable:true,width:50">CTBs</th>
+					<th data-options="field:'PMB',sortable:true,width:50">PMBs</th>
+					<th data-options="field:'PTB',sortable:true,width:50">PTB</th>
+					<th data-options="field:'Cantidad',sortable:true,width:35">Prg</th>
+					<th data-options="field:'Minutos',sortable:true,width:35">Min</th>
 										
-					<th id = "lun_prg" data-options="field:'lun_prg',width:35,editor:'numberbox'">Prg</th>
+					<th id = "lun_prg" data-options="field:'lun_prg',sortable:true,width:35,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'lun_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'lun_set',width:40">setup</th>
+					<th data-options="field:'lun_set',width:25">SU</th>
 		
-					<th id = "mar_prg" data-options="field:'mar_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "mar_prg" data-options="field:'mar_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mar_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'mar_set',width:40">setup</th>
+					<th data-options="field:'mar_set',width:25">SU</th>
 
-					<th  id = "mie_prg" data-options="field:'mie_prg',width:40,editor:'numberbox'">Prg</th>
+					<th  id = "mie_prg" data-options="field:'mie_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mie_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'mie_set',width:40">setup</th>
+					<th data-options="field:'mie_set',width:25">SU</th>
 		
-					<th  id = "jue_prg" data-options="field:'jue_prg',width:40,editor:'numberbox'">Prg</th>
+					<th  id = "jue_prg" data-options="field:'jue_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'jue_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'jue_set',width:40">set</th>
+					<th data-options="field:'jue_set',width:25">SU</th>
 	
-					<th id = "vie_prg" data-options="field:'vie_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "vie_prg" data-options="field:'vie_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'vie_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'vie_set',width:40">setup</th>
+					<th data-options="field:'vie_set',width:25">SU</th>
 					
-					<th id = "sab_prg" data-options="field:'sab_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "sab_prg" data-options="field:'sab_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'sab_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'sab_set',width:40">setup</th>
+					<th data-options="field:'sab_set',width:25">SU</th>
 					
-					<th id = "dom_prg" data-options="field:'dom_prg',width:40,editor:'numberbox'">Prg</th>
+					<th id = "dom_prg" data-options="field:'dom_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'dom_min',width:40, styler:formateo_dia_celda">Min</th>
-					<th data-options="field:'dom_set',width:40">setup</th>
+					<th data-options="field:'dom_set',width:25">SU</th>
 					
-					<th data-options="field:'sum',width:40">Sum</th>
-					<th data-options="field:'rest',width:40">Rest</th>
+					<th data-options="field:'sum',sortable:true,width:40">Sum</th>
+					<th data-options="field:'rest',sortable:true,width:40">Rest</th>
 					
-					<th data-options="field:'sum_min',width:40, styler:formateo_dia_celda">Sum</th>
-					<th data-options="field:'rest_min',width:40, styler:formateo_dia_celda">Rest</th>
-					
+					<th data-options="field:'sum_min',sortable:true,width:40">Sum</th>
+					<th data-options="field:'rest_min',sortable:true,width:40">Rest</th>
 					<th data-options="field:'setup',width:40,hidden:0">min</th>
 					<th id = "maq1" data-options="field:'maq1',width:40,editor:'numberbox'">Prg</th>
 					<th data-options="field:'Maquina',width:80,hidden:1">Maquina</th>
@@ -180,6 +190,7 @@ data-options="
                 tools:[{
                     iconCls:'icon-reload',
                     handler:function(){
+						control<?php echo $sem1 ?>.recargaGrid();
                         
                     }
                 }]"
@@ -653,6 +664,24 @@ data-options="
 			
 		}
 		
+		this.recargaGrid = function(){
+			var i = 0 ; 
+			var tablas = [];
+			$('.easyui-datagrid').each(  
+				function(){ 
+						tablas[i] = '#' + $(this).attr('id');
+						 i++;
+							} );
+
+			for( i = 0 ; i <= 15; i++){
+					
+				$(tablas[i]).datagrid('reload');
+
+			}
+			
+			
+			
+		}
 
 	}	//class control
 
@@ -680,7 +709,7 @@ function formateo_dia(index,row){
 		
 		) return;
 			if (ordenGrupo ==  1 )
-				return 'background-color:grey;';
+				return 'color:grey;font-weight: bold;';
 			if (  minutos_m  == 0  )
 				 return ;
 			if ( minutos_o == minutos_m )
@@ -694,12 +723,53 @@ function formateo_dia(index,row){
 		
 		
 		function formateo_dia_celda(val,row,inx){
+			var v =  parseInt(val) ? parseInt(val) : 0;
+			var pt =  parseInt(row.p_t) ? parseInt(row.p_t) : 0;
+		 // turno de 9 acero t9  min por dia  t8= 480  t9 = 540
+			var t = 540;
+			 if ( (t  < v) && (pt >  0) ) {
+				
+				return 'color:red;font-weight: bold;';
+			 
+			 }
 			
 			 if ( row.ordenGrupo != 1) 
-				return 'background-color:lightgrey;';
-			 else 
+				return 'color:grey;font-weight: bold;';
+
+			else 
 				 return false;
 			
+
+		}
+		function formateo_prg(val,row,inx){
+			
+			var pt =  parseInt(row.p_t) ? parseInt(row.p_t) : 0;
+			var v =  parseInt(val) ? parseInt(val) : 0;
+		 
+			
+			 if ( (pt  < v) && (pt >  0) ) {
+				 // var out = "INFORME: ";
+				// out =  out.concat("inx: ",inx," pt : ", row.p_t," val : ",val," ",row.Pieza);
+				// console.log(out );
+				return 'color:red;font-weight: bold;';
+			 
+			 }
+				return 'color:#474747;'
+		}
+		
+		function formateo_min(val,row,inx){
+			
+			
+			var v =  parseInt(val) ? parseInt(val) : 0;
+		 // turno de 9 acero t9  min por dia  t8= 480  t9 =
+			var t = 300;
+			 if ( (t  < v) && (pt >  0) ) {
+				 var out = "INFORME: ";
+				out =  out.concat("inx: ",inx," pt : ", row.p_t," val : ",val," ",row.Pieza);
+				console.log(out );
+				return 'color:red;font-weight: bold;';
+			 
+			 }
 
 		}
 		

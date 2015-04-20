@@ -132,7 +132,7 @@ Class MaquinadoCTA4 extends Model {
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1
-						and almprod.ALMACEN = 'CTA'
+						-- and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
 						
 				) as dux1 on pdp_cta.Pieza = dux1.producto 
@@ -144,7 +144,7 @@ Class MaquinadoCTA4 extends Model {
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2
-						and almprod.ALMACEN = 'CTA'
+						-- and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
 						
 				) as dux2 on pdp_cta.Pieza = dux2.producto 

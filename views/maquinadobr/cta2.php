@@ -426,7 +426,7 @@ data-options="
 				 hold = $(ed_hld.target).is(':checked');
 				 sem_actual = $('#semana1').val();
 				 
-				 
+				
 				
 					// sales si es igual el dato capturado salgo para que no guarde de nuevo
 					// el controlador recibe  n para saber que no guarde 
@@ -600,7 +600,15 @@ data-options="
 		// var maquina4  = $('#<?php echo $id ?>').datagrid('getColumnOption','maquina4');
 		    // maquina4.editor.options.url = 'cta2p1maquina?pieza='+prod;
 			
-		var ed = null
+			//deshabilita para edicion los casting 
+			 if(row.cast==1){
+				 editIndex = undefined;
+				
+				deshacerfila();
+				 return true;
+				 }
+			
+		var ed = null;
 			if (editIndex != inx){
 				if (endEditing()){
 					$('#<?php echo $id ?>').datagrid('selectRow', inx)
@@ -657,6 +665,10 @@ data-options="
 		var sum = 0;
 		function formateo(index,row){
 			
+			if (row.cast == 1){
+				
+					return 'color:darkgrey;';
+			}		
 			
 			if (row.Hold == 1){
 				
@@ -705,7 +717,7 @@ data-options="
 			// var op =  parseInt(row.op) ? parseInt(row.op) : 0;
 			// if (op == 0 )
 			   // return 'font-weight:bold;background-color: Yellow ;';
-			if (row.maquina1 == 0 )
+			if (row.maquina1 == 0 && row.cast == 0)
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 			
@@ -790,10 +802,10 @@ data-options="
 			
 			
 			// amarillo no tan grosero
-		   if (row.opx == null )
+		   if (row.opx == null && row.cast == 0)
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 		   
-		   if (row.Minutos == null )
+		   if (row.Minutos == null && row.cast == 0)
 
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			

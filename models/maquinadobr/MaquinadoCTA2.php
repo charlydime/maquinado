@@ -20,7 +20,12 @@ Class MaquinadoCTA2 extends Model {
  
   select 
 				prod.producto,
+				
 				prod_dux.CAMPOUSUARIO5 as casting,
+				CASE 
+					WHEN  prod.producto <>  prod_dux.CAMPOUSUARIO5 THEN 0
+					ELSE 1
+				END as cast,
 				ctb.maquina as maquina1,
  				
 				pdp_maquina_piezabr.op as opx,
@@ -54,10 +59,14 @@ Class MaquinadoCTA2 extends Model {
 				
 				
 				from 
-				(				select  distinct almprod.PRODUCTO 
-								from almprod 
-								 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
-								where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2') and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+				(				
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where CAMPOUSUARIO5 in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
 								
 								Union 
 								
@@ -88,7 +97,7 @@ Class MaquinadoCTA2 extends Model {
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						datepart( week,PAROEN.doctoadicionalfecha)  =  $se1
-						and almprod.ALMACEN = 'CTB'
+						-- and almprod.ALMACEN = 'CTB'
 						GROUP BY ALMPROD.producto
 						
 				) as dux1 on prod.PRODUCTO = dux1.producto 
@@ -100,7 +109,7 @@ Class MaquinadoCTA2 extends Model {
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						datepart( week,PAROEN.doctoadicionalfecha) = $se2
-						and almprod.ALMACEN = 'CTB'
+						-- and almprod.ALMACEN = 'CTB'
 						GROUP BY ALMPROD.producto
 						
 				) as dux2 on prod.PRODUCTO = dux2.producto 
@@ -224,17 +233,18 @@ Class MaquinadoCTA2 extends Model {
 				
 				
 				where  prod_dux.CAMPOUSUARIO5 is not null 
-				 and prod.PRODUCTO  in (select pieza from pdp_maquinado_blbr)
+				 and prod.PRODUCTO  not in (select pieza from pdp_maquinado_blbr)
 				-- and prod.PRODUCTO <> prod_dux.CAMPOUSUARIO5
 				ORDER BY 
 
 				Hold,
 				prioridad desc,
 				prod_dux.CAMPOUSUARIO5 ,
+				cast asc,
 				
 				producto,						
 				
-				pdp_maquina_piezabr.op asc,
+				pdp_maquina_piezabr.op ,
 			
 				
 				dux1.fechaemb,
@@ -322,7 +332,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
 				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
 				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;;
-				$totales[0]['CTB'] = $ctb;
+				// $totales[0]['CTB'] = $ctb== 0 ? '' : number_format($ctb,1);
 			
 				$totales[0]['maquina1'] = 'Minutos';
 				
@@ -330,7 +340,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[1]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2/60) ;
 				$totales[1]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3/60) ;
 				$totales[1]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4/60) ;
-				$totales[1]['CTB'] = $ctb == 0 ? '' : number_format($ctb/60) ;
+				// $totales[1]['CTB'] = $ctb == 0 ? '' : number_format($ctb/60) ;
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
@@ -346,7 +356,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/9,1) ;
 				$totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/9,1) ;
 				$totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/9,1) ;
-				$totales[2]['CTB'] = $ctb== 0 ? '' : number_format(($ctb/60)/9,1) ;
+				// $totales[2]['CTB'] = $ctb== 0 ? '' : number_format(($ctb/60)/9,1) ;
 			
 				$totales[2]['maquina1'] = 'Turno 9H';
 	

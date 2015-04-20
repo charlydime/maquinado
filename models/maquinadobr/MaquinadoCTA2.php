@@ -263,9 +263,33 @@ Class MaquinadoCTA2 extends Model {
 			 $ts3=0;
 			 $ts4=0;
 			 $ctb=0;
+			 
+			 $tcs1=0;
+			 $tcs2=0;
+			 $tcs3=0;
+			 $tcs4=0;
+			 
 			 $rows = 0;
+			 $alm= [];
+			 $ok = 0;
+			 $cast = '';
 				foreach($result as &$r){
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
+					if ($ok == 0 || $cast <> $r['casting']){
+						  $alm =  $this->getInvCasting( $r['casting'] );
+							$ok = 1;
+
+							
+					}		
+
+					
+					
+					$cast = $r['casting'];  
+					
+						$r['pl'] = round( $alm['PL'] );
+						$r['pm'] = round( $alm['PM'] );
+						$r['ct'] = round( $alm['CT'] );
+					
 					
 					if ($r['maquina1'] == null)	
 						$r['maquina1']=$this->maquina($r['producto'],$r['opx']);
@@ -282,6 +306,24 @@ Class MaquinadoCTA2 extends Model {
 					$r['s3_min'] = $min * $r["s3"];
 					$r['s4_min'] = $min * $r["s4"];
 					
+					 $tcs1 +=  $min * $r["s1"];
+					 $tcs2 +=  $min * $r["s2"];
+					 $tcs3 +=  $min * $r["s3"];
+					 $tcs4 +=  $min * $r["s4"];
+					 
+					 if ($r['cast'] == '1'){
+							
+							
+							$r['s1_min'] = $tcs1;
+							$r['s2_min'] = $tcs2;
+							$r['s3_min'] = $tcs3;
+							$r['s4_min'] = $tcs4;
+							
+							 $tcs1=0;
+							 $tcs2=0;
+							 $tcs3=0;
+							 $tcs4=0;
+					}
 								
 					$r['tot_pza'] =  $r["s1"]+$r["s2"]+$r["s3"]+$r["s4"];
 					$r['tot_min'] =  $r["s1_min"]+$r["s2_min"]+$r["s3_min"]+$r["s4_min"] ;
@@ -454,7 +496,92 @@ semana = $s
 
 } 
 
-public function GetInfo_programacion($semana){
+public function getInvCasting($parte){
+	$sql = "
+			select
+			 prod.IDENTIFICACION as PRODUCTO , 
+			 prod.CAMPOUSUARIO5 as casting,
+
+			isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PL,
+			isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PM,
+			isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) as CT
+
+			from  producto as  prod
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB'
+					GROUP BY almprod.producto
+				) as almctb on prod.CAMPOUSUARIO5 = almctb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY almprod.producto
+				) as almctb2 on prod.CAMPOUSUARIO5 = almctb2.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PTB'
+					GROUP BY almprod.producto
+				) as almptb on prod.CAMPOUSUARIO5 = almptb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB'
+					GROUP BY almprod.producto
+				) as almplb on prod.CAMPOUSUARIO5 = almplb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB2'
+					GROUP BY almprod.producto
+				) as almplb2 on prod.CAMPOUSUARIO5 = almplb2.producto
+	
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB'
+					GROUP BY almprod.producto
+				) as almpmb on prod.CAMPOUSUARIO5 = almpmb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB2'
+					GROUP BY almprod.producto
+				) as almpmb2 on prod.CAMPOUSUARIO5 = almpmb2.producto
+
+			WHERE prod.IDENTIFICACION = '$parte' and prod.CAMPOUSUARIO5 = '$parte'
+	";
+	$command = \Yii::$app->db_mysql;
+        $result =$command
+					->createCommand($sql)
+					->queryAll();
+					
+	return $result ? $result[0] : null ;	
+	}
+
+	public function GetInfo_programacion($semana){
 	
 	 $tmp = explode('-',$semana);
 		  $s = substr($tmp[1],1);

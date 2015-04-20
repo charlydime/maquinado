@@ -115,7 +115,7 @@ $this->registerJS("
 
 										rownumbers:true,
 										
-										view:groupview,
+										
 										groupField:'casting',
 										groupFormatter:function(value,rows){
 											
@@ -151,7 +151,7 @@ $this->registerJS("
 										<th colspan ="2">Sem <?=$s2 ?> </th>
 										<th colspan ="2">Sem <?=$s3 ?> </th>
 										<th colspan ="2">Sem <?=$s4 ?> </th>
-										<th colspan ="2">Total</th>
+										<th colspan ="8">Total</th>
 										
 									</tr>
 									
@@ -166,8 +166,8 @@ $this->registerJS("
 										
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
-										<th data-options="field:'casting',width:200,sortable:true">Casting</th>
-										<th data-options="field:'producto',width:200,sortable:true,">Parte</th>
+										<th data-options="field:'casting',width:100,sortable:true">Casting</th>
+										<th data-options="field:'producto',width:100,sortable:true,">Parte</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,sortable:true,
 													
@@ -211,9 +211,16 @@ $this->registerJS("
 										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
 										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 									
-										<th data-options="field:'tot_pza',width:50">pza</th>
-										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda">min</th>
 										
+										
+										
+										
+										<th data-options="field:'pl',width:50,hidden:1">pl</th>
+										<th data-options="field:'ct',width:50,hidden:1">ct</th>
+										<th data-options="field:'pm',width:50,hidden:1">pm</th>
+										<th data-options="field:'s1_min2',width:50,hidden:1">s1</th>
+										<th data-options="field:'s2_min2',width:50,hidden:1">s2</th>
+										<th data-options="field:'s3_min2',width:50,hidden:1">s3</th>
 										
 										
 										<th data-options="field:'op',width:50,hidden:1">op</th>
@@ -675,9 +682,9 @@ data-options="
 					return 'background-color:lightgrey;';
 			}		
 			if (row.opx == 10){		
-					pmb =  parseInt(row.PMB) ? parseInt(row.PMB) : 0;
-					cta =  parseInt(row.CTB) ? parseInt(row.CTB) : 0;
-					pla =  parseInt(row.PLB) ? parseInt(row.PLB) : 0;
+					pmb =  parseInt(row.pm) ? parseInt(row.pm) : 0;
+					ctb =  parseInt(row.ct) ? parseInt(row.ct) : 0;
+					plb =  parseInt(row.pl) ? parseInt(row.pl) : 0;
 					s1 =  parseInt(row.s1) ? parseInt(row.s1) : 0;
 					s2 =  parseInt(row.s2) ? parseInt(row.s2) : 0;
 					s3 =  parseInt(row.s3) ? parseInt(row.s3) : 0;

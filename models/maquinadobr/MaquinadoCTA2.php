@@ -786,7 +786,7 @@ public function GetInfo_Operador($semana){
 			'Noc' as titulo ,Nocturno as turno from pdp_maquina_turnosbr
 				where semana = $s AND Nocturno is not null
 		) as turnos
-		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR
+		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR or turnos.turno-10000 = empleado.CODIGOANTERIOR
 	
 	";
 	
@@ -1296,6 +1296,11 @@ public function  GetInfo_pza_op($semana){
 		$r1 =$command
 					->createCommand("
 					select operador , empleado.NOMBRECOMPLETO
+					from maquina_operador
+					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
+					where maquina = '". $maquina."'
+					UNION
+					select operador+10000 , concat ('FAN-', empleado.NOMBRECOMPLETO) as NOMBRECOMPLETO
 					from maquina_operador
 					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'

@@ -9,6 +9,7 @@ Class MaquinadoCTA2 extends Model {
     public function GetInfo($semana) {
           $tmp = explode('-',$semana);
 		  $tmp_s = substr($tmp[1],1);
+		  $aio = date("Y");
 		$se1 =  $tmp_s +0;
 		$se2 =  $tmp_s +1;
 		$se3 =  $tmp_s +2;
@@ -34,6 +35,18 @@ Class MaquinadoCTA2 extends Model {
 				can_s2.cantidad as s2,
 				can_s3.cantidad as s3,			
 				can_s4.cantidad as s4,
+				
+				ETE_S1.hechas as hechas1,
+				ETE_S1.rechazadas as rechazadas1,
+				
+				ETE_S2.hechas as hechas2,
+				ETE_S2.rechazadas as rechazadas2,
+				
+				ETE_S3.hechas as hechas3,
+				ETE_S3.rechazadas as rechazadas3,
+				
+				ETE_S4.hechas as hechas4,
+				ETE_S4.rechazadas as rechazadas4,
 				
 				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLB,
 				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMB,
@@ -229,7 +242,113 @@ Class MaquinadoCTA2 extends Model {
 					   can_s4.op = pdp_maquina_piezabr.op 
 					  
 				
+LEFT JOIN(
+				
+					select 
 
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S1 on 
+					ETE_S1.producto = prod.PRODUCTO and 
+					ETE_S1.semana = 	$se1 and
+					ETE_S1.aio  =   $aio and
+					ETE_S1.OP =	pdp_maquina_piezabr.op
+					and ETE_S1.clave = ctb.maquina
+
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S2 on 
+					ETE_S2.producto = prod.PRODUCTO and 
+					ETE_S2.semana = 	$se2 and
+					ETE_S2.aio  =   $aio and
+					ETE_S2.OP =	pdp_maquina_piezabr.op
+					and ETE_S2.clave = ctb.maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S3 on 
+					ETE_S3.producto = prod.PRODUCTO and 
+					ETE_S3.semana = 	$se3 and
+					ETE_S3.aio  =   $aio and
+					ETE_S3.OP =	pdp_maquina_piezabr.op
+					and ETE_S3.clave = ctb.maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S4 on 
+					ETE_S4.producto = prod.PRODUCTO and 
+					ETE_S4.semana = 	$se4 and
+					ETE_S4.aio  =   $aio and
+					ETE_S4.OP =	pdp_maquina_piezabr.op 
+					and ETE_S4.clave = ctb.maquina
 				
 				
 				where  prod_dux.CAMPOUSUARIO5 is not null 
@@ -343,8 +462,11 @@ Class MaquinadoCTA2 extends Model {
 						$ts2 +=  $r["s2"] * $min;
 						$ts3 +=  $r["s3"] * $min;
 						$ts4 +=  $r["s4"] * $min;
-						$ctb +=  $r["CTB"] * $min;
+						
+					if ($r['cast'] != 1)
+						$ctb +=  $r["ct"] == null ? 0 : $r["ct"] * $min ;// ;
 					}
+					
 					
 				$r['CTB'] = (real)$r['CTB'] ;
 				$r['PLB'] = (real)$r['PLB'] ;
@@ -374,7 +496,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
 				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
 				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;;
-				// $totales[0]['CTB'] = $ctb== 0 ? '' : number_format($ctb,1);
+				$totales[0]['CTB'] = $ctb== 0 ? '' : number_format($ctb,1);
 			
 				$totales[0]['maquina1'] = 'Minutos';
 				
@@ -382,7 +504,7 @@ Class MaquinadoCTA2 extends Model {
 				$totales[1]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2/60) ;
 				$totales[1]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3/60) ;
 				$totales[1]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4/60) ;
-				// $totales[1]['CTB'] = $ctb == 0 ? '' : number_format($ctb/60) ;
+				$totales[1]['CTB'] = $ctb == 0 ? '' : number_format($ctb/60) ;
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
@@ -390,17 +512,17 @@ Class MaquinadoCTA2 extends Model {
 				// $totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/8,1) ;
 				// $totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/8,1) ;
 				// $totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/8,1) ;
-				// $totales[2]['CTB'] = $cta == 0 ? $ctb : number_format(($ctb/60)/8,1) ;
+				 $totales[2]['CTB'] = $ctb == 0 ? $ctb : number_format(($ctb/60)/8,1) ;
 	
 				// $totales[2]['maquina1'] = 'Turno 8H';
 				
-				$totales[2]['s1_min'] = $ts1 == 0 ? '' : number_format(($ts1/60)/9,1) ;
-				$totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/9,1) ;
-				$totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/9,1) ;
-				$totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/9,1) ;
-				// $totales[2]['CTB'] = $ctb== 0 ? '' : number_format(($ctb/60)/9,1) ;
+				$totales[2]['s1_min'] = $ts1 == 0 ? '' : number_format(($ts1/60)/8,1) ;
+				$totales[2]['s2_min'] = $ts2 == 0 ? '' : number_format(($ts2/60)/8,1) ;
+				$totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/8,1) ;
+				$totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/8,1) ;
+				 $totales[2]['CTB'] = $ctb== 0 ? '' : number_format(($ctb/60)/8,1) ;
 			
-				$totales[2]['maquina1'] = 'Turno 9H';
+				$totales[2]['maquina1'] = 'Turno 8H';
 	
 			
 		$datos['rows'] = $result;

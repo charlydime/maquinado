@@ -9,6 +9,7 @@ Class MaquinadoCTA2 extends Model {
     public function GetInfo($semana) {
           $tmp = explode('-',$semana);
 		  $tmp_s = substr($tmp[1],1);
+		  $aio = date("Y");
 		$se1 =  $tmp_s +0;
 		$se2 =  $tmp_s +1;
 		$se3 =  $tmp_s +2;
@@ -29,6 +30,18 @@ Class MaquinadoCTA2 extends Model {
 				can_s2.cantidad as s2,
 				can_s3.cantidad as s3,			
 				can_s4.cantidad as s4,
+				
+				ETE_S1.hechas as hechas1,
+				ETE_S1.rechazadas as rechazadas1,
+				
+				ETE_S2.hechas as hechas2,
+				ETE_S2.rechazadas as rechazadas2,
+				
+				ETE_S3.hechas as hechas3,
+				ETE_S3.rechazadas as rechazadas3,
+				
+				ETE_S3.hechas as hechas4,
+				ETE_S3.rechazadas as rechazadas4,
 				
 				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
 				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
@@ -219,10 +232,114 @@ Class MaquinadoCTA2 extends Model {
 					   can_s4.Semana = $se4  and 
 					   can_s4.op = pdp_maquina_pieza.op 
 					  
+				LEFT JOIN(
 				
+					select 
 
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
 				
 				
+				) AS ETE_S1 on 
+					ETE_S1.producto = prod.PRODUCTO and 
+					ETE_S1.semana = 	$se1 and
+					ETE_S1.aio  =   $aio and
+					ETE_S1.OP =	pdp_maquina_pieza.op
+					and ETE_S1.clave = cta.maquina
+
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S2 on 
+					ETE_S2.producto = prod.PRODUCTO and 
+					ETE_S2.semana = 	$se2 and
+					ETE_S2.aio  =   $aio and
+					ETE_S2.OP =	pdp_maquina_pieza.op
+					and ETE_S2.clave = cta.maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S3 on 
+					ETE_S3.producto = prod.PRODUCTO and 
+					ETE_S3.semana = 	$se3 and
+					ETE_S3.aio  =   $aio and
+					ETE_S3.OP =	pdp_maquina_pieza.op
+					and ETE_S3.clave = cta.maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					DATEPART(WEEK, fecha) as semana ,
+					DATEPART(year,fecha) as aio
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				
+				
+				) AS ETE_S4 on 
+					ETE_S4.producto = prod.PRODUCTO and 
+					ETE_S4.semana = 	$se4 and
+					ETE_S4.aio  =   $aio and
+					ETE_S4.OP =	pdp_maquina_pieza.op 
+					and ETE_S4.clave = cta.maquina
+					
 				where prod.PRODUCTO  in (select pieza from pdp_maquinado_bl)
 				
 				ORDER BY 
@@ -524,7 +641,7 @@ public function GetInfo_Operador($semana){
 			'Noc' as titulo ,Nocturno as turno from pdp_maquina_turnos
 				where semana = $s AND Nocturno is not null
 		) as turnos
-		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR
+		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR or turnos.turno-10000 = empleado.CODIGOANTERIOR
 	
 	";
 	
@@ -1037,6 +1154,12 @@ public function  GetInfo_pza_op($semana){
 					from maquina_operador
 					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'
+					UNION
+					select operador+10000 , concat ('FAN-', empleado.NOMBRECOMPLETO) as NOMBRECOMPLETO
+					from maquina_operador
+					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
+					where maquina = '". $maquina."'
+					
 					
 					")
 					->queryAll();

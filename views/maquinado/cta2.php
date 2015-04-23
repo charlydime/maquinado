@@ -148,10 +148,10 @@ $this->registerJS("
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
 										<th colspan ="4">Almacenes</th>
-										<th colspan ="2">Sem <?=$s1 ?> </th>
-										<th colspan ="2">Sem <?=$s2 ?> </th>
-										<th colspan ="2">Sem <?=$s3 ?> </th>
-										<th colspan ="2">Sem <?=$s4 ?> </th>
+										<th colspan ="4">Sem <?=$s1 ?> </th>
+										<th colspan ="4">Sem <?=$s2 ?> </th>
+										<th colspan ="4">Sem <?=$s3 ?> </th>
+										<th colspan ="4">Sem <?=$s4 ?> </th>
 										<th colspan ="2">Total</th>
 										
 									</tr>
@@ -201,13 +201,27 @@ $this->registerJS("
 										
 										<th id= "thsem1" data-options="field:'s1',width:60, styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s1_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th data-options="field:'hechas1',width:50,sortable:true">H</th>
+										<th data-options="field:'rechazadas1',width:50,sortable:true">R</th>
+										
 										<th id= "thsem2" data-options="field:'s2',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s2_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th data-options="field:'hechas2',width:50,sortable:true">H</th>
+										<th data-options="field:'rechazadas2',width:50,sortable:true">R</th>
+
+										
 										<th id= "thsem3" data-options="field:'s3',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s3_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+										<th data-options="field:'hechas3',width:50,sortable:true">H</th>
+										<th data-options="field:'rechazadas3',width:50,sortable:true">R</th>
+										
 										<th id= "thsem4" data-options="field:'s4',width:60,styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
 										<th data-options="field:'s4_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-									
+										<th data-options="field:'hechas4',width:50,sortable:true">H</th>
+										<th data-options="field:'rechazadas4',width:50,sortable:true">R</th>
+
+
+										
 										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
 										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 										

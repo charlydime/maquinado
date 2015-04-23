@@ -46,7 +46,7 @@ use common\models\Grid;
 		<tr>
 			<th rowspan='2' data-options="field:'maquina',width:100">Maquina</th>
 			<th colspan="3">Turnos</th>
-			<th colspan="4">Tiempo a Maquinar</th>
+			<th colspan="3">Tiempo a Maquinar</th>
 			
 		</tr>
 	
@@ -103,7 +103,7 @@ use common\models\Grid;
 			<th data-options="field:'minutos_m',width:60">Min</th>
 			<th data-options="field:'horas_m',width:40">Hrs</th>
 			<th data-options="field:'t8_m',width:40">T8</th>
-			<th data-options="field:'t9_m',width:40">T9</th>
+			
 			
 			
 

@@ -53,20 +53,7 @@ use common\models\Grid;
 			
 			
 			
-			<th data-options="field:'Area',width:200,
-										
-											
-				editor:{
-					type:'combobox',
-					options:{
-					valueField:'Area',
-					textField:'Area',
-					panelWidth:300,
-					url:'insertoarea',
-					method:'get',
-						}
-				}
-			">area</th>
+			<th data-options="field:'area',width:200">area</th>
 			
 			<th data-options="field:'Parte',width:200,
 										
@@ -98,7 +85,7 @@ use common\models\Grid;
 				}
 			">Herramienta</th>
 			
-			<th data-options="field:'inserto',width:200,
+			<th data-options="field:'Inserto',width:200,
 										
 											
 				editor:{
@@ -112,17 +99,11 @@ use common\models\Grid;
 						}
 				}
 			">Inserto</th>
-			
-			
-			
+
 			<th data-options="field:'insxherr',width:60,editor:'numberbox'">Insertos</th>
 			<th data-options="field:'filos',width:60,editor:'numberbox'">Filos</th>
-			
-			
-						
-
-			
-            
+			<th data-options="field:'ID',width:60,hidden:1">ID</th>
+    
         </tr>
     </thead>
 </table>
@@ -134,9 +115,7 @@ use common\models\Grid;
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
 		 
-		 this.url = 'pzamaqsalva';
-
-		this.teclas = function(e) {
+		 this.teclas = function(e) {
 						 // Escape 
                 		if (e.keyCode === 27) {this.deshacerfila2();}
 						// Enter 
@@ -168,7 +147,7 @@ use common\models\Grid;
 			
 			var data = []; 
 			
-			var ed_area = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Area'});
+			
 			var ed_parte = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Parte'});
 			var ed_herramienta = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Herramienta'});
 			var ed_inserto = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Inserto'});
@@ -176,16 +155,15 @@ use common\models\Grid;
 			var ed_filos = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'filos'});
 			
 			if (
-				ed_area == null || 
+				
 					ed_parte == null || 
 					ed_herramienta == null || 
-					ed_inserto == null || 
-					insxherr == null || 
-					filos == null 
+					ed_inserto == null 
+					
 					)
 					{return true;this.editIndex2 = undefined;}
 			
-			area  = $(ed_area.target).combobox('getText');
+			
 			parte  = $(ed_parte.target).combobox('getText');
 			herramienta  = $(ed_herramienta.target).numberbox('getValue');
 			inserto  =  $(ed_inserto.target).combobox('getValue');
@@ -193,7 +171,7 @@ use common\models\Grid;
 			filos  =    $(ed_filos.target).numberbox('getValue');
 			
 			
-			$(this.grid).datagrid('getRows')[this.editIndex2]['Area'] = area;
+			
 			$(this.grid).datagrid('getRows')[this.editIndex2]['Parte'] = parte;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['Herramienta'] = herramienta;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['Inserto'] = inserto;

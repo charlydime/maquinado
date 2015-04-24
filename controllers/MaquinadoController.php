@@ -9,6 +9,7 @@ use frontend\models\maquinado\maquinadocta;
 use frontend\models\maquinado\maquinadocta2;
 use frontend\models\maquinado\maquinadocta4;
 use frontend\models\maquinado\maquinadoPzaMaq;
+use frontend\models\maquinado\maquinadoInserto;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -501,6 +502,72 @@ class MaquinadoController extends Controller
 		
 		
 	}
+	//----------insertos--------
+	public function actionInserto(){
+		
+	 return $this->render('Inserto', []);
 	
+	}
+	
+	public function actionLstinserto(){
+		
+			$model = new MaquinadoInserto;
+			$r = $model->lstinserto();
+			
+			return json_encode($r,0);
+	}
+	
+	public function actionInsertoparte(){
+		
+			$model = new MaquinadoInserto;
+			$r = $model->insertoparte();
+			
+			return json_encode($r,0);
+	}
+	
+	public function actionInsertoherr(){
+		
+		$model = new MaquinadoInserto;	
+		$r = $model->insertoherr();
+		
+		return json_encode($r,0);
+	}
+	
+	public function actionInsertoins(){
+		
+		$model = new MaquinadoInserto;	
+		$r = $model->insertoins();
+		
+		return json_encode($r,0);
+	}
+	
+	public function actionInsertoarea(){
+		
+		$model = new MaquinadoInserto;	
+		$r = $model->insertoarea();
+		
+		return json_encode($r,0);
+	}
+	
+	public function actionInsertosave(){
+		
+		$model = new MaquinadoInserto;
+                
+		$data = json_decode($_POST['Data']);
+						
+		$model->insertosave($data);
+		
+		
+	}
+	
+	public function actionInsertodel(){
+		
+		$model = new MaquinadoInserto;
+                
+		$data = json_decode($_POST['Data']);
+						
+		$model->insertodel($data);
+		
+	}
 	
 }

@@ -96,7 +96,7 @@ Class MaquinadoCTA2 extends Model {
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, sum(CANTIDAD) as cantidad
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
@@ -108,7 +108,7 @@ Class MaquinadoCTA2 extends Model {
 
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, sum(CANTIDAD) as cantidad
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE

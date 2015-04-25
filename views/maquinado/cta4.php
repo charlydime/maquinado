@@ -95,13 +95,13 @@ data-options="
 					<th colspan= 2>Embaques</th>
 					<th colspan= 4>Almacenes</th>
 					<th colspan= 2>Sem <?=$sem1?></th>
-					<th colspan=3>Lunes</th>
-					<th colspan=3>Martes</th>
-					<th colspan=3>Miercoles</th>
-					<th colspan=3>Jueves</th>
-					<th colspan=3>Viernes</th>
-					<th colspan=3>Sabado</th>
-					<th colspan=3>Domingo</th>
+					<th colspan=5>Lunes</th>
+					<th colspan=5>Martes</th>
+					<th colspan=5>Miercoles</th>
+					<th colspan=5>Jueves</th>
+					<th colspan=5>Viernes</th>
+					<th colspan=5>Sabado</th>
+					<th colspan=5>Domingo</th>
 					<th colspan=2>Tot Prod</th>
 					<th colspan=2>Tot Min</th>
 					<th colspan= 2>SetUp</th>
@@ -125,30 +125,44 @@ data-options="
 					<th id = "lun_prg" data-options="field:'lun_prg',sortable:true,width:35,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'lun_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'lun_set',width:25">SU</th>
+					<th data-options="field:'hechaslun',width:25">B</th>
+					<th data-options="field:'rechazadaslun',width:25">M</th>
 		
 					<th id = "mar_prg" data-options="field:'mar_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mar_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'mar_set',width:25">SU</th>
+					<th data-options="field:'hechasmar',width:25">B</th>
+					<th data-options="field:'rechazadasmar',width:25">M</th>
 
 					<th  id = "mie_prg" data-options="field:'mie_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'mie_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'mie_set',width:25">SU</th>
+					<th data-options="field:'hechasmie',width:25">B</th>
+					<th data-options="field:'rechazadasmie',width:25">M</th>
 		
 					<th  id = "jue_prg" data-options="field:'jue_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'jue_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'jue_set',width:25">SU</th>
+					<th data-options="field:'hechasjue',width:25">B</th>
+					<th data-options="field:'rechazadasjue',width:25">M</th>
 	
 					<th id = "vie_prg" data-options="field:'vie_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'vie_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'vie_set',width:25">SU</th>
+					<th data-options="field:'hechasvie',width:25">B</th>
+					<th data-options="field:'rechazadasvie',width:25">M</th>
 					
 					<th id = "sab_prg" data-options="field:'sab_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'sab_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'sab_set',width:25">SU</th>
+					<th data-options="field:'hechassab',width:25">B</th>
+					<th data-options="field:'rechazadassab',width:25">M</th>
 					
 					<th id = "dom_prg" data-options="field:'dom_prg',sortable:true,width:40,editor:'numberbox',styler:formateo_prg">Prg</th>
 					<th data-options="field:'dom_min',width:40, styler:formateo_dia_celda">Min</th>
 					<th data-options="field:'dom_set',width:25">SU</th>
+					<th data-options="field:'hechasdom',width:25">B</th>
+					<th data-options="field:'rechazadasdom',width:25">M</th>
 					
 					<th data-options="field:'sum',sortable:true,width:40">Sum</th>
 					<th data-options="field:'rest',sortable:true,width:40">Rest</th>

@@ -43,30 +43,44 @@ Class MaquinadoCTA4 extends Model {
 				lun.cantidad as lun_prg,
 				lun.min as lun_min,
 				lun.setup as lun_set,
+				ETE_lun.hechas as hechaslun,
+				ETE_lun.rechazadas as rechazadaslun,
 				
 				mar.cantidad as mar_prg,
 				mar.min as mar_min,
 				mar.setup as mar_set,
+				ETE_mar.hechas as hechasmar,
+				ETE_mar.rechazadas as rechazadasmar,
 				
 				mie.cantidad as mie_prg,
 				mie.min as mie_min,
 				mie.setup as mie_set,
+				ETE_mie.hechas as hechasmie,
+				ETE_mie.rechazadas as rechazadasmie,
 				
 				jue.cantidad as jue_prg,
 				jue.min as jue_min,
 				jue.setup as jue_set,
+				ETE_jue.hechas as hechasjue,
+				ETE_jue.rechazadas as rechazadasjue,
 				
 				vie.cantidad as vie_prg,
 				vie.min as vie_min,
 				vie.setup as vie_set,
+				ETE_vie.hechas as hechasvie,
+				ETE_vie.rechazadas as rechazadasvie,
 				
 				sab.cantidad as sab_prg,
 				sab.min as sab_min,
 				sab.setup as sab_set,
+				ETE_sab.hechas as hechassab,
+				ETE_sab.rechazadas as rechazadassab,
 			
 				dom.cantidad as dom_prg,
 				dom.min as dom_min,
 				dom.setup as dom_set,
+				ETE_dom.hechas as hechasdom,
+				ETE_dom.rechazadas as rechazadasdom,
 				
 				isnull(lun.cantidad,0)+
 				isnull(mar.cantidad,0)+
@@ -243,6 +257,190 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN 
 				pdp_maquina_pieza as mp  on  mp.Pieza = pdp_cta.Pieza and mp.Maquina = pdp_cta.Maquina and  mp.OP = pdp_cta.OP
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					where
+						fecha =	 cast ( '$lun' as datetime2)
+				
+				) AS ETE_lun on 
+					ETE_lun.producto = pdp_cta.Pieza and 
+					ETE_lun.OP =	pdp_cta.op
+					and ETE_lun.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					where
+						fecha =	 cast ( '$mar' as datetime2)
+				
+				
+				) AS ETE_mar on 
+					ETE_mar.producto = pdp_cta.Pieza and 
+					ETE_mar.OP =	pdp_cta.op
+					and ETE_mar.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$mie' as datetime2)
+				
+				) AS ETE_mie on 
+					ETE_mie.producto = pdp_cta.Pieza and 
+					ETE_mie.OP =	pdp_cta.op
+
+					and ETE_mie.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$jue' as datetime2)
+				
+				) AS ETE_jue on 
+					ETE_jue.producto = pdp_cta.Pieza and 
+					ETE_jue.OP =	pdp_cta.op
+					and ETE_jue.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$vie' as datetime2)
+				
+				) AS ETE_vie on 
+					ETE_vie.producto = pdp_cta.Pieza and 
+					ETE_vie.OP =	pdp_cta.op
+					and ETE_vie.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$sab' as datetime2)
+				
+				) AS ETE_sab on 
+					ETE_sab.producto = pdp_cta.Pieza and 
+					ETE_sab.OP =	pdp_cta.op
+					and ETE_sab.clave = pdp_cta.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					Celda,
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$dom' as datetime2)
+				
+				) AS ETE_dom on 
+					ETE_dom.producto = pdp_cta.Pieza and 
+					ETE_dom.OP =	pdp_cta.op
+					and ETE_dom.clave = pdp_cta.Maquina
 				
 				where semana = $se1
 				

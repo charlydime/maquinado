@@ -22,7 +22,14 @@ Class MaquinadoCTA2 extends Model {
   select 
 				prod.producto,
 				
-				cta.maquina as maquina1,
+				CASE 
+				WHEN can_s1.maquina is not null THEN can_s1.maquina
+				WHEN can_s2.maquina is not null THEN can_s2.maquina
+				WHEN can_s3.maquina is not null THEN can_s3.maquina
+				WHEN can_s4.maquina is not null THEN can_s4.maquina
+				ELSE '' 
+				END 
+				as maquina1,
  				
 				pdp_maquina_pieza.op as opx,
 				
@@ -372,7 +379,7 @@ Class MaquinadoCTA2 extends Model {
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
 					
 					if ($r['maquina1'] == null)	
-						$r['maquina1']=$this->maquina($r['producto'],$r['opx']);
+						$r['maquina1']= $this->maquina($r['producto'],$r['opx']);
 					
 					$min =  $this->p1tiempos($r['producto'], $r['maquina1'],$r['opx']);
 						//echo '('.$min.')     p'.$r['producto'].'   m'.$r['maquina1'].'  s'.$r["s1"].' ' .$r["s2"].' '.$r["s3"].' '.$r["s4"];			  

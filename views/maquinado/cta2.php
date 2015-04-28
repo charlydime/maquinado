@@ -133,11 +133,11 @@ $this->registerJS("
 								toolbar: "'#tb'">
 								
 								<div id="tb" style="height:auto">
-								<!--
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="accept()">Accept</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject()">Reject</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
-								-->
+								
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(1)">pieza</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(2)">maquina</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
+								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
 						
 					</div>
@@ -810,6 +810,34 @@ data-options="
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 
+		}
+		
+		function vistas(view){
+			var defaultOpt =   $('#<?php echo $id ?>').datagrid('options');
+			var opt = $.extend(true, {}, defaultOpt);
+	
+			if (view == 0) {//default list view
+
+			} else if (view == 1) {// pieza
+				opt.view = groupview;
+				opt.groupField = 'producto';
+				opt.groupFormatter = function(value, rows){
+					return value;
+				};
+			} else if (view == 2) {//maquina
+				opt.view = groupview;
+				opt.groupField = 'maquina1';
+				opt.groupFormatter = function(value, rows){
+					return value;
+				};
+			} else if (view == 3){ //normal
+				$('#<?php echo $id ?>').datagrid({
+						view: $.fn.datagrid.defaults.view
+						});
+			}
+
+			$('#<?php echo $id ?>').datagrid(opt);//re-render datagrid
+			
 		}
 
 	</script>

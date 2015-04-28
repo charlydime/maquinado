@@ -21,6 +21,7 @@ Class MaquinadoPzaMaq extends Model {
 				celda, 
 				siguiente
 			from pdp_maquina_pieza 
+			order by pieza
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();

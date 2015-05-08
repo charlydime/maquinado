@@ -58,7 +58,7 @@ data-options="
 	<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:560px;"
 
 			data-options="
-				url:'cta4data?fecha=<?=$semana?>',
+				url:'cta4data?semana=<?=$semana?>',
 				method:'post',
 				singleSelect: true,
 				onClickRow:function(inx,row){ control<?php echo $sem1 ?>.onClickRow2(inx,row); },

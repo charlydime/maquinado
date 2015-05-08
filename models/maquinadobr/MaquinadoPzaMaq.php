@@ -23,7 +23,7 @@ Class MaquinadoPzaMaq extends Model {
 				siguiente
 			from pdp_maquina_piezabr
 			LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = pdp_maquina_piezabr.pieza
-			order by CAMPOUSUARIO5,pieza,maquina,OP
+			order by CAMPOUSUARIO5,pieza,OP,maquina
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();

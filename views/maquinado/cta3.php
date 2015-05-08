@@ -39,6 +39,7 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="controlsemana<?php echo $idOpMaq ?>.deshacerfila2()">Escape</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="controlsemana<?php echo $idOpMaq ?>.diario()">Ver L-M</a>
 						
 					</div>
    
@@ -218,7 +219,7 @@ use common\models\Grid;
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
 		 this.semana = <?php echo $idOpMaq ?> ? <?php echo $idOpMaq ?> : 0;
-		 
+		 this.sem = '<?=$semana?>';
 		this.endEditing2 = function (){
 				
 				var mat = null;
@@ -359,6 +360,13 @@ use common\models\Grid;
 			$(nextgrid).datagrid('reload');
 			
 			
+			
+		}
+		
+		this.diario = function(){
+			
+			alert('cta4?semana='+this.sem);
+			window.open('cta4?semana='+this.sem);
 			
 		}
 		

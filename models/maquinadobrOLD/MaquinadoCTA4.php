@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\Models\Maquinado;
+namespace frontend\Models\Maquinadobr;
 use Yii;
 use yii\base\Model;
 
@@ -19,156 +19,136 @@ Class MaquinadoCTA4 extends Model {
 		 $vie = $this->semana2fecha($tmp[0],$se1,'vie');
 		 $sab = $this->semana2fecha($tmp[0],$se1,'sab');
 		 $dom = $this->semana2fecha($tmp[0],$se1,'dom');
-		// echo $semana;
-		// echo $lun.' <br> ';
-		// echo $mar.' <br>';
-		// echo $mie.' <br>';
-		// echo $jue.' <br>';
-		// echo $vie.' <br>';
-		// echo $sab.' <br>';
-		// echo $dom.' <br>';
+		
         $command = \Yii::$app->db_mysql;
         $result =$command->createCommand("
- 				select 
-				pdp_cta.Pieza,
-				pdp_cta.Prioridad,
-				pdp_cta.Cantidad,
-				pdp_cta.Maquina,
-				pdp_cta.op,
-				pdp_cta.Minutos as minmaq,
-				round(480/pdp_cta.Minutos,0) as p_t,
-				pdp_cta.Minutos * pdp_cta.Cantidad as Minutos,
-				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
-				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
-				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
-				almcta.existencia as CTA,
-				almpta.existencia as PTA,
-				dux1.cantidad as e0,
-				dux2.cantidad as e1,
+ 				
+				select 
+				pdp_ctb.Pieza,
+				pdp_ctb.Prioridad,
+				pdp_ctb.Cantidad,
+				pdp_ctb.Maquina,
+				pdp_ctb.op,
+				pdp_ctb.Minutos as minmaq,
+				round(480/pdp_ctb.Minutos) as p_t,
+				pdp_ctb.Minutos * pdp_ctb.Cantidad as Minutos,
+				IFNULL(almplb.existencia,0)+IFNULL(almplb2.existencia,0) as PLB,
+				IFNULL(almpmb.existencia,0)+IFNULL(almpmb2.existencia,0) as PMB,
+				IFNULL(almctb.existencia,0)+IFNULL(almctb2.existencia,0) as CTB,
+				almctb.existencia as CTB,
+				almptb.existencia as PTB,
+				dux1.fechaemb as e0,
+				dux2.fechaemb as e1,
 				mp.Minutos1Maquinado as setup,
 				
 				lun.cantidad as lun_prg,
 				lun.min as lun_min,
 				lun.setup as lun_set,
-				ETE_lun.hechas as hechaslun,
-				ETE_lun.rechazadas as rechazadaslun,
 				
 				mar.cantidad as mar_prg,
 				mar.min as mar_min,
 				mar.setup as mar_set,
-				ETE_mar.hechas as hechasmar,
-				ETE_mar.rechazadas as rechazadasmar,
 				
 				mie.cantidad as mie_prg,
 				mie.min as mie_min,
 				mie.setup as mie_set,
-				ETE_mie.hechas as hechasmie,
-				ETE_mie.rechazadas as rechazadasmie,
 				
 				jue.cantidad as jue_prg,
 				jue.min as jue_min,
 				jue.setup as jue_set,
-				ETE_jue.hechas as hechasjue,
-				ETE_jue.rechazadas as rechazadasjue,
 				
 				vie.cantidad as vie_prg,
 				vie.min as vie_min,
 				vie.setup as vie_set,
-				ETE_vie.hechas as hechasvie,
-				ETE_vie.rechazadas as rechazadasvie,
 				
 				sab.cantidad as sab_prg,
 				sab.min as sab_min,
 				sab.setup as sab_set,
-				ETE_sab.hechas as hechassab,
-				ETE_sab.rechazadas as rechazadassab,
 			
 				dom.cantidad as dom_prg,
 				dom.min as dom_min,
 				dom.setup as dom_set,
-				ETE_dom.hechas as hechasdom,
-				ETE_dom.rechazadas as rechazadasdom,
 				
-				isnull(lun.cantidad,0)+
-				isnull(mar.cantidad,0)+
-				isnull(mie.cantidad,0)+
-				isnull(jue.cantidad,0)+
-				isnull(vie.cantidad,0)+
-				isnull(sab.cantidad,0)+
-				isnull(dom.cantidad,0)
+				IFNULL(lun.cantidad,0)+
+				IFNULL(mar.cantidad,0)+
+				IFNULL(mie.cantidad,0)+
+				IFNULL(jue.cantidad,0)+
+				IFNULL(vie.cantidad,0)+
+				IFNULL(sab.cantidad,0)+
+				IFNULL(dom.cantidad,0)
 				
 				as sum,
 				
-				pdp_cta.Cantidad  -
+				pdp_ctb.Cantidad  -
 				(
-				isnull(lun.cantidad,0)+
-				isnull(mar.cantidad,0)+
-				isnull(mie.cantidad,0)+
-				isnull(jue.cantidad,0)+
-				isnull(vie.cantidad,0)+
-				isnull(sab.cantidad,0)+
-				isnull(dom.cantidad,0)
+				IFNULL(lun.cantidad,0)+
+				IFNULL(mar.cantidad,0)+
+				IFNULL(mie.cantidad,0)+
+				IFNULL(jue.cantidad,0)+
+				IFNULL(vie.cantidad,0)+
+				IFNULL(sab.cantidad,0)+
+				IFNULL(dom.cantidad,0)
 				)
 				as rest,
 				
-				isnull(lun.min,0)+
-				isnull(mar.min,0)+
-				isnull(mie.min,0)+
-				isnull(jue.min,0)+
-				isnull(vie.min,0)+
-				isnull(sab.min,0)+
-				isnull(dom.min,0)
+				IFNULL(lun.min,0)+
+				IFNULL(mar.min,0)+
+				IFNULL(mie.min,0)+
+				IFNULL(jue.min,0)+
+				IFNULL(vie.min,0)+
+				IFNULL(sab.min,0)+
+				IFNULL(dom.min,0)
 				
 				as sum_min,
 				
-				pdp_cta.Minutos  * pdp_cta.Cantidad -
+				pdp_ctb.Minutos  * pdp_ctb.Cantidad -
 				(
-				isnull(lun.min,0)+
-				isnull(mar.min,0)+
-				isnull(mie.min,0)+
-				isnull(jue.min,0)+
-				isnull(vie.min,0)+
-				isnull(sab.min,0)+
-				isnull(dom.min,0)
+				IFNULL(lun.min,0)+
+				IFNULL(mar.min,0)+
+				IFNULL(mie.min,0)+
+				IFNULL(jue.min,0)+
+				IFNULL(vie.min,0)+
+				IFNULL(sab.min,0)+
+				IFNULL(dom.min,0)
 				)
 				as rest_min,
 				
-				isnull(lun.setup,0)+
-				isnull(mar.setup,0)+
-				isnull(mie.setup,0)+
-				isnull(jue.setup,0)+
-				isnull(vie.setup,0)+
-				isnull(sab.setup,0)+
-				isnull(dom.setup,0)
+				IFNULL(lun.setup,0)+
+				IFNULL(mar.setup,0)+
+				IFNULL(mie.setup,0)+
+				IFNULL(jue.setup,0)+
+				IFNULL(vie.setup,0)+
+				IFNULL(sab.setup,0)+
+				IFNULL(dom.setup,0)
 				
 				as maq1
 				
-				from pdp_cta 
+				from pdp_ctb
 				
 
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, sum(CANTIDAD) as cantidad
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1
-						-- and almprod.ALMACEN = 'CTA'
+						DATE_FORMAT( PAROEN.doctoadicionalfecha ,'%U') = $se1
+						and almprod.ALMACEN = 'CTB'
 						GROUP BY ALMPROD.producto
-						
-				) as dux1 on pdp_cta.Pieza = dux1.producto 
+						order by ALMPROD.producto
+				) as dux1 on pdp_ctb.Pieza = dux1.producto 
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, sum(CANTIDAD) as cantidad
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2
-						-- and almprod.ALMACEN = 'CTA'
+						DATE_FORMAT( PAROEN.doctoadicionalfecha ,'%U') = $se2
+						and almprod.ALMACEN = 'CTB'
 						GROUP BY ALMPROD.producto
-						
-				) as dux2 on pdp_cta.Pieza = dux2.producto 
+						order by ALMPROD.producto
+				) as dux2 on pdp_ctb.Pieza = dux2.producto 
 
 
 				LEFT JOIN(
@@ -176,282 +156,99 @@ Class MaquinadoCTA4 extends Model {
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTA'
+					ALMPROD.ALMACEN =   'CTB'
 					GROUP BY almprod.producto
-				) as almcta on pdp_cta.Pieza = almcta.producto
+				) as almctb on pdp_ctb.Pieza = almctb.producto
 				
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTA2'
+					ALMPROD.ALMACEN =   'CTB2'
 					GROUP BY almprod.producto
-				) as almcta2 on pdp_cta.Pieza = almcta2.producto
+				) as almctb2 on pdp_ctb.Pieza = almctb2.producto
 
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PTA'
+					ALMPROD.ALMACEN =   'PTB'
 					GROUP BY almprod.producto
-				) as almpta on pdp_cta.Pieza = almpta.producto
+				) as almptb on pdp_ctb.Pieza = almptb.producto
 
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLA'
+					ALMPROD.ALMACEN =   'PLB'
 					GROUP BY almprod.producto
-				) as almpla on pdp_cta.Pieza = almpla.producto
+				) as almplb on pdp_ctb.Pieza = almplb.producto
 
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLA2'
+					ALMPROD.ALMACEN =   'PLB2'
 					GROUP BY almprod.producto
-				) as almpla2 on pdp_cta.Pieza = almpla2.producto
+				) as almplb2 on pdp_ctb.Pieza = almplb2.producto
 	
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMA'
+					ALMPROD.ALMACEN =   'PMB'
 					GROUP BY almprod.producto
-				) as almpma on pdp_cta.Pieza = almpma.producto
+				) as almpmb on pdp_ctb.Pieza = almpmb.producto
 
 				LEFT JOIN(
 					SELECT   
 						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
 					FROM ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMA2'
+					ALMPROD.ALMACEN =   'PMB2'
 					GROUP BY almprod.producto
-				) as almpma2 on pdp_cta.Pieza = almpma2.producto
+				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as lun on pdp_cta.Pieza = lun.pieza and pdp_cta.op = lun.op and lun.dia = '$lun'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as lun on pdp_ctb.Pieza = lun.pieza and pdp_ctb.op = lun.op and lun.dia = '$lun'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as mar on pdp_cta.Pieza = mar.pieza and pdp_cta.op = mar.op and mar.dia = '$mar'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as mar on pdp_ctb.Pieza = mar.pieza and pdp_ctb.op = mar.op and mar.dia = '$mar'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as mie on pdp_cta.Pieza = mie.pieza and pdp_cta.op = mie.op and mie.dia = '$mie'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as mie on pdp_ctb.Pieza = mie.pieza and pdp_ctb.op = mie.op and mie.dia = '$mie'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as jue on pdp_cta.Pieza = jue.pieza and pdp_cta.op = jue.op and jue.dia = '$jue'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as jue on pdp_ctb.Pieza = jue.pieza and pdp_ctb.op = jue.op and jue.dia = '$jue'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as vie on pdp_cta.Pieza = vie.pieza and pdp_cta.op = vie.op and vie.dia = '$vie'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as vie on pdp_ctb.Pieza = vie.pieza and pdp_ctb.op = vie.op and vie.dia = '$vie'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as sab on pdp_cta.Pieza = sab.pieza and pdp_cta.op = sab.op and sab.dia = '$sab'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as sab on pdp_ctb.Pieza = sab.pieza and pdp_ctb.op = sab.op and sab.dia = '$sab'
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup from pdp_cta_dia
-				)as dom on pdp_cta.Pieza = dom.pieza and pdp_cta.op = dom.op and dom.dia = '$dom'
+					select cantidad,min,operador,pieza,dia,op,setup from pdp_ctb_dia
+				)as dom on pdp_ctb.Pieza = dom.pieza and pdp_ctb.op = dom.op and dom.dia = '$dom'
 				
 				LEFT JOIN 
-				pdp_maquina_pieza as mp  on  mp.Pieza = pdp_cta.Pieza and mp.Maquina = pdp_cta.Maquina and  mp.OP = pdp_cta.OP
+				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_ctb.Maquina and  mp.OP = pdp_ctb.OP
 				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-					where
-						fecha =	 cast ( '$lun' as datetime2)
-				
-				) AS ETE_lun on 
-					ETE_lun.producto = pdp_cta.Pieza and 
-					ETE_lun.OP =	pdp_cta.op
-					and ETE_lun.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-					where
-						fecha =	 cast ( '$mar' as datetime2)
-				
-				
-				) AS ETE_mar on 
-					ETE_mar.producto = pdp_cta.Pieza and 
-					ETE_mar.OP =	pdp_cta.op
-					and ETE_mar.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				where
-						fecha =	 cast ( '$mie' as datetime2)
-				
-				) AS ETE_mie on 
-					ETE_mie.producto = pdp_cta.Pieza and 
-					ETE_mie.OP =	pdp_cta.op
-
-					and ETE_mie.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				where
-						fecha =	 cast ( '$jue' as datetime2)
-				
-				) AS ETE_jue on 
-					ETE_jue.producto = pdp_cta.Pieza and 
-					ETE_jue.OP =	pdp_cta.op
-					and ETE_jue.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				where
-						fecha =	 cast ( '$vie' as datetime2)
-				
-				) AS ETE_vie on 
-					ETE_vie.producto = pdp_cta.Pieza and 
-					ETE_vie.OP =	pdp_cta.op
-					and ETE_vie.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				where
-						fecha =	 cast ( '$sab' as datetime2)
-				
-				) AS ETE_sab on 
-					ETE_sab.producto = pdp_cta.Pieza and 
-					ETE_sab.OP =	pdp_cta.op
-					and ETE_sab.clave = pdp_cta.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion] * 10  as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
-					clave,
-					fecha
-					
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				where
-						fecha =	 cast ( '$dom' as datetime2)
-				
-				) AS ETE_dom on 
-					ETE_dom.producto = pdp_cta.Pieza and 
-					ETE_dom.OP =	pdp_cta.op
-					and ETE_dom.clave = pdp_cta.Maquina
-				
-				where semana = $se1
+				where semana = $se1 
 				
 				order by Maquina
+				
 				
 			")->queryAll();
 			
@@ -500,10 +297,7 @@ Class MaquinadoCTA4 extends Model {
 				}
 				
 				foreach($result as &$r){
-					if ( $r["setup"] == 0)	$r["setup"] = '';
-					if ( $r["maq1"] == 0)	$r["maq1"] = '';
-					 $r["setup"] =  (int)$r["setup"]; 
-								
+					
 					//sumas totales
 					$tp += $r["Cantidad"];
 					$tm += $r["Minutos"];
@@ -555,47 +349,65 @@ Class MaquinadoCTA4 extends Model {
 					$tsum += $r["sum"];
 					$tsum_min += $r["sum_min"];
 					
-					$r["p_t"] = number_format($r["p_t"]);
+					$r["p_t"] = number_format($r["p_t"],2);
 					
 					
 					// asunto de 0s para que no se deplieguen en grid
-					if ($r['CTA'] ==  0) $r['CTA'] = ''; else $r['CTA'] = (int)$r['CTA']  ;
-					if ($r['PLA'] ==  0) $r['PLA'] = ''; else $r['PLA'] = (int)$r['PLA']  ;
-					if ($r['PMA'] ==  0) $r['PMA'] = ''; else $r['PMA'] = (int)$r['PMA']  ;
-					if ($r['PTA'] ==  0) $r['PTA'] = ''; else $r['PTA'] = (int)$r['PTA']  ;
-					if ($r['sum'] ==  0) $r['sum'] = ''; else $r['sum'] = (int)$r['sum']  ;
-					if ($r['e0'] ==  0) $r['e0'] = ''; else $r['e0'] = (int)$r['e0']  ;
-					if ($r['e1'] ==  0) $r['e1'] = ''; else $r['e1'] = (int)$r['e1']  ;
+					if ($r['CTB'] ==  0) $r['CTB'] = ''; 
+					if ($r['PLB'] ==  0) $r['PLB'] = ''; 
+					if ($r['PMB'] ==  0) $r['PMB'] = ''; 
+					if ($r['PTB'] ==  0) $r['PTB'] = ''; 
+					if ($r['sum'] ==  0) $r['sum'] = ''; 
 					if ($r['rest'] ==  0) $r['rest'] = ''; 
 					if ($r['rest_min'] ==  0) $r['rest_min'] = ''; 
 					if ($r['sum_min'] ==  0) $r['sum_min'] = ''; 
 					
 					//grupal
 					
-									if(  $r["Maquina"] != $m  ){
+					
+					 
+						
+						$gp += $r["Cantidad"];
+						$gm += $r["Minutos"];
+						$glp += $r["lun_prg"];
+						$glm += $r["lun_min"];
+						$gmp += $r["mar_prg"];
+						$gmm += $r["mar_min"];
+						$gip += $r["mie_prg"];
+						$gim += $r["mie_min"];
+						$gjp += $r["jue_prg"];
+						$gjm += $r["jue_min"];
+						$gvp += $r["vie_prg"];
+						$gvm += $r["vie_min"];
+						$gsp += $r["sab_prg"];
+						$gsm += $r["sab_min"];
+						$gdp += $r["dom_prg"];
+						$gdm += $r["dom_min"];
+						
+					if(  $r["Maquina"] != $m  ){
 						
 						
 					
 						array_push ($congrupo , [
 						
 						'Cantidad' => $gp,
-						'Minutos' => $gm,
+						'Minutos' => $tm,
 						'Maquina' => $m,
-						'Pieza' => "Totales - ".$m,
-						"lun_prg" => $glp == 0 ? '' : $glp ,
-						"lun_min" => $glm == 0 ? '' : $glm ,
-						"mar_prg" => $gmp == 0 ? '' : $gmp ,
-						"mar_min" => $gmm == 0 ? '' : $gmm ,
-						"mie_prg" => $gip == 0 ? '' : $gip ,
-						"mie_min" => $gim == 0 ? '' : $gim ,
-						"jue_prg" => $gjp == 0 ? '' : $gjp ,
-						"jue_min" => $gjm == 0 ? '' : $gjm ,
-						"vie_prg" => $gvp == 0 ? '' : $gvp ,
-						"vie_min" => $gvm == 0 ? '' : $gvm  ,
-						"sab_prg" => $gsp == 0 ? '' : $gsp ,
-						"sab_min" => $gsm == 0 ? '' : $gsm ,
-						"dom_prg" => $gdp == 0 ? '' : $gdp ,
-						"dom_min" => $gdm == 0 ? '' : $gdm,
+						'Pieza' => "Totales - ".$r['Maquina'],
+						"lun_prg" => $glp ,
+						"lun_min" => $glm ,
+						"mar_prg" => $gmp ,
+						"mar_min" => $gmm ,
+						"mie_prg" => $gip ,
+						"mie_min" => $gim ,
+						"jue_prg" => $gjp ,
+						"jue_min" => $gjm ,
+						"vie_prg" => $gvp ,
+						"vie_min" => $gvm  ,
+						"sab_prg" => $gsp ,
+						"sab_min" => $gsm ,
+						"dom_prg" => $gdp ,
+						"dom_min" => $gdm,
 						"ordenGrupo" => 1
 						]);
 						$m = $r['Maquina'] ;
@@ -616,85 +428,54 @@ Class MaquinadoCTA4 extends Model {
 						$gdp = 0;
 						$gdm = 0;
 					}
-
-						$gp += $r["Cantidad"];
-						$gm += $r["Minutos"];
-						$glp += $r["lun_prg"];
-						$glm += $r["lun_min"];
-						$gmp += $r["mar_prg"];
-						$gmm += $r["mar_min"];
-						$gip += $r["mie_prg"];
-						$gim += $r["mie_min"];
-						$gjp += $r["jue_prg"];
-						$gjm += $r["jue_min"];
-						$gvp += $r["vie_prg"];
-						$gvm += $r["vie_min"];
-						$gsp += $r["sab_prg"];
-						$gsm += $r["sab_min"];
-						$gdp += $r["dom_prg"];
-						$gdm += $r["dom_min"];
-						
-	
 					
 					array_push($congrupo , $r);
-					
-				
 					//conteo 
 					$rows++;
-					
-					
 				}
-					array_push ($congrupo , [
-						
-						'Cantidad' => $gp,
-						'Minutos' => $gm,
-						'Maquina' => $m,
-						'Pieza' => "Totales - ".$m,
-						"lun_prg" => $glp == 0 ? '' : $glp ,
-						"lun_min" => $glm == 0 ? '' : $glm ,
-						"mar_prg" => $gmp == 0 ? '' : $gmp ,
-						"mar_min" => $gmm == 0 ? '' : $gmm ,
-						"mie_prg" => $gip == 0 ? '' : $gip ,
-						"mie_min" => $gim == 0 ? '' : $gim ,
-						"jue_prg" => $gjp == 0 ? '' : $gjp ,
-						"jue_min" => $gjm == 0 ? '' : $gjm ,
-						"vie_prg" => $gvp == 0 ? '' : $gvp ,
-						"vie_min" => $gvm == 0 ? '' : $gvm  ,
-						"sab_prg" => $gsp == 0 ? '' : $gsp ,
-						"sab_min" => $gsm == 0 ? '' : $gsm ,
-						"dom_prg" => $gdp == 0 ? '' : $gdp ,
-						"dom_min" => $gdm == 0 ? '' : $gdm,
-						"ordenGrupo" => 1
-						]);
 				
 				
 				$totales[0]['Minutos'] = $tm;
 				
-				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm) ;
-				$totales[0]['mar_min'] = $tmm == 0 ? '' : number_format($tmm) ;
-				$totales[0]['mie_min'] = $tim == 0 ? '' : number_format($tim) ;
-				$totales[0]['jue_min'] = $tjm == 0 ? '' : number_format($tjm) ;
-				$totales[0]['vie_min'] = $tvm == 0 ? '' : number_format($tvm) ;
-				$totales[0]['sab_min'] = $tsm == 0 ? '' : number_format($tsm) ;
-				$totales[0]['dom_min'] = $tdm == 0 ? '' : number_format($tdm) ;
+				//$totales[0]['lun_prg'] = $tlp;
+				$totales[0]['lun_min'] = $tlm;
+				// $totales[0]['mar_prg'] = $tmp;
+				$totales[0]['mar_min'] = $tmm;
+				// $totales[0]['mie_prg'] = $tip;
+				$totales[0]['mie_min'] = $tim;
+				// $totales[0]['jue_prg'] = $tjp;
+				$totales[0]['jue_min'] = $tjm;
+				// $totales[0]['vie_prg'] = $tvp;
+				$totales[0]['vie_min'] = $tvm;
+				// $totales[0]['sab_prg'] = $tsp;
+				$totales[0]['sab_min'] = $tsm;
+				// $totales[0]['dom_prg'] = $tdp;
+				$totales[0]['dom_min'] = $tdm;
 				
 				$totales[0]['sum_min'] = $tsum_min ;
 				
 				$totales[0]['Pieza'] = 'Totales Minutos:';
 				
-				$totales[1]['lun_min'] =  $tlm == 0 ? '' :number_format($tlm / 60);
-				$totales[1]['mar_min'] =  $tmm == 0 ? '' :number_format($tmm / 60);
-				$totales[1]['mie_min'] =  $tim == 0 ? '' :number_format($tim /60);
-				$totales[1]['jue_min'] =  $tjm == 0 ? '' :number_format($tjm / 60);
-				$totales[1]['vie_min'] = $tvm == 0 ? '' :number_format($tvm / 60);
-				$totales[1]['sab_min'] = $tsm == 0 ? '' : number_format($tsm / 60) ;
-				$totales[1]['dom_min'] =  $tdm == 0 ? '' :number_format($tdm / 60);
+				//$totales[0]['lun_prg'] = $tlp;
+				$totales[1]['lun_min'] = number_format($tlm / 60);
+				// $totales[0]['mar_prg'] = $tmp;
+				$totales[1]['mar_min'] = number_format($tmm / 60);
+				// $totales[0]['mie_prg'] = $tip;
+				$totales[1]['mie_min'] = number_format($tim /60);
+				// $totales[0]['jue_prg'] = $tjp;
+				$totales[1]['jue_min'] = number_format($tjm / 60);
+				// $totales[0]['vie_prg'] = $tvp;
+				$totales[1]['vie_min'] =number_format($tvm / 60);
+				// $totales[0]['sab_prg'] = $tsp;
+				$totales[1]['sab_min'] = number_format($tsm / 60) ;
+				// $totales[0]['dom_prg'] = $tdp;
+				$totales[1]['dom_min'] = number_format($tdm / 60);
 				
-				$totales[1]['sum_min'] =  $tsum_min == 0 ? '' :number_format($tsum_min / 60);
+				$totales[1]['sum_min'] = number_format($tsum_min / 60);
 				
 				$totales[1]['Pieza'] = 'Totales horas:';
 				
-				/* // $totales[0]['lun_prg'] = $tlp;
+				//$totales[0]['lun_prg'] = $tlp;
 				$totales[2]['lun_min'] = number_format(($tlm / 60)/8);
 				// $totales[0]['mar_prg'] = $tmp;
 				$totales[2]['mar_min'] = number_format(($tmm / 60)/8);
@@ -711,36 +492,49 @@ Class MaquinadoCTA4 extends Model {
 				
 				$totales[2]['sum_min'] = number_format(($tsum_min / 60)/8 );
 				
-				$totales[2]['Pieza'] = 'Totales turno T8:'; */
+				$totales[2]['Pieza'] = 'Totales turno T8:';
 				
 				
-				$totales[2]['lun_min'] = $tlm == 0 ? '' :number_format(($tlm / 60)/9);
-				$totales[2]['mar_min'] = $tmm == 0 ? '' :number_format(($tmm / 60)/9);
-				$totales[2]['mie_min'] = $tim == 0 ? '' :number_format(($tim /60)/9);
-				$totales[2]['jue_min'] = $tjm == 0 ? '' :number_format(($tjm / 60)/9);
-				$totales[2]['vie_min'] = $tvm == 0 ? '' :number_format(($tvm / 60)/9);
-				$totales[2]['sab_min'] = $tsm == 0 ? '' :number_format(($tsm / 60)/9) ;
-				$totales[2]['dom_min'] = $tdm == 0 ? '' :number_format(($tdm / 60)/9);
+				//$totales[0]['lun_prg'] = $tlp;
+				$totales[3]['lun_min'] = number_format(($tlm / 60)/9);
+				// $totales[0]['mar_prg'] = $tmp;
+				$totales[3]['mar_min'] = number_format(($tmm / 60)/9);
+				// $totales[0]['mie_prg'] = $tip;
+				$totales[3]['mie_min'] = number_format(($tim /60)/9);
+				// $totales[0]['jue_prg'] = $tjp;
+				$totales[3]['jue_min'] = number_format(($tjm / 60)/9);
+				// $totales[0]['vie_prg'] = $tvp;
+				$totales[3]['vie_min'] = number_format(($tvm / 60)/9);
+				// $totales[0]['sab_prg'] = $tsp;
+				$totales[3]['sab_min'] = number_format(($tsm / 60)/9) ;
+				// $totales[0]['dom_prg'] = $tdp;
+				$totales[3]['dom_min'] = number_format(($tdm / 60)/9);
 				
-				$totales[2]['sum_min'] = $tsum_min == 0 ? '' :number_format($tsum_min / 60)/9 ;
+				$totales[3]['sum_min'] = ($tsum_min / 60)/9 ;
 				
-				$totales[2]['Pieza'] = 'Totales turno T9:';
+				$totales[3]['Pieza'] = 'Totales turno T9:';
 				
 				
-				$totales[3]['Cantidad'] =  $tp == 0 ? '' :$tp;
-				$totales[3]['lun_prg'] =  $tlp == 0 ? '' :$tlp;
-				$totales[3]['mar_prg'] =  $tmp == 0 ? '' :$tmp;
-				$totales[3]['mie_prg'] =  $tip == 0 ? '' :$tip;
-				$totales[3]['jue_prg'] =  $tjp == 0 ? '' :$tjp;
-				$totales[3]['vie_prg'] =  $tvp == 0 ? '' :$tvp;
-				$totales[3]['sab_prg'] =  $tsp == 0 ? '' :$tsp;
-				$totales[3]['dom_prg'] =  $tdp == 0 ? '' :$tdp;
+				$totales[4]['Cantidad'] = $tp;
+				$totales[4]['lun_prg'] = $tlp;
+				// $totales[0]['lun_min'] = $tlm;
+				$totales[4]['mar_prg'] = $tmp;
+				// $totales[0]['mar_min'] = $tmm;
+				$totales[4]['mie_prg'] = $tip;
+				// $totales[0]['mie_min'] = $tim;
+				$totales[4]['jue_prg'] = $tjp;
+				// $totales[0]['jue_min'] = $tjm;
+				$totales[4]['vie_prg'] = $tvp;
+				// $totales[0]['vie_min'] = $tvm;
+				$totales[4]['sab_prg'] = $tsp;
+				// $totales[0]['sab_min'] = $tsm;
+				$totales[4]['dom_prg'] = $tdp;
 				
 				// $totales[0]['dom_min'] = $tdm;
 				
-				$totales[3]['sum'] = $tsum ;
+				$totales[4]['sum'] = $tsum ;
 				
-				$totales[3]['Pieza'] = 'Totales Piezas:';
+				$totales[4]['Pieza'] = 'Totales Piezas:';
 			}
 			
 		// $datos['rows'] = $result;
@@ -1012,7 +806,7 @@ Class MaquinadoCTA4 extends Model {
 		if (!$this->exist($data['fecha'],$data['Pieza'],$data['op'] ) ){
 			if ( $data['cantidad'] == 0) return ;
 			
-			$result =$command->createCommand()->insert('pdp_cta_dia',[
+			$result =$command->createCommand()->insert('pdp_ctb_dia',[
 									'maquina' => $data['Maquina'], 
 									'semana' => $data['sem'],
 									'dia' => $data['fecha'],
@@ -1029,7 +823,7 @@ Class MaquinadoCTA4 extends Model {
 		 
 			  if($data['cantidad'] == 0  ){
 					
-				$result =$command->createCommand()->delete('pdp_cta_dia',[
+				$result =$command->createCommand()->delete('pdp_ctb_dia',[
 														'dia' => $data['fecha'],
 														'op' => $data['op'],
 														'pieza' => $data['Pieza']
@@ -1041,7 +835,7 @@ Class MaquinadoCTA4 extends Model {
 					return true; //corta ejecucion y sale
 				}
 			  
-			  $result =$command->createCommand()->update('pdp_cta_dia',[
+			  $result =$command->createCommand()->update('pdp_ctb_dia',[
 										'maquina' => $data['Maquina'], 
 										'semana' => $data['sem'],
 										'cantidad' => $data['cantidad'],
@@ -1068,7 +862,7 @@ Class MaquinadoCTA4 extends Model {
 					->createCommand("
 					
 					Select  count(Maquina) as m 
-					from pdp_cta_dia 
+					from pdp_ctb_dia
 					where 
 					pieza ='$pieza'  
 					and dia = '$dia'
@@ -1093,14 +887,14 @@ Class MaquinadoCTA4 extends Model {
 						(select maquina,
 										sum(min) as min,
 										sum(min/60) as min_hrs,
-										sum( (min/60)/9 ) as min_t9 
-						from pdp_cta_dia 
+										sum( (min/60)/8 ) as min_t8 
+						from pdp_ctb_dia 
 						where dia = '$fecha' 
 						GROUP BY maquina
 						)as d
-					LEFT JOIN  pdp_maquina_turno_dia as m on  d.maquina = m.maquina and   m.dia =  '$fecha' and m.turno = 'Matutino'  
-					LEFT JOIN  pdp_maquina_turno_dia as v on  d.maquina = v.maquina and   v.dia =  '$fecha' and v.turno = 'Vespertino'  
-					LEFT JOIN  pdp_maquina_turno_dia as n on  d.maquina = n.maquina and   n.dia =  '$fecha' and n.turno = 'Nocturno'  
+					LEFT JOIN  pdp_maquina_turno_diabr as m on  d.maquina = m.maquina and   m.dia =  '$fecha' and m.turno = 'Matutino'  
+					LEFT JOIN  pdp_maquina_turno_diabr as v on  d.maquina = v.maquina and   v.dia =  '$fecha' and v.turno = 'Vespertino'  
+					LEFT JOIN  pdp_maquina_turno_diabr as n on  d.maquina = n.maquina and   n.dia =  '$fecha' and n.turno = 'Nocturno'  
 			";
 			
 			$command = \Yii::$app->db_mysql;
@@ -1153,10 +947,10 @@ Class MaquinadoCTA4 extends Model {
 			$sql = "
 			
 			select Matutino,Vespertino,Nocturno,Minutos
-			from pdp_maquina_turnos
+			from pdp_maquina_turnosbr
 			where
 			maquina = '$maq' and
-			semana =  DATEpart(week,'$dia')
+			semana =  week('$dia',1)
 			
 			";
 			
@@ -1201,7 +995,7 @@ Class MaquinadoCTA4 extends Model {
 					->createCommand("
 					
 					Select  count(Maquina) as m 
-					from pdp_maquina_turno_dia 
+					from pdp_maquina_turno_diabr 
 					where maquina ='$maquina'  and dia = '$dia' and turno = '$turno'
 					
 					")->queryAll();
@@ -1223,7 +1017,7 @@ Class MaquinadoCTA4 extends Model {
 		if (!$this->exist_turno($data['dia'],$data['maquina'],$data['turno'] ) ){
 			if ( $data['turno'] == '---' || $data['operador'] == '---' ) return ;
 			
-			$result =$command->createCommand()->insert('pdp_maquina_turno_dia',[
+			$result =$command->createCommand()->insert('pdp_maquina_turno_diabr',[
 									'maquina' => $data['maquina'], 
 									'dia' => $data['dia'],
 									'turno' => $data['turno'],
@@ -1237,7 +1031,7 @@ Class MaquinadoCTA4 extends Model {
 			
 			  if ( $data['operador'] == '---' ||  $data['operador'] == 0 ) {
 					
-				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
+				$result =$command->createCommand()->delete('pdp_maquina_turno_diabr',[
 														'dia' => $data['dia'],
 														'maquina' => $data['maquina'],
 														'turno' => $data['turno'],
@@ -1251,7 +1045,7 @@ Class MaquinadoCTA4 extends Model {
 			  
 				if ( $data['cantidad_prog'] == 0  ) {
 					
-				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
+				$result =$command->createCommand()->delete('pdp_maquina_turno_diabr',[
 														'dia' => $data['dia'],
 														'maquina' => $data['maquina'],
 													])->execute();
@@ -1262,7 +1056,7 @@ Class MaquinadoCTA4 extends Model {
 					return true; //corta ejecucion y sale
 				}
 			  
-			  $result =$command->createCommand()->update('pdp_maquina_turno_dia',[
+			  $result =$command->createCommand()->update('pdp_maquina_turno_diabr',[
 										'minutos' => $data['minutos'],
 										'op' => $data['operador']
 										], 	[
@@ -1287,7 +1081,7 @@ Class MaquinadoCTA4 extends Model {
 			$sql = "
 				
 				select   d.op, e.NOMBRECOMPLETO ,d.maquina,D.turno,d.minutos
-				from pdp_maquina_turno_dia as d
+				from pdp_maquina_turno_diabr as d
 				left join  Empleado as e on e.CODIGOANTERIOR+0 = d.op+0
 				where d.dia = '$fecha'
 				

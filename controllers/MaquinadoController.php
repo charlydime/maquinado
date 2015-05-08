@@ -334,11 +334,17 @@ class MaquinadoController extends Controller
     }
 	//cta 4
 	public function actionCta4(){
-   
-	          
-	          $sem = date('W');
+				
+			if  ( isset ($_GET['semana']) ){
+				$semana = $_GET['semana'];
+			}else{
+			  $sem = date('W');
 			  $aio = date('Y');
 			  $semana=$aio.'-W'.$sem;
+			} 
+			
+	          
+	          
         
         return $this->render('cta4', ['semana' => $semana,  ]);
    
@@ -346,13 +352,17 @@ class MaquinadoController extends Controller
    //diario (1 semana)
    	 public function actionCta4data(){
 		
-		     $sem = date('W');
-			 $aio = date('Y');
-			 $semana=$aio.'-W'.$sem;
+		     if  ( isset ($_GET['semana']) ){
+				$semana = $_GET['semana'];
+			}else{
+				  $sem = date('W');
+				  $aio = date('Y');
+				  $semana=$aio.'-W'.$sem;
+			} 
         
-		 if ( isset( $_POST['semana']) and $_POST['semana'] == ''){
-		   $semana=$_POST['semana'];
-		} ;
+		 // if ( isset( $_POST['semana']) and $_POST['semana'] == ''){
+		   // $semana=$_POST['semana'];
+		// } ;
 		
 		$model = new MaquinadoCTA4;
 			$prog = $model->GetInfo($semana);

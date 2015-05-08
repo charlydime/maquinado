@@ -117,7 +117,7 @@ $this->registerJS("
 										rownumbers:true,
 										
 										view:groupview,
-										groupField:'producto',
+										groupField:'casting',
 										groupFormatter:function(value,rows){
 											
 										   return value ;
@@ -144,7 +144,7 @@ $this->registerJS("
 								
 								<thead>
 									<tr>
-										<th colspan ="4"></th>
+										<th colspan ="5"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
 										<th colspan ="4">Almacenes</th>
@@ -152,7 +152,7 @@ $this->registerJS("
 										<th colspan ="4">Sem <?=$s2 ?> </th>
 										<th colspan ="4">Sem <?=$s3 ?> </th>
 										<th colspan ="4">Sem <?=$s4 ?> </th>
-										<th colspan ="2">Total</th>
+										
 										
 									</tr>
 									
@@ -166,6 +166,7 @@ $this->registerJS("
 										sortable:true,
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
+										<th data-options="field:'casting',width:100,sortable:true,hidden:0">Casting</th>
 										<th data-options="field:'producto',width:100,sortable:true,hidden:0">Parte</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,sortable:true,
@@ -221,12 +222,6 @@ $this->registerJS("
 										<th data-options="field:'rechazadas4',width:50,sortable:true">Malas</th>
 
 
-										
-										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
-										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-										
-										
-										
 										
 										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
 										
@@ -284,6 +279,14 @@ $this->registerJS("
 										
 									</tr>
 								</thead>
+							<thead data-options="frozen:true">
+								<th colspan ="2">Total</th>
+							</thead>							
+							<thead data-options="frozen:true">
+								<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
+								<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
+							</thead>							
+								
 							</table>
 						
 						

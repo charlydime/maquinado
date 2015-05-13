@@ -38,7 +38,7 @@ Class MaquinadoMaqOp extends Model {
 		 $sql="
 			SELECT Empleado.CODIGOANTERIOR, Empleado.NOMBRECOMPLETO
 			FROM Empleado
-			WHERE (Empleado.ESTATUS<>'Baja') AND (Empleado.PUESTO IN('MAA 01','MAA 02'))
+			WHERE (Empleado.ESTATUS<>'Baja') AND (Empleado.PUESTO IN ('MAA 01','MAA 02','MAA 03','MAA 04','MAA 05','MAA 06','MAB 01','MAB 02','MAB 03','PA 01','TH 03'))
 			ORDER BY Empleado.CODIGOANTERIOR
 		 ";
 		 $result =$command->createCommand($sql)

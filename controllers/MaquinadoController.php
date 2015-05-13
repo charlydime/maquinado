@@ -62,11 +62,14 @@ class MaquinadoController extends Controller
 		
 	public function actionCta2(){
    
-	          
-	          $sem = date('W');
-			  $aio = date('Y');
-			  $semana=$aio.'-W'.$sem;
-        
+	          if ( isset($_POST['semana']) ){
+				 $semana =  $POST('semana');
+				 //echo $POST('semana');exit;  
+			  }else{
+				  $sem = date('W');
+				  $aio = date('Y');
+				  $semana=$aio.'-W'.$sem;
+			  }
         return $this->render('cta2', ['semana' => $semana,  ]);
    
     }
@@ -140,6 +143,7 @@ class MaquinadoController extends Controller
 		$datos_a_grabar['Matutino']= $data->{'Matutino'}; 
 		$datos_a_grabar['Vespertino']= $data->{'Vespertino'}; 
 		$datos_a_grabar['Nocturno']= $data->{'Nocturno'}; 
+		$datos_a_grabar['Mixto']= $data->{'Mixto'}; 
 		$datos_a_grabar['minutos_m']= $data->{'minutos_m'}; 
 		$datos_a_grabar['semana']= $data->{'semana'}; 
 		

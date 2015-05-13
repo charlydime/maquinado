@@ -30,7 +30,7 @@ Class MaquinadoCTA4 extends Model {
 				pdp_ctb.Maquina,
 				pdp_ctb.op,
 				pdp_ctb.Minutos as minmaq,
-				round(480/pdp_ctb.Minutos,0) as p_t,
+				round(480/ nullif(pdp_ctb.Minutos,0),0) as p_t,
 				pdp_ctb.Minutos * pdp_ctb.Cantidad as Minutos,
 				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLB,
 				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMB,
@@ -255,7 +255,7 @@ Class MaquinadoCTA4 extends Model {
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -281,7 +281,7 @@ Class MaquinadoCTA4 extends Model {
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -308,7 +308,7 @@ Class MaquinadoCTA4 extends Model {
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -335,7 +335,7 @@ Class MaquinadoCTA4 extends Model {
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -361,7 +361,7 @@ Class MaquinadoCTA4 extends Model {
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,

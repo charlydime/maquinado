@@ -11,8 +11,20 @@ use common\models\Grid;
 	$tb = "barraherramcap";
 	$id2 = "captura";
 ?>
+<table>
+<tr>
+<td>ID :</td>
+<td>				<input id="id" class="easyui-textbox" type="text" name="id"  ></input></td>
+</td>
+</tr>		
+<tr>
+<td>Descripcion :</td>
+<td>				<input id="descripcion" class="easyui-textbox" type="text" name="descripcion" value = "" ></input></td>
+</td>
+</tr>			
+</table>
 
-<table id="<?php echo $id2 ?>" title="Piezas  Maquinadas"  class="easyui-datagrid " style="width:100%;height:300px;"
+<table id="<?php echo $id2 ?>" title="Maquinas de nueva Celda"  class="easyui-datagrid " style="width:40%;height:300px;"
 
         data-options="
 			url:'lstcelda',
@@ -41,6 +53,7 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="controlcap.add()">Agregar</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="controlcap.del()">Borrar </a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="controlcap.deshacerfila2()">Escape </a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="controlcap.guarda()">guardar </a>
 						<!-- <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
 						
@@ -48,18 +61,11 @@ use common\models\Grid;
 					</div>
    
     <thead>
-		<tr> 
-		<th colspan=2> Hora</th>
-		<th colspan=3></th>
-		<th colspan=2>Rechazo</th>
-		<th colspan=2></th>
-		
-		</tr>
+
 	
         <tr>
 
-		<th data-options="field:'inicio',width:60,editor:'textbox'">inicio</th>
-		<th data-options="field:'fin',width:60,editor:'textbox'">Fin</th>
+		
 			
 			<th data-options="field:'maquina',width:200,
 										
@@ -67,19 +73,19 @@ use common\models\Grid;
 				editor:{
 					type:'combobox',
 					options:{
-					valueField:'maq',
-					textField:'descripcion',
-					panelWidth:200,
-					url:'loadmaq',
+					valueField:'id',
+					textField:'Descripcion',
+					panelWidth:300,
+					url:'loadmaquina',
 					method:'get'
 						}
 				}
 			">maquina</th>
 
 		
-			<th data-options="field:'timestamp',width:300,editor:'textbox'">fecha</th>
-			<th data-options="field:'id',width:50,editor:'numberbox'">id</th>
-			<th data-options="field:'celda',width:50,editor:'numberbox'">celda</th>
+			<th data-options="field:'clave',width:100">clave</th>
+			<th data-options="field:'Descripcion',width:300">desc</th>
+			
 			
             
         </tr>
@@ -92,8 +98,10 @@ use common\models\Grid;
 	function control(grid){
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
+		 this.s = 'salvacelda'
 		 
-		 this.url = 'pzamaqsalva';
+		 
+		
 
 		this.teclas = function(e) {
 						 // Escape 
@@ -117,64 +125,14 @@ use common\models\Grid;
 					 }
 		
 		this.guarda = function(){
-			
-			var inicio  = null;
-			var fin  = null;
-			var parte  = null;
-			var op  = null;
-			var maq  = null;
-			var r_maq  = null;
-			var r_fun  = null;
-			var desc  = null;
-			var data = []; 
-			
-			var ed_inicio = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'inicio'});
-			var ed_fin = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'fin'});
-			var ed_parte = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'parte'});
-			var ed_op = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'op'});
-			var ed_maq = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'maq'});
-			var ed_r_maq = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'RMaq'});
-			var ed_r_fun = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'RFun'});
-			var ed_desc = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'desc'});
-			
-			if (
-				ed_inicio == null || 
-					ed_fin == null || 
-					ed_parte == null || 
-					ed_op == null || 
-					
-					ed_maq == null || 
-					ed_r_maq == null || 
-					ed_r_fun == null ||
-					ed_desc == null 
-					)
-					{return true;this.editIndex2 = undefined;}
-			
-			inicio  = $(ed_inicio.target).textbox('getValue');
-			fin  = $(ed_fin.target).textbox('getValue');
-			parte  = $(ed_parte.target).combobox('getValue');
-			op  = $(ed_op.target).combobox('getValue');
-			maq  = $(ed_maq.target).numberbox('getValue');
-			r_maq  = $(ed_r_maq.target).numberbox('getValue');
-			r_fun  = $(ed_r_fun.target).numberbox('getValue');
-			desc   = $(ed_desc.target).textbox('getValue');
-			
-			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = inicio;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = fin;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['parte'] = parte;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['op'] = op;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['maq'] = maq;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['RMaq'] = r_maq;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['RFun'] = r_fun;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['desc'] = desc;
-			$(this.grid).datagrid('getRows')[this.editIndex2]['ID'] = $('#id').val();
-			$(this.grid).datagrid('getRows')[this.editIndex2]['fecha'] = $('#fecha').val();
-			$(this.grid).datagrid('getRows')[this.editIndex2]['operador'] = $('#operador').val();
-			
-			data.push ( $(this.grid).datagrid('getRows')[this.editIndex2] );
-			
-				this.save(data,'savecap');
-						
+				var data=[];
+				desc = $('#descripcion').val();
+				grid = $(this.grid).datagrid('getChanges');
+				
+				var data = { descripcion : desc,
+							 maquinas : grid		};
+				
+				this.save(data,this.s);
 				this.recargaSigGrid(grid);
 				this.editIndex2 = undefined;
 				$(this.grid).datagrid('endEdit', this.editIndex2);
@@ -184,18 +142,12 @@ use common\models\Grid;
 		
 		this.add = function() {
 			
-		
+		rows = 	$(this.grid).datagrid('getRows');
 			$(this.grid).datagrid('insertRow',{
-				index:1,
+				index:rows.length,
 				row:{
-				inicio:'',
-				fin:'',
-				parte:'',
-				op:'',
-				maq:'',
-				RMaq:'0',
-				RFun:'',
-				desc:''
+				
+				maquina:''
 				}
 			});
 			
@@ -205,9 +157,11 @@ use common\models\Grid;
 		}
 		
 		this.del = function() {	
+		var sel = $(this.grid).datagrid('getSelected');
+					var row=  $(this.grid).datagrid('getRowIndex',sel);
 		
-		var row  = $(this.grid).datagrid('getSelected');
-		this.save(row,'borracap');
+		var row  = $(this.grid).datagrid('deleteRow',row);
+		
 			
 		}
 		
@@ -218,7 +172,7 @@ use common\models\Grid;
 							function(data,status){
 								if(status == 'success' ){
 									$(grid).datagrid('load');
-
+									$('#id').textbox('setValue','un id');
 									console.log(data);
 									$var = $(grid).datagrid('getChanges');
 								}else{
@@ -235,8 +189,16 @@ use common\models\Grid;
 			if (this.editIndex2 == undefined){return true}
 			if ($(this.grid).datagrid('validateRow', this.editIndex2)){
 				
+				var maquina  = null;
+				var ed_maquina = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'maquina'});
+				if ( ed_maquina  == null )
+					{return true;this.editIndex2 = undefined;}
 				
-				this.guarda();
+				maquina = $(ed_maquina.target).combobox('getValue');
+				$(this.grid).datagrid('getRows')[this.editIndex2]['maquina'] = maquina;
+				
+				$(this.grid).datagrid('endEdit', this.editIndex2);
+				
 				
 				return true;
 			} else {
@@ -304,6 +266,10 @@ use common\models\Grid;
 	
 		var controlcap = new control('#<?php echo $id2 ?>'); 
 		
-		
+		function getid(){
+			 return $('#id').val(); 
+			
+			
+		}
 		
 	</script>

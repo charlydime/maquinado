@@ -224,6 +224,7 @@ $this->registerJS("
 
 										
 										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
+										<th data-options="field:'maq_ocup',width:50,hidden:1,sortable:true">maq_ocup</th>
 										
 										<!--
 										<th data-options="field:'s2',width:50,editor:'numberbox'">sem2</th>
@@ -720,7 +721,9 @@ data-options="
 			// if (op == 0 )
 			   // return 'font-weight:bold;background-color: Yellow ;';
 		   
-		 
+		   if(row.maq_ocup == 1 )
+			   return 'font-weight:bold;color: red ;';
+			
 			if (row.maquina1 == 0 )
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			

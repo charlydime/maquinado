@@ -301,10 +301,11 @@ Class Captura extends Model {
 	//busca la maquina combobox
 	public function GetMaquina(){
 		
-		 $cmd = \Yii::$app->db_ete;
+		 $cmd = \Yii::$app->db_mysql;
 		 $sql = "
-		 select Descripcion , [codigo maquina] as clave 
-		 from Maquinas
+		 select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
+		 from pdp_maquina
+		 where activa = 1 and len(maquina) <= 7 
 		 order by Descripcion
 		
 		 ";

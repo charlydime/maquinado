@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use frontend\models\ete\captura;
 use frontend\models\ete\calcculo;
+use frontend\models\ete\celda;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -149,8 +150,7 @@ class EteController extends Controller
 		$model = new Captura;
 		$data = json_decode($_POST['Data']);
 		$model->borraTM($data);
-		
-		
+
 		
 	}
 	
@@ -163,6 +163,26 @@ class EteController extends Controller
 	//lista celdas
 	public function actionLstcelda(){
 		
+		$model = new Celda;
+		
+		 $id = $_REQUEST['id'];
+		// $f  = $_POST['fecha'];
+		
+		$celda = $model->lstcelda($id);
+		
+		return json_encode($celda, 0);
+		
+	}
+	
+	//salva celda
+	public function actionSalvacelda(){
+		
+		$data = json_decode($_POST['Data']);
+
+		$model = new Celda;
+		$id =$model->saveCelda($data);
+		
+		return $id;
 		
 	}
 	

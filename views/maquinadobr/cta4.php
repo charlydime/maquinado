@@ -618,7 +618,7 @@ data-options="
 					$(this.grid).datagrid('getPanel').bind('keydown', function(e) { instancia.teclas(e);} );
 					
 					this.editIndex2 = inx;
-					this.llena();
+					//this.llena();
 				
 				} else {
 					$(this.grid).datagrid('selectRow', this.editIndex2);

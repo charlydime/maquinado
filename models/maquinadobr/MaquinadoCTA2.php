@@ -1103,6 +1103,7 @@ public function  GetInfo_pza_op($semana){
 			  $result =$command->createCommand()->update('pdp_ctb',[
 										'maquina' => $data['maquina'],
 										'prioridad' => $data['prioridad'],
+										'minutos' => $data['minutos'],
 										'cantidad' => $data['cantidad'] 
 										], 	[
 										

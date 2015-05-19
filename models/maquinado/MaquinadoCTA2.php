@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\Models\Maquinado;
+
 use Yii;
 use yii\base\Model;
 
@@ -1073,6 +1074,12 @@ public function  GetInfo_pza_op($semana){
 			// ])->getRawSql();
 			//se llena pdp_maquina turnos
 			$this->maquinaturnossemana( $data );
+			
+			//si es celda inserta en id pdp_prgcelda
+			if( strlen($data['maquina']) > 7 ){
+				$model = new Celda;
+				$model->creaPRGCelda( $data['maquina']);
+			}
 		}else{
 		  //echo ' existe se actualiza';
 		  
@@ -1107,7 +1114,7 @@ public function  GetInfo_pza_op($semana){
 								// )->getRawSql();
 				//se llena pdp_maquina turnos
 				$this->maquinaturnossemana( $data );
-			
+			//si es celda se actualiza pdp_prgcta
 									
 		  }
 		echo "query: $result \n";	

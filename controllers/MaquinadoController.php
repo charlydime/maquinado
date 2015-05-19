@@ -10,6 +10,7 @@ use frontend\models\maquinado\maquinadocta2;
 use frontend\models\maquinado\maquinadocta4;
 use frontend\models\maquinado\maquinadoPzaMaq;
 use frontend\models\maquinado\maquinadoInserto;
+use frontend\models\maquinado\celda;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -581,6 +582,69 @@ class MaquinadoController extends Controller
 		$data = json_decode($_POST['Data']);
 						
 		$model->insertodel($data);
+		
+	}
+	//---------------celdaprg
+	
+	// celdas
+	public function actionCelda(){
+		
+		return $this->render('celda', [  ]);
+	}
+	
+	//lista celdas
+	public function actionLstcelda(){
+		
+		$id = 0;
+		$model = new Celda;
+		if (isset($_REQUEST['id']))
+			$id = $_REQUEST['id'];
+	
+		// $f  = $_POST['fecha'];
+		
+		$celda = $model->lstcelda($id);
+		
+		return json_encode($celda, 0);
+		
+	}
+	
+	//salva celda
+	public function actionSalvacelda(){
+		
+		$data = json_decode($_POST['Data']);
+
+		$model = new Celda;
+		$id =$model->saveCelda($data);
+		
+		return $id;
+		
+	}
+	
+	//obtiene id de celda
+	public function actionGetcelid(){
+		//$data = json_decode(']);
+		
+		// print_r($_GET['maquina']);exit;
+		
+		
+		$model = new Celda;
+		$id =$model->getCelId( $_GET['maquina']  );
+		
+		return $id;
+		
+	}
+	
+	//obtiene nombre de celda
+	public function actionGetcelname(){
+		//$data = json_decode(']);
+		
+		// print_r($_GET['maquina']);exit;
+		
+		
+		$model = new Celda;
+		$id =$model->getCelName( $_GET['idcelda']  );
+		
+		return $id;
 		
 	}
 	

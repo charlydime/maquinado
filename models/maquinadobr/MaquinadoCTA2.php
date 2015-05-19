@@ -250,7 +250,7 @@ LEFT JOIN(
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -277,7 +277,7 @@ LEFT JOIN(
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -304,7 +304,7 @@ LEFT JOIN(
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,
@@ -331,7 +331,7 @@ LEFT JOIN(
 					[Num Operacion] * 10  as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					Celda,
+					
 					idturno, 
 					Descripcion,
 					Area,

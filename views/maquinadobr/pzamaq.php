@@ -108,7 +108,7 @@ use common\models\Grid;
 			
 			
 			
-			<th data-options="field:'minutos',width:60,editor:'numberbox'">Min</th>
+			<th data-options="field:'minutos',width:60,editor:'textbox'">Min</th>
 			<th data-options="field:'minutos1maquinado',width:50,editor:'numberbox'">Setup</th>
 			<th data-options="field:'celda',width:50,editor:'numberbox'">Celda</th>
 			
@@ -206,7 +206,7 @@ use common\models\Grid;
 			sig  = $(ed_sig.target).numberbox('getValue');
 			
 			op  = $(ed_op.target).combobox('getValue');
-			minutos  = $(ed_minutos.target).numberbox('getValue');
+			minutos  = $(ed_minutos.target).textbox('getValue');
 			minutos1maquinado  = $(ed_minutos1maquinado.target).numberbox('getValue');
 			celda  = $(ed_celda.target).numberbox('getValue');
 			siguiente  = $(ed_siguiente.target).numberbox('getValue');

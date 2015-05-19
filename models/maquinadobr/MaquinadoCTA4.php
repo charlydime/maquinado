@@ -792,6 +792,10 @@ Class MaquinadoCTA4 extends Model {
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
+							$this->save_opturno_p2( $data_rec2);
 						
 						
 					}
@@ -820,6 +824,10 @@ Class MaquinadoCTA4 extends Model {
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
+							$this->save_opturno_p2( $data_rec2);
 						
 					}
 					if($data->{'mie_prg'} != '' && $data->{'mie_prg'} != 'n') {
@@ -846,6 +854,10 @@ Class MaquinadoCTA4 extends Model {
 						
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
 					}
@@ -874,6 +886,10 @@ Class MaquinadoCTA4 extends Model {
 						
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
 						
@@ -904,6 +920,10 @@ Class MaquinadoCTA4 extends Model {
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
+							$this->save_opturno_p2( $data_rec2);
 						
 						
 					}
@@ -933,6 +953,10 @@ Class MaquinadoCTA4 extends Model {
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
+							$this->save_opturno_p2( $data_rec2);
 						
 					}
 					if($data->{'dom_prg'} != '' && $data->{'dom_prg'} != 'n') {
@@ -960,6 +984,10 @@ Class MaquinadoCTA4 extends Model {
 						
 							$data_rec2['operador'] = $ops['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
+							$this->save_opturno_p2( $data_rec2);
+							
+							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
 					}
@@ -1064,6 +1092,7 @@ Class MaquinadoCTA4 extends Model {
 					LEFT JOIN  pdp_maquina_turno_diabr as m on  d.maquina = m.maquina and   m.dia =  '$fecha' and m.turno = 'Matutino'  
 					LEFT JOIN  pdp_maquina_turno_diabr as v on  d.maquina = v.maquina and   v.dia =  '$fecha' and v.turno = 'Vespertino'  
 					LEFT JOIN  pdp_maquina_turno_diabr as n on  d.maquina = n.maquina and   n.dia =  '$fecha' and n.turno = 'Nocturno'  
+					LEFT JOIN  pdp_maquina_turno_diabr as x on  d.maquina = x.maquina and   x.dia =  '$fecha' and x.turno = 'Mixto'  
 			";
 			
 			$command = \Yii::$app->db_mysql;

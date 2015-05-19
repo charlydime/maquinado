@@ -139,6 +139,7 @@ $this->registerJS("
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
 								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
 						
 					</div>
 								
@@ -368,7 +369,12 @@ data-options="
 		
 </div>			
 							
-							
+	<?= $this->render('celdaprg',[
+								'semana'=>$sem4,
+								'sem'=>$s4,
+								'idOpMaq'  => '8',
+								'idOP'  => '9'
+							]);?>						
 							
 						
 						
@@ -843,6 +849,89 @@ data-options="
 			}
 
 			$('#<?php echo $id ?>').datagrid(opt);//re-render datagrid
+			
+		}
+		
+		function cel(){
+				var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+				var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+				
+				var maquina = $('#<?php echo $id ?>').datagrid('getRows')[inx]['maquina1'];
+			
+			
+			
+			if ( es_celda(maquina) ){
+					//$('#id').val(maquina);
+					//$('#id').textbox('setText',maquina);
+					
+					getCelId(maquina);
+					
+					
+					$('#win_cel').window('open');
+					$('#captura').datagrid('reload');
+					$('#captura').datagrid('reload');
+					
+			}else{
+				alert("Esta es una maquina , No es una  celda");
+				
+			}
+			
+			
+		}
+		
+		function es_celda (maquina){
+			
+			if (maquina.length > 7) 
+				return true
+			else 
+				return false;
+		}
+		
+		function getCelId(cel){
+			var data = { maquina: cel};
+			$.ajax({
+                data:  data,
+                url:   'getcelid',
+                type:  'get',
+                beforeSend: function () {
+                        // $("#resultado").html("Creando registro");
+                },
+                success:  function (response) {
+                        response.replace(/\"/g, "");
+						console.log(response);
+						getCelName(response);
+						$('#id').textbox('setValue',response);
+						
+				},
+				error:  function (response) {
+                        
+						console.log(response);
+						alert("No  se pudo obtener ID");
+                }
+        });
+			
+		}
+		
+		function getCelName(cel){
+			var data = { idcelda: cel};
+			$.ajax({
+                data:  data,
+                url:   'getcelname',
+                type:  'get',
+                beforeSend: function () {
+                        // $("#resultado").html("Creando registro");
+                },
+                success:  function (response) {
+                        response.replace(/\"/g, "");
+						console.log(response);
+						$('#descripcion').textbox('setValue',response);
+				},
+				error:  function (response) {
+                        
+						console.log(response);
+						alert("No  se pudo obtener nombre");
+                }
+        });
 			
 		}
 

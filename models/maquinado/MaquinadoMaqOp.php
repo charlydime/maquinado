@@ -67,8 +67,8 @@ Class MaquinadoMaqOp extends Model {
 	
 	//da de alta  maquina operador
 	public function SetMaqOp($data){
-					
-			$result =$command->createCommand()->insert('pdp_cta',[
+					$command = \Yii::$app->db_mysql;
+			$result = $command->createCommand()->insert('maquina_operador',[
 														'maquina' =>  $data['maquina'], 
 														'operador' => $data['operador']
 									

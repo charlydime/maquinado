@@ -30,12 +30,23 @@ Class Celda extends Model {
 	   $data = (array) $data;
 	    $descripcion = $data['descripcion'];
 	   $maquinas = $data['maquinas'];
+	   $idcel = $data['id'];
 	   	   	   
-		// cocatena claves
+		// concatena claves
 		$clave = $this->creaClave($maquinas); 
-		
-	   //id de la celda
+	   
+	   if ($idcel > 0){
+	   // borra todas las maquinas par aponerlas de nuevo
+	   $result =$cmd->createCommand()->delete('pdp_celda',[
+								'idcelda' => $idcel
+								])->execute();
+							// ])->getRawSql();
+							// print_r($result);
+							$id = $idcel;
+	   }else{ // crea la celda 
+	   //obtiene el id de la celda nueva
 	   $id = $this->creaCeldaMaquina($descripcion,$clave);
+	   }
 	   
 		foreach($maquinas as $m){
 			$m = (array) $m;

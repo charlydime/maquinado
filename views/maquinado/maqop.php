@@ -9,7 +9,7 @@ use yii\helpers\URL;
  $id = 'maqop';
 ?>
 
-<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:100%;height:auto;"
+<table id="<?php echo $id ?>" class="easyui-datagrid " style="width:80%;height:450px;"
 
         data-options="
 			url:'maqopd',
@@ -70,7 +70,7 @@ use yii\helpers\URL;
 					type:'combobox',
 					options:{
 					valueField:'Maquina',
-					textField:'Descripcion',
+					textField:'Maquina',
 					url:'maq',
 					method:'get',
 						}

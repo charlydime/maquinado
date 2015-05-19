@@ -201,7 +201,7 @@ use common\models\Grid;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Matutino'] = mat;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Vespertino'] = ves;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Nocturno'] = noc;
-				 $(this.grid).datagrid('getRows')[this.editIndex2]['Mixto'] = noc;
+				 $(this.grid).datagrid('getRows')[this.editIndex2]['Mixto'] = mix;
 			
 				 
 				$(this.grid).datagrid('refreshRow',this.editIndex2);

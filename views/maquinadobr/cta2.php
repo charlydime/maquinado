@@ -27,7 +27,7 @@ echo Html::beginTag('div',['id'=>'tbDiaria']);
 echo Html::a('Actualizar',"javascript:void(0)",[
         'class'=>"easyui-linkbutton",
         'data-options'=>"iconCls:'icon-reload',plain:true",
-        'onclick'=>"cambia('#$id')"
+        'onclick'=>"recargaPagina()"
     ]);
 
 
@@ -115,6 +115,7 @@ $this->registerJS("
 
 										rownumbers:true,
 										
+										view:groupview,
 										
 										groupField:'casting',
 										groupFormatter:function(value,rows){
@@ -132,18 +133,19 @@ $this->registerJS("
 								toolbar: "'#tb'">
 								
 								<div id="tb" style="height:auto">
-								<!--
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="accept()">Accept</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject()">Reject</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
-								-->
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(1)">pieza</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(2)">maquina</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
+								
+
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
 						
 					</div>
 								
 								<thead>
 									<tr>
-										<th colspan ="5"></th>
+										<th colspan ="6"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
 										<th colspan ="4">Almacenes</th>
@@ -166,8 +168,9 @@ $this->registerJS("
 										
 										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 										">Hold</th>
-										<th data-options="field:'casting',width:100,sortable:true">Casting</th>
-										<th data-options="field:'producto',width:100,sortable:true,">Parte</th>
+										<th data-options="field:'casting',width:100,sortable:true,hidden:0">Casting</th>
+										<th data-options="field:'producto',width:100,sortable:true,hidden:0">Parte</th>
+										<th data-options="field:'descripcion',width:50,sortable:true,hidden:0">desc</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,sortable:true,
 													
@@ -188,7 +191,7 @@ $this->registerJS("
 										
 									
 										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes,sortable:true">num</th>
-										<th data-options="field:'Minutos',width:50">min</th>
+										<th data-options="field:'Minutos',width:50, styler:formateo_celda_faltantes">min</th>
 										
 									   
 										<th data-options="field:'sem1',width:50,sortable:true">sem<?=$s1 ?></th>
@@ -224,6 +227,8 @@ $this->registerJS("
 										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 									
 										
+										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
+										<th data-options="field:'maq_ocup',width:50,hidden:1,sortable:true">maq_ocup</th>
 										
 										
 										
@@ -370,6 +375,14 @@ data-options="
 		 </div>
 		
 </div>			
+
+<?= $this->render('celdaprg',[
+								'semana'=>$sem4,
+								'sem'=>$s4,
+								'idOpMaq'  => '8',
+								'idOP'  => '9'
+							]);?>						
+							
 							
 							
 							
@@ -736,6 +749,8 @@ data-options="
 			// var op =  parseInt(row.op) ? parseInt(row.op) : 0;
 			// if (op == 0 )
 			   // return 'font-weight:bold;background-color: Yellow ;';
+			if(row.maq_ocup == 1 )
+			    return 'font-weight:bold;color: red ;';
 			if (row.maquina1 == 0 && row.cast == 0)
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
@@ -817,6 +832,13 @@ data-options="
 
 		}
 		
+		function recargaPagina(){
+			
+			var sem = $('#semana1').val();
+			window.location.href = 'cta2' + "?fecha=" + sem ;
+			
+		}
+		
 		function formateo_celda_faltantes(val,row,inx){
 			
 			
@@ -829,6 +851,116 @@ data-options="
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
 
+		}
+function vistas(view){
+			var defaultOpt =   $('#<?php echo $id ?>').datagrid('options');
+			var opt = $.extend(true, {}, defaultOpt);
+	
+			if (view == 0) {//default list view
+
+			} else if (view == 1) {// pieza
+				opt.view = groupview;
+				opt.groupField = 'producto';
+				opt.groupFormatter = function(value, rows){
+					return value;
+				};
+			} else if (view == 2) {//maquina
+				opt.view = groupview;
+				opt.groupField = 'maquina1';
+				opt.groupFormatter = function(value, rows){
+					return value;
+				};
+			} else if (view == 3){ //normal
+				$('#<?php echo $id ?>').datagrid({
+						view: $.fn.datagrid.defaults.view
+						});
+			}
+
+			$('#<?php echo $id ?>').datagrid(opt);//re-render datagrid
+			
+		}
+		
+		function cel(){
+				var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+				var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+				
+				var maquina = $('#<?php echo $id ?>').datagrid('getRows')[inx]['maquina1'];
+			
+			
+			
+			if ( es_celda(maquina) ){
+					//$('#id').val(maquina);
+					//$('#id').textbox('setText',maquina);
+					
+					getCelId(maquina);
+					
+					
+					$('#win_cel').window('open');
+					$('#captura').datagrid('reload');
+					$('#captura').datagrid('reload');
+					
+			}else{
+				alert("Esta es una maquina , No es una  celda");
+				
+			}
+			
+			
+		}
+		
+		function es_celda (maquina){
+			
+			if (maquina.length > 7) 
+				return true
+			else 
+				return false;
+		}
+		
+		function getCelId(cel){
+			var data = { maquina: cel};
+			$.ajax({
+                data:  data,
+                url:   'getcelid',
+                type:  'get',
+                beforeSend: function () {
+                        // $("#resultado").html("Creando registro");
+                },
+                success:  function (response) {
+                        response.replace(/\"/g, "");
+						console.log(response);
+						getCelName(response);
+						$('#id').textbox('setValue',response);
+						
+				},
+				error:  function (response) {
+                        
+						console.log(response);
+						alert("No  se pudo obtener ID");
+                }
+        });
+			
+		}
+		
+		function getCelName(cel){
+			var data = { idcelda: cel};
+			$.ajax({
+                data:  data,
+                url:   'getcelname',
+                type:  'get',
+                beforeSend: function () {
+                        // $("#resultado").html("Creando registro");
+                },
+                success:  function (response) {
+                        response.replace(/\"/g, "");
+						console.log(response);
+						$('#descripcion').textbox('setValue',response);
+				},
+				error:  function (response) {
+                        
+						console.log(response);
+						alert("No  se pudo obtener nombre");
+                }
+        });
+			
 		}
 
 	</script>

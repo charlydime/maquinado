@@ -25,6 +25,8 @@ Class MaquinadoCTA4 extends Model {
 
  				select 
 				pdp_ctb.Pieza,
+				prod_dux.CAMPOUSUARIO5 as casting,
+				prod_dux.DESCRIPCION as descripcion,
 				pdp_ctb.Prioridad,
 				pdp_ctb.Cantidad,
 				pdp_ctb.Maquina,
@@ -44,30 +46,44 @@ Class MaquinadoCTA4 extends Model {
 				lun.cantidad as lun_prg,
 				lun.min as lun_min,
 				lun.setup as lun_set,
+				ETE_lun.hechas as hechaslun,
+				ETE_lun.rechazadas as rechazadaslun,
 				
 				mar.cantidad as mar_prg,
 				mar.min as mar_min,
 				mar.setup as mar_set,
+				ETE_mar.hechas as hechasmar,
+				ETE_mar.rechazadas as rechazadasmar,
 				
 				mie.cantidad as mie_prg,
 				mie.min as mie_min,
 				mie.setup as mie_set,
+				ETE_mie.hechas as hechasmie,
+				ETE_mie.rechazadas as rechazadasmie,
 				
 				jue.cantidad as jue_prg,
 				jue.min as jue_min,
 				jue.setup as jue_set,
+				ETE_jue.hechas as hechasjue,
+				ETE_jue.rechazadas as rechazadasjue,
 				
 				vie.cantidad as vie_prg,
 				vie.min as vie_min,
 				vie.setup as vie_set,
+				ETE_vie.hechas as hechasvie,
+				ETE_vie.rechazadas as rechazadasvie,
 				
 				sab.cantidad as sab_prg,
 				sab.min as sab_min,
 				sab.setup as sab_set,
+				ETE_sab.hechas as hechassab,
+				ETE_sab.rechazadas as rechazadassab,
 			
 				dom.cantidad as dom_prg,
 				dom.min as dom_min,
 				dom.setup as dom_set,
+				ETE_dom.hechas as hechasdom,
+				ETE_dom.rechazadas as rechazadasdom,
 				
 				isnull(lun.cantidad,0)+
 				isnull(mar.cantidad,0)+
@@ -125,7 +141,8 @@ Class MaquinadoCTA4 extends Model {
 				
 				from pdp_ctb 
 				
-
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = pdp_ctb.Pieza
+				
 				LEFT JOIN(
 						SELECT 
 						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
@@ -378,6 +395,60 @@ Class MaquinadoCTA4 extends Model {
 					ETE_vie.producto = pdp_ctb.Pieza and 
 					ETE_vie.OP =	pdp_ctb.op
 					and ETE_vie.clave = pdp_ctb.Maquina
+				
+				
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$sab' as datetime2)
+				
+				) AS ETE_sab on 
+					ETE_sab.producto = pdp_ctb.Pieza and 
+					ETE_sab.OP =	pdp_ctb.op
+					and ETE_sab.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion] * 10  as OP, 
+					[Piezas Maquinadas] as hechas, 
+					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
+					
+					idturno, 
+					Descripcion,
+					Area,
+					clave,
+					fecha
+					
+					 from  ete.dbo.[Detalle de ETE] as DE 
+					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+				where
+						fecha =	 cast ( '$dom' as datetime2)
+				
+				) AS ETE_dom on 
+					ETE_dom.producto = pdp_ctb.Pieza and 
+					ETE_dom.OP =	pdp_ctb.op
+					and ETE_dom.clave = pdp_ctb.Maquina
 				
 				where semana = $se1
 				
@@ -1079,7 +1150,9 @@ Class MaquinadoCTA4 extends Model {
 				select d.*, 
 					m.op as Matutino,
 					v.op as Vespertino,
-					n.op as Nocturno
+					n.op as Nocturno,
+					x.op as Mixto
+					
 					 from 
 						(select maquina,
 										sum(min) as min,
@@ -1136,6 +1209,12 @@ Class MaquinadoCTA4 extends Model {
 				$this->save_opturno_p2($guardar);
 			}
 			
+			if($data->{'Mixto'} != '' ) {
+				$guardar['operador'] =  $data->{'Mixto'};
+					
+				$guardar['turno'] =  'Mixto';
+				$this->save_opturno_p2($guardar);
+			}
 			
 		}
 		

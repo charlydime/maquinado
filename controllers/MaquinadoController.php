@@ -10,7 +10,8 @@ use frontend\models\maquinado\maquinadocta2;
 use frontend\models\maquinado\maquinadocta4;
 use frontend\models\maquinado\maquinadoPzaMaq;
 use frontend\models\maquinado\maquinadoInserto;
-use frontend\models\maquinado\celda;
+use frontend\models\maquinado\eteusr;
+use frontend\models\ete\celda;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -63,14 +64,14 @@ class MaquinadoController extends Controller
 		
 	public function actionCta2(){
    
-	          if ( isset($_POST['semana']) ){
-				 $semana =  $POST('semana');
-				 //echo $POST('semana');exit;  
-			  }else{
-				  $sem = date('W');
-				  $aio = date('Y');
-				  $semana=$aio.'-W'.$sem;
+	           if ( isset( $_REQUEST['fecha'] )){
+	          $semana = $_REQUEST['fecha'];
+			  }else {
+				$sem = date('W');
+			  $aio = date('Y');
+			  $semana=$aio.'-W'.$sem;  
 			  }
+			  
         return $this->render('cta2', ['semana' => $semana,  ]);
    
     }
@@ -614,7 +615,7 @@ class MaquinadoController extends Controller
 		$data = json_decode($_POST['Data']);
 
 		$model = new Celda;
-		$id =$model->saveCelda($data);
+		$id =$model->saveCeldaPrg($data);
 		
 		return $id;
 		
@@ -645,6 +646,20 @@ class MaquinadoController extends Controller
 		$id =$model->getCelName( $_GET['idcelda']  );
 		
 		return $id;
+		
+	}
+	
+	//alta usuarios
+		public function actionAltausr(){
+		//$data = json_decode(']);
+		
+		// print_r($_GET['maquina']);exit;
+		
+		
+		$model = new Eteusr;
+		$id =$model->altamasiva(   );
+		
+	
 		
 	}
 	

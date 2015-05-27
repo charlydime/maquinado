@@ -71,8 +71,16 @@ Class Celda extends Model {
 							// echo $result;exit; 
 			}
 		}
-	   return $id;
-   }
+		
+		// if ( $id > 0  )
+			// $res = json_encode ( array( 'success' => $id  ) );
+		// else 
+			// $res = json_encode ( array( 'error' => "NO id" ) );
+		
+
+	   return $id ;
+		}
+   
    
    public function creaCeldaMaquina($descripcion,$clave){
 	   $cmd = \Yii::$app->db_mysql;
@@ -121,5 +129,72 @@ Class Celda extends Model {
 	   
    }
         
-    
+    public function getCelId($maquina){
+		
+	
+		
+		 $cmd = \Yii::$app->db_mysql;
+		$id = 0;
+		 $sql = "
+			select top 1 id from pdp_maquina
+			where maquina = '$maquina'
+			";
+		 
+		
+		if ($maquina != '') { 
+		
+		  $result = $cmd->createCommand($sql)
+							->queryAll();
+		  $id = $result[0]['id'];
+		  }
+		
+		return $id;
+		
+	}
+	
+	public function getCelName($id){
+		
+	
+		
+		 $cmd = \Yii::$app->db_mysql;
+		
+		$name = '';
+		 $sql = "
+			select top 1  Descripcion+ '-' +maquina  as  name 
+			from pdp_maquina
+			where id  = $id
+			";
+		 
+		
+		if ($id != '') { 
+		
+		  $result = $cmd->createCommand($sql)
+							->queryAll();
+		  $name = $result[0]['name'];
+		  }
+		
+		return $name;
+		
+	}
+
+public function existCeldaPrg(){
+	echo "existe";
+}
+
+	
+public function saveCeldaPrg(){
+	$this->existCeldaPrg();
+	echo "guarda";
+}
+
+//obtiene celda con base en el ID celda
+public function getMaquinasCelda($celda){
+
+
+
+
+}
+
+
+	
 }

@@ -26,7 +26,7 @@ Class Celda extends Model {
    }
    
    public function saveCelda($data){
-	   
+
 	   $cmd = \Yii::$app->db_mysql;
 	   $data = (array) $data;
 	    $descripcion = $data['descripcion'];
@@ -72,7 +72,9 @@ Class Celda extends Model {
 							// echo $result;exit; 
 			}
 		}
-	   return $id;
+		
+		
+	   return $id ;
    }
    
    public function creaCeldaMaquina($descripcion,$clave){
@@ -169,5 +171,11 @@ Class Celda extends Model {
 		return $name;
 		
 	}
-    
+
+
+public function savePrgCelda(){
+	
+}
+
+	
 }

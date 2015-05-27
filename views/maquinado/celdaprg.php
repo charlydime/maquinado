@@ -106,6 +106,7 @@ use common\models\Grid;
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
 		 this.s = 'salvacelda'
+		 this.rows = [];
 		 
 		 
 		

@@ -130,17 +130,19 @@ Class Captura extends Model {
 		 // print_r($data);
 		 
 		 $command = \Yii::$app->db_ete;
+		 $data['fecha'] = str_replace('-','', $data['fecha']);
+		 // $data['fecha'] =  $data['fecha'] ;
 		 if (!$this->existeEte($data['usuario'],$data['fecha'],$data['maquina']))
 		 {
 			 $result =$command->createCommand()->insert('ETE',[
 									'empleado' => $data['usuario'],
 									'fecha' => $data['fecha'], 
-									'idmaquina' => 1,
-									'idturno' => $data['fecha'], //jalar de empleados
+									'idmaquina' => $data['maquina'],
+									// 'idturno' => $data['fecha'], //jalar de empleados
 
 							])->execute();
 							// ])->getRawSql();
-							//echo $result;exit;
+							// echo $result;exit;
 			
 			$ultimo = 	$command->getLastInsertID();
 			
@@ -299,14 +301,28 @@ Class Captura extends Model {
 	
 	
 	//busca la maquina combobox
-	public function GetMaquina(){
+	public function GetMaquina($fecha){
 		
 		 $cmd = \Yii::$app->db_mysql;
+
+		 
+		 	 // select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		// from pdp_maquina as m
+
+		// LEFT JOIN (
+		// select * from pdp_cta_dia 
+		// union 
+		// select * from pdp_ctb_dia 
+
+		// ) as pdp_ct on pdp_ct.maquina = m.Maquina
+		// where pdp_ct.dia =  '$fecha'
 		 $sql = "
-		 select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
+
+					 select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
 		 from pdp_maquina
-		 where activa = 1 and len(maquina) <= 7 
+		 where activa = 1 
 		 order by Descripcion
+
 		
 		 ";
 		  $result =$cmd->createCommand($sql)
@@ -349,6 +365,7 @@ Class Captura extends Model {
 	}
 	
 		//busca  operaciones  combobox
+		//TODO: restriccion aqui
 	public function GetParte(){
 		
 		 $cmd = \Yii::$app->db_mysql;

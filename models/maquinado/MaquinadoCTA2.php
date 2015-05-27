@@ -4,6 +4,7 @@ namespace frontend\Models\Maquinado;
 
 use Yii;
 use yii\base\Model;
+use frontend\models\ete\celda;
 
 Class MaquinadoCTA2 extends Model {
 
@@ -20,9 +21,15 @@ Class MaquinadoCTA2 extends Model {
         $result =$command->createCommand("
  				
  
-  select 
+  select 		
+				can_s1.id as id1,
+				can_s2.id as id2,
+				can_s3.id as id3,			
+				can_s4.id as id4,
+  
 				prod.producto,
 				prod_dux.CAMPOUSUARIO5 as casting,
+				prod_dux.DESCRIPCION as descripcion,
 				CASE 
 				WHEN can_s1.maquina is not null THEN can_s1.maquina
 				WHEN can_s2.maquina is not null THEN can_s2.maquina
@@ -51,6 +58,8 @@ Class MaquinadoCTA2 extends Model {
 				ETE_S3.hechas as hechas4,
 				ETE_S3.rechazadas as rechazadas4,
 				
+				isnull(almpla.existencia,0) as PLA1,
+				isnull(almpla2.existencia,0) as PLA2,
 				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
 				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
 				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
@@ -199,7 +208,7 @@ Class MaquinadoCTA2 extends Model {
 
 				LEFT JOIN(
 				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
+				 id,Cantidad,pieza,semana,op,maquina,prioridad
 				FROM pdp_cta
 				
 				) as can_s1 on 
@@ -210,7 +219,7 @@ Class MaquinadoCTA2 extends Model {
 
 				LEFT JOIN(
 				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
+				  id,Cantidad,pieza,semana,op,maquina,prioridad
 				FROM pdp_cta
 				
 				) as can_s2 on 
@@ -221,7 +230,7 @@ Class MaquinadoCTA2 extends Model {
 
 				LEFT JOIN(
 				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
+				  id,Cantidad,pieza,semana,op,maquina,prioridad
 				FROM pdp_cta
 				
 				) as can_s3 on 
@@ -232,7 +241,7 @@ Class MaquinadoCTA2 extends Model {
 
 				LEFT JOIN(
 				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
+				  id,Cantidad,pieza,semana,op,maquina,prioridad
 				FROM pdp_cta
 				
 				) as can_s4 on 
@@ -415,6 +424,8 @@ Class MaquinadoCTA2 extends Model {
 				if ($r['opx'] == 10 ||  $r['maquina1'] == null){
 				}else {
 				 $r['PLA'] = '';	
+				 $r['PLA1'] = '';	
+				 $r['PLA2'] = '';	
 				 $r['CTA'] = '';	
 				 $r['PMA'] = '';	
 				 $r['PTA'] = '';	
@@ -431,6 +442,8 @@ Class MaquinadoCTA2 extends Model {
 					
 				$r['CTA'] = (real)$r['CTA'] ;
 				$r['PLA'] = (real)$r['PLA'] ;
+				$r['PLA1'] = (real)$r['PLA1'] ;
+				$r['PLA2'] = (real)$r['PLA2'] ;
 				$r['PMA'] = (real)$r['PMA'] ;
 				$r['PTA'] = (real)$r['PTA'] ;
 				$r['sem1'] = (real)$r['sem1'] ;
@@ -446,6 +459,8 @@ Class MaquinadoCTA2 extends Model {
 				if ($r['tot_min'] ==  0) $r['tot_min'] = ''; 
 				if ($r['CTA'] ==  0) $r['CTA'] = ''; 
 				if ($r['PLA'] ==  0) $r['PLA'] = ''; 
+				if ($r['PLA1'] ==  0) $r['PLA1'] = ''; 
+				if ($r['PLA2'] ==  0) $r['PLA2'] = ''; 
 				if ($r['PMA'] ==  0) $r['PMA'] = ''; 
 				if ($r['PTA'] ==  0) $r['PTA'] = ''; 
 				if ($r['sem1'] ==  0) $r['sem1'] = ''; 

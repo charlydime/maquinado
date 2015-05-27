@@ -89,7 +89,7 @@ data-options="
 			<thead>
 	
 				<tr>
-					<th colspan= 2></th>
+					<th colspan= 3></th>
 					<th colspan= 2>Opeacion</th>
 					<th colspan= 1></th>
 					<th colspan= 2>Embaques</th>
@@ -109,6 +109,8 @@ data-options="
 				<tr>
 					
 					<th data-options="field:'Pieza',width:170,sortable:true">Producto</th>
+					<th data-options="field:'descripcion',width:50,sortable:true">desc</th>
+					<th data-options="field:'casting',width:50,sortable:true">casting</th>
 					<th data-options="field:'prio',sortable:true,width:40">Prio</th>
 					<th data-options="field:'op',sortable:true,width:40">num</th>
 					<th data-options="field:'minmaq',sortable:true,width:53">Min</th>

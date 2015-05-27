@@ -39,13 +39,14 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="controlsemana<?php echo $idOpMaq ?>.deshacerfila2()">Escape</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="controlsemana<?php echo $idOpMaq ?>.diario()">Ver L-M</a>
 						
 					</div>
    
     <thead>
 		<tr>
 			<th rowspan='2' data-options="field:'maquina',width:100">Maquina</th>
-			<th colspan="3">Turnos</th>
+			<th colspan="4">Turnos</th>
 			<th colspan="3">Tiempo a Maquinar</th>
 			
 		</tr>
@@ -100,6 +101,20 @@ use common\models\Grid;
 				}
 			">N</th>
 			
+			<th data-options="field:'Mixto',width:40,
+										
+											
+				editor:{
+					type:'combobox',
+					options:{
+					valueField:'operador',
+					textField:'NOMBRECOMPLETO',
+					panelWidth:300,
+					url:'cta2',
+					method:'get',
+						}
+				}
+			">X</th>
 			<th data-options="field:'minutos_m',width:60">Min</th>
 			<th data-options="field:'horas_m',width:40">Hrs</th>
 			<th data-options="field:'t8_m',width:40">T8</th>
@@ -218,6 +233,7 @@ use common\models\Grid;
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
 		 this.semana = <?php echo $idOpMaq ?> ? <?php echo $idOpMaq ?> : 0;
+		 this.sem = '<?=$semana?>';
 		 
 		this.endEditing2 = function (){
 				
@@ -231,6 +247,7 @@ use common\models\Grid;
 				var ed_mat = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Matutino'});
 				var ed_ves = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Vespertino'});
 				var ed_noc = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Nocturno'});
+				var ed_mix = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'Mixto'});
 				 
 				  if (ed_mat == null || ed_ves == null || ed_noc == null  )
 				  {return true;this.editIndex2 = undefined;}
@@ -238,11 +255,13 @@ use common\models\Grid;
 				 mat = $(ed_mat.target).combobox('getValue');
 				 ves = $(ed_ves.target).combobox('getValue');
 				 noc = $(ed_noc.target).combobox('getValue');
+				 mix = $(ed_mix.target).combobox('getValue');
 				//semana = $('#semana1').val(); directo de campo
 				semana = this.getSemana();
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Matutino'] = mat;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Vespertino'] = ves;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['Nocturno'] = noc;
+				 $(this.grid).datagrid('getRows')[this.editIndex2]['Mixto'] = mix;
 				 $(this.grid).datagrid('getRows')[this.editIndex2]['semana'] = semana;
 				 
 				$(this.grid).datagrid('refreshRow',this.editIndex2);
@@ -299,6 +318,9 @@ use common\models\Grid;
 						
 					var noc  = $(this.grid).datagrid('getColumnOption','Nocturno');
 						noc.editor.options.url = 'cta3p2operador?maquina='+maquina;
+				
+					var mix  = $(this.grid).datagrid('getColumnOption','Mixto');
+						mix.editor.options.url = 'cta3p2operador?maquina='+maquina;
 								
 								$(this.grid).datagrid('selectRow', inx)
 										.datagrid('beginEdit', inx);
@@ -359,6 +381,13 @@ use common\models\Grid;
 			$(nextgrid).datagrid('reload');
 			
 			
+			
+		}
+		
+		this.diario = function(){
+			
+			alert('Abriendo semana '+this.sem);
+			window.open('cta4?semana='+this.sem);
 			
 		}
 		

@@ -259,8 +259,8 @@ use common\models\Grid;
 					var noc  = $(this.grid).datagrid('getColumnOption','Nocturno');
 						noc.editor.options.url = 'cta3p2operador?maquina='+maquina;
 						
-					var noc  = $(this.grid).datagrid('getColumnOption','Mixto');
-						noc.editor.options.url = 'cta3p2operador?maquina='+maquina;
+					var mix  = $(this.grid).datagrid('getColumnOption','Mixto');
+					mix.editor.options.url = 'cta3p2operador?maquina='+maquina;
 								
 								$(this.grid).datagrid('selectRow', inx)
 										.datagrid('beginEdit', inx);

@@ -11,6 +11,13 @@ use common\models\Grid;
 	$tb = "barraherramcap";
 	$id2 = "captura";
 ?>
+
+ 
+<div id="win_cel" class="easyui-window" data-options="modal:true,closed:true,title:'configuracion de Celda',inline:true" style="width:600px;height:400px;padding:10px">
+           
+        
+    
+
 <table>
 <tr>
 <td>ID :</td>
@@ -24,7 +31,7 @@ use common\models\Grid;
 </tr>			
 </table>
 
-<table id="<?php echo $id2 ?>" title="Maquinas de nueva Celda"  class="easyui-datagrid " style="width:40%;height:300px;"
+<table id="<?php echo $id2 ?>" title="Maquinas de nueva Celda"  class="easyui-datagrid " style="width:90%;height:300px;"
 
         data-options="
 			url:'lstcelda',
@@ -91,7 +98,7 @@ use common\models\Grid;
         </tr>
     </thead>
 </table>
-
+</div>
 <script type="text/javascript">
 	
 		//class control
@@ -168,46 +175,20 @@ use common\models\Grid;
 		
 		this.save = function(data,url) {
 			
-				// $.post(url,
-							// {Data: JSON.stringify(data)},
-							// function(data,status){
-								// if(status == 'success' ){
-									// $(grid).datagrid('load');
-									// $('#id').textbox('setValue','un id');
-									// getCelName(data);
-									// console.log("datos"+data);
-									// console.log("datos"+response);
-									// $var = $(grid).datagrid('getChanges');
-								// }else{
-									// reject('#$id');
-									// alert('Error al guardar los datos');
-								// }
-							// }
-						// );
-						var data = { Data: JSON.stringify(data) };
-				$.ajax({
-                data:  data,
-                url:   url,
-                type:  'post',
-                beforeSend: function () {
-                        // $("#resultado").html("Creando registro");
-					
-                },
-                success:  function (response) { 
-									alert ("Celda guardada con el ID: "+ response);
-								
-									$('#id').textbox('setValue',response);
-									getCelName(response);
-									console.log("datos"+data.success);
-									console.log("datos"+response);
+				$.post(url,
+							{Data: JSON.stringify(data)},
+							function(data,status){
+								if(status == 'success' ){
+									$(grid).datagrid('load');
+									$('#id').textbox('setValue','un id');
+									console.log(data);
 									$var = $(grid).datagrid('getChanges');
-				},
-				error:  function (response) {
-                        
-						console.log(response);
-						alert("No  se pudo obtener nombre");
-                }
-        });
+								}else{
+									reject('#$id');
+									alert('Error al guardar los datos');
+								}
+							}
+						);
 			
 		}
 		this.endEditing2 = function (){
@@ -266,6 +247,14 @@ use common\models\Grid;
 			}
 		}
 		
+		this.es_celda = function ($maquina){
+			
+			if (maquina.length > 7) 
+				return true
+			else 
+				return false;
+		}
+		
 		this.recargaSigGrid = function(grid){
 			var nextgrid = null; 
 			var tablas = [];
@@ -296,55 +285,6 @@ use common\models\Grid;
 		function getid(){
 			 return $('#id').val(); 
 			
-			
-		}
-		
-		function getCelId(cel){
-			var data = { maquina: cel};
-			$.ajax({
-                data:  data,
-                url:   'maquinado/getcelid',
-                type:  'get',
-                beforeSend: function () {
-                        // $("#resultado").html("Creando registro");
-                },
-                success:  function (response) {
-                        response.replace(/\"/g, "");
-						console.log(response);
-						getCelName(response);
-						$('#id').textbox('setValue',response);
-						
-				},
-				error:  function (response) {
-                        
-						console.log(response);
-						alert("No  se pudo obtener ID");
-                }
-        });
-			
-		}
-		
-		function getCelName(cel){
-			var data = { idcelda: cel};
-			$.ajax({
-                data:  data,
-                url:   '../maquinado/getcelname',
-                type:  'get',
-                beforeSend: function () {
-                        // $("#resultado").html("Creando registro");
-                },
-                success:  function (response) {
-                        response.replace(/\"/g, "");
-						
-						console.log(response);
-						$('#descripcion').textbox('setValue',response);
-				},
-				error:  function (response) {
-                        
-						console.log(response);
-						alert("No  se pudo obtener nombre");
-                }
-        });
 			
 		}
 		

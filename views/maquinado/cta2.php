@@ -27,7 +27,7 @@ echo Html::beginTag('div',['id'=>'tbDiaria']);
 echo Html::a('Actualizar',"javascript:void(0)",[
         'class'=>"easyui-linkbutton",
         'data-options'=>"iconCls:'icon-reload',plain:true",
-        'onclick'=>"cambia('#$id')"
+        'onclick'=>"recargaPagina()"
     ]);
 
 
@@ -145,15 +145,16 @@ $this->registerJS("
 								
 								<thead>
 									<tr>
-										<th colspan ="5"></th>
+										<th colspan ="6"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="2">Embarques</th>
-										<th colspan ="4">Almacenes</th>
+										<th colspan ="5">Almacenes</th>
 										<th colspan ="4">Sem <?=$s1 ?> </th>
 										<th colspan ="4">Sem <?=$s2 ?> </th>
 										<th colspan ="4">Sem <?=$s3 ?> </th>
 										<th colspan ="4">Sem <?=$s4 ?> </th>
 										
+										<th colspan ="8">Total</th>
 										
 									</tr>
 									
@@ -169,6 +170,7 @@ $this->registerJS("
 										">Hold</th>
 										<th data-options="field:'casting',width:100,sortable:true,hidden:0">Casting</th>
 										<th data-options="field:'producto',width:100,sortable:true,hidden:0">Parte</th>
+										<th data-options="field:'descripcion',width:50,sortable:true,hidden:0">Desc</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
 										<th data-options="field:'maquina1',width:100,sortable:true,
 													
@@ -195,7 +197,8 @@ $this->registerJS("
 									   
 										<th data-options="field:'sem1',width:50,sortable:true">sem<?=$s1 ?></th>
 										<th data-options="field:'sem2',width:50,sortable:true">sem<?=$s2 ?></th>
-										<th data-options="field:'PLA',width:50,sortable:true">PLAs</th>
+										<th data-options="field:'PLA1',width:50,sortable:true">PLA1</th>
+										<th data-options="field:'PLA2',width:50,sortable:true">PLA2</th>
 										<th data-options="field:'CTA',width:50,sortable:true">CTAs</th>
 										<th data-options="field:'PMA',width:50,sortable:true">PMAs</th>
 										<th data-options="field:'PTA',width:50,sortable:true">PTA</th>
@@ -223,9 +226,16 @@ $this->registerJS("
 										<th data-options="field:'rechazadas4',width:50,sortable:true">Malas</th>
 
 
+										<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
+										<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
 										
 										<th data-options="field:'op',width:50,hidden:1,sortable:true">op</th>
 										<th data-options="field:'maq_ocup',width:50,hidden:1,sortable:true">maq_ocup</th>
+										
+										<th data-options="field:'id1',width:50,hidden:1,sortable:true">id_sem1</th>
+										<th data-options="field:'id2',width:50,hidden:1,sortable:true">id_sem2</th>
+										<th data-options="field:'id3',width:50,hidden:1,sortable:true">id_sem3</th>
+										<th data-options="field:'id4',width:50,hidden:1,sortable:true">id_sem4</th>
 										
 										<!--
 										<th data-options="field:'s2',width:50,editor:'numberbox'">sem2</th>
@@ -281,13 +291,7 @@ $this->registerJS("
 										
 									</tr>
 								</thead>
-							<thead data-options="frozen:true">
-								<th colspan ="2">Total</th>
-							</thead>							
-							<thead data-options="frozen:true">
-								<th data-options="field:'tot_pza',width:50,styler:formateo_sem_celda_pza,sortable:true">pza</th>
-								<th data-options="field:'tot_min',width:50, styler:formateo_sem_celda,sortable:true">min</th>
-							</thead>							
+												
 								
 							</table>
 						
@@ -811,6 +815,14 @@ data-options="
 
 		}
 		
+		function recargaPagina(){
+			
+			var sem = $('#semana1').val();
+			window.location.href = 'cta2' + "?fecha=" + sem ;
+			
+		}
+		
+		
 		function formateo_celda_faltantes(val,row,inx){
 			
 			
@@ -857,7 +869,7 @@ data-options="
 				var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
 				
 				var maquina = $('#<?php echo $id ?>').datagrid('getRows')[inx]['maquina1'];
-			
+				controlcap.row = $('#<?php echo $id ?>').datagrid('getRows')[inx];
 			
 			
 			if ( es_celda(maquina) ){
@@ -868,7 +880,7 @@ data-options="
 					
 					
 					$('#win_cel').window('open');
-					$('#captura').datagrid('reload');
+					$('#win_cel #captura').datagrid('reload');
 					$('#captura').datagrid('reload');
 					
 			}else{

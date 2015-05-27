@@ -2,13 +2,14 @@
 
 namespace frontend\controllers;
 
-
+// TODO : insercion en prgceldas.
 use frontend\models\maquinadobr\maquinadoped;
 use frontend\models\maquinadobr\maquinadoMaqOp;
 use frontend\models\maquinadobr\maquinadocta;
 use frontend\models\maquinadobr\maquinadocta2;
 use frontend\models\maquinadobr\maquinadocta4;
 use frontend\models\maquinadobr\maquinadoPzaMaq;
+use frontend\models\ete\celda;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -61,21 +62,23 @@ class MaquinadobrController extends Controller
 		
 	public function actionCta2(){
    
-	          
-	          $sem = date('W');
+	          if ( isset( $_REQUEST['fecha'] )){
+	          $semana = $_REQUEST['fecha'];
+			  }else {
+				$sem = date('W');
 			  $aio = date('Y');
-			  $semana=$aio.'-W'.$sem;
-        
+			  $semana=$aio.'-W'.$sem;  
+			  }
         return $this->render('cta2', ['semana' => $semana,  ]);
    
     }
 	
-	public function actionCta2d($fecha){
+	public function actionCta2d(){
 
         $model = new MaquinadoCta2;
-        if ( isset( $_POST['semana']) and $_POST['semana'] = ''){
-		   $fecha=$_POST['semana'];
-		} ;
+        
+		   $fecha=$_REQUEST['fecha'];
+		
         
 		$cat = $model->GetInfo($fecha);
                     
@@ -139,6 +142,7 @@ class MaquinadobrController extends Controller
 		$datos_a_grabar['Matutino']= $data->{'Matutino'}; 
 		$datos_a_grabar['Vespertino']= $data->{'Vespertino'}; 
 		$datos_a_grabar['Nocturno']= $data->{'Nocturno'}; 
+		$datos_a_grabar['Mixto']= $data->{'Mixto'}; 
 		$datos_a_grabar['minutos_m']= $data->{'minutos_m'}; 
 		$datos_a_grabar['semana']= $data->{'semana'}; 
 		
@@ -502,5 +506,68 @@ class MaquinadobrController extends Controller
 		
 	}
 	
+	//---------------celdaprg
+	
+	// celdas
+	public function actionCelda(){
+		
+		return $this->render('celda', [  ]);
+	}
+	
+	//lista celdas
+	public function actionLstcelda(){
+		
+		$id = 0;
+		$model = new Celda;
+		if (isset($_REQUEST['id']))
+			$id = $_REQUEST['id'];
+	
+		// $f  = $_POST['fecha'];
+		
+		$celda = $model->lstcelda($id);
+		
+		return json_encode($celda, 0);
+		
+	}
+	
+	//salva celda
+	public function actionSalvacelda(){
+		
+		$data = json_decode($_POST['Data']);
+
+		$model = new Celda;
+		$id =$model->saveCelda($data);
+		
+		return $id;
+		
+	}
+	
+	//obtiene id de celda
+	public function actionGetcelid(){
+		//$data = json_decode(']);
+		
+		// print_r($_GET['maquina']);exit;
+		
+		
+		$model = new Celda;
+		$id =$model->getCelId( $_GET['maquina']  );
+		
+		return $id;
+		
+	}
+	
+	//obtiene nombre de celda
+	public function actionGetcelname(){
+		//$data = json_decode(']);
+		
+		// print_r($_GET['maquina']);exit;
+		
+		
+		$model = new Celda;
+		$id =$model->getCelName( $_GET['idcelda']  );
+		
+		return $id;
+		
+	}
 	
 }

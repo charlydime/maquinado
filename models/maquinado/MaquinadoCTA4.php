@@ -31,6 +31,8 @@ Class MaquinadoCTA4 extends Model {
         $result =$command->createCommand("
  				select 
 				pdp_cta.Pieza,
+				prod_dux.CAMPOUSUARIO5 as casting,
+				prod_dux.DESCRIPCION as descripcion,
 				pdp_cta.Prioridad,
 				pdp_cta.Cantidad,
 				pdp_cta.Maquina,
@@ -38,6 +40,8 @@ Class MaquinadoCTA4 extends Model {
 				pdp_cta.Minutos as minmaq,
 				round(480/ nullif(pdp_cta.Minutos,0),0) as p_t,
 				pdp_cta.Minutos * pdp_cta.Cantidad as Minutos,
+				isnull(almpla.existencia,0) as PLA1,
+				isnull(almpla2.existencia,0) as PLA2,
 				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
 				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
 				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
@@ -145,6 +149,7 @@ Class MaquinadoCTA4 extends Model {
 				
 				from pdp_cta 
 				
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = pdp_cta.Pieza
 
 				LEFT JOIN(
 						SELECT 
@@ -561,6 +566,8 @@ Class MaquinadoCTA4 extends Model {
 					// asunto de 0s para que no se deplieguen en grid
 					if ($r['CTA'] ==  0) $r['CTA'] = ''; else $r['CTA'] = (int)$r['CTA']  ;
 					if ($r['PLA'] ==  0) $r['PLA'] = ''; else $r['PLA'] = (int)$r['PLA']  ;
+					if ($r['PLA1'] ==  0) $r['PLA1'] = ''; else $r['PLA1'] = (int)$r['PLA1']  ;
+					if ($r['PLA2'] ==  0) $r['PLA2'] = ''; else $r['PLA2'] = (int)$r['PLA2']  ;
 					if ($r['PMA'] ==  0) $r['PMA'] = ''; else $r['PMA'] = (int)$r['PMA']  ;
 					if ($r['PTA'] ==  0) $r['PTA'] = ''; else $r['PTA'] = (int)$r['PTA']  ;
 					if ($r['sum'] ==  0) $r['sum'] = ''; else $r['sum'] = (int)$r['sum']  ;

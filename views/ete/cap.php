@@ -17,8 +17,8 @@ use common\models\Grid;
 
 	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
 				Maquina:
-				 <input class="easyui-combobox" style="width:250px" data-options="
-                url: 'loadmaquina',
+				 <input id = 'maquina'class="easyui-combobox" style="width:250px" data-options="
+                url: 'loadmaquina?fecha='+$('#fecha').val(),
                 method:'get',
                 valueField: 'clave',
 				onSelect:setmaquina,
@@ -54,7 +54,8 @@ use common\models\Grid;
 		var data= {
 		  operador : $('#operador').val(),
 		  fecha : $('#fecha').val(),
-		  id: $('#id').val()
+		  id: $('#id').val(),
+		  maquina: record.id
 		};
 		
 		// $.post('nuevoete',

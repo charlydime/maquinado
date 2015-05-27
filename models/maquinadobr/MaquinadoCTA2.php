@@ -3,6 +3,7 @@
 namespace frontend\Models\Maquinadobr;
 use Yii;
 use yii\base\Model;
+use frontend\models\ete\celda;
 
 Class MaquinadoCTA2 extends Model {
 
@@ -23,11 +24,22 @@ Class MaquinadoCTA2 extends Model {
 				prod.producto,
 				
 				prod_dux.CAMPOUSUARIO5 as casting,
+				prod_dux.DESCRIPCION as descripcion,
+				CASE 
+				WHEN can_s1.maquina is not null THEN can_s1.maquina
+				WHEN can_s2.maquina is not null THEN can_s2.maquina
+				WHEN can_s3.maquina is not null THEN can_s3.maquina
+				WHEN can_s4.maquina is not null THEN can_s4.maquina
+				ELSE '' 
+				END 
+				
+				as maquina1, 
+				
 				CASE 
 					WHEN  prod.producto <>  prod_dux.CAMPOUSUARIO5 THEN 0
 					ELSE 1
 				END as cast,
-				ctb.maquina as maquina1,
+				
  				
 				pdp_maquina_piezabr.op as opx,
 				
@@ -359,7 +371,7 @@ LEFT JOIN(
 				Hold,
 				prioridad desc,
 				prod_dux.CAMPOUSUARIO5 ,
-				cast asc,
+				cast desc,
 				
 				producto,						
 				
@@ -547,6 +559,7 @@ pdp_maquina_turnosbr.maquina,
 pdp_maquina_turnosbr.Matutino,
 pdp_maquina_turnosbr.Vespertino,
 pdp_maquina_turnosbr.Nocturno,
+pdp_maquina_turnosbr.Mixto,
 
 pdp_maquina_turnosbr.Minutos as minutos_m,
 (pdp_maquina_turnosbr.Minutos)/60  as horas_m,
@@ -562,7 +575,8 @@ LEFT JOIN
 		(	Select    
 			isnull( isnull(pdp_maquina_turnosbr.Matutino,0)/isnull(pdp_maquina_turnosbr.Matutino,1) ,0) +
 			isnull( isnull(pdp_maquina_turnosbr.Vespertino,0)/isnull(pdp_maquina_turnosbr.Vespertino ,1),0) +
-			isnull( isnull(pdp_maquina_turnosbr.Nocturno,0)/isnull(pdp_maquina_turnosbr.Nocturno,1) ,0)
+			isnull( isnull(pdp_maquina_turnosbr.Nocturno,0)/isnull(pdp_maquina_turnosbr.Nocturno,1) ,0) +
+			isnull( isnull(pdp_maquina_turnosbr.Mixto,0)/isnull(pdp_maquina_turnosbr.Mixto,1) ,0)
 			as turno,
 			pdp_maquina_turnosbr.maquina
 
@@ -785,6 +799,10 @@ public function GetInfo_Operador($semana){
 			select maquina,minutos_o as minutos, minutos_o/60 as horas,(minutos_o/60)/8 as t8,
 			'Noc' as titulo ,Nocturno as turno from pdp_maquina_turnosbr
 				where semana = $s AND Nocturno is not null
+		UNION
+			select maquina,minutos_o as minutos, minutos_o/60 as horas,(minutos_o/60)/8 as t8,
+			'Mix' as titulo ,Mixto as turno from pdp_maquina_turnosbr
+				where semana = $s AND Mixto is not null
 		) as turnos
 		JOIN empleado on turnos.turno = empleado.CODIGOANTERIOR or turnos.turno-10000 = empleado.CODIGOANTERIOR
 	
@@ -814,11 +832,13 @@ public function  GetInfo_pza_op($semana){
 		CONCAT(emat.CODIGOANTERIOR+0 ,'-', emat.NOMBRECOMPLETO) as m,
 		CONCAT(eves.CODIGOANTERIOR+0 ,'-', eves.NOMBRECOMPLETO) as v,
 		CONCAT(enoc.CODIGOANTERIOR+0 ,'-', enoc.NOMBRECOMPLETO) as n
+		CONCAT(enoc.CODIGOANTERIOR+0 ,'-', emix.NOMBRECOMPLETO) as x
 		from pdp_ctb
 		JOIN pdp_maquina_turnosbr on  pdp_maquina_turnosbr.semana = pdp_ctb.semana and pdp_maquina_turnosbr.maquina = pdp_ctb.Maquina
 		left join empleado as emat on emat.CODIGOANTERIOR = Matutino   
 		left join empleado as eves on eves.CODIGOANTERIOR = Vespertino
 		left join empleado as enoc on enoc.CODIGOANTERIOR = Nocturno 
+		left join empleado as emix on emix.CODIGOANTERIOR = Mixto 
 		where pdp_ctb.Semana = $s 
 		ORDER BY pdp_ctb.Maquina
 	
@@ -883,6 +903,25 @@ public function  GetInfo_pza_op($semana){
 		
 		return $result ? $result[0]['maquina'] : 0;
 	}
+ public function maquina_ocupada($maquina){
+		 $command = \Yii::$app->db_mysql;
+		 $sql = "
+				select  count( maq.Maquina ) as clave	
+		from pdp_celda
+		LEFT JOIN  pdp_maquina as maq  on maq.id = pdp_celda.[Codigo Maquina]
+		where maq.Maquina = '$maquina'
+				";
+		
+
+		$result =$command
+					->createCommand($sql)
+					->queryAll();
+		
+		
+		
+		return $result ? $result[0]['clave'] : 0;
+		 
+	 }
    
    
    public function getOperaciones(){
@@ -1017,6 +1056,7 @@ public function  GetInfo_pza_op($semana){
 				if ($data['Matutino'] == 0) $data['Matutino'] = "";
 				if ($data['Vespertino'] == 0) $data['Vespertino'] = "";
 				if ($data['Nocturno'] == 0) $data['Nocturno'] = "";
+				if ($data['Mixto'] == 0) $data['Mixto'] = "";
 	
 			print_r($data);
 		$min = $this->p2minutos($data['maquina'], $semana);
@@ -1032,6 +1072,7 @@ public function  GetInfo_pza_op($semana){
 		if ($data['Matutino'] != null || $data['Matutino'] != '') $turnos ++;
 		if ($data['Vespertino'] != null || $data['Vespertino'] != '') $turnos ++;
 		if ($data['Nocturno'] != null || $data['Nocturno'] !=  '') $turnos ++;
+		if ($data['Mixto'] != null || $data['Mixto'] !=  '') $turnos ++;
 	
 		if($turnos > 0 )
 			$minutos = $data['minutos_m']/$turnos;
@@ -1043,6 +1084,7 @@ public function  GetInfo_pza_op($semana){
 									'Matutino' => $data['Matutino'],
 									'Vespertino' => $data['Vespertino'],
 									'Nocturno' => $data['Nocturno'], 
+									'Mixto' => $data['Mixto'], 
 									'minutos_o' => $minutos
 									
 									], 	[
@@ -1081,6 +1123,11 @@ public function  GetInfo_pza_op($semana){
 			// ])->getRawSql();
 			//se llena pdp_maquina turnos
 			$this->maquinaturnossemana( $data );
+		//si es celda inserta en id pdp_prgcelda
+			if( strlen($data['maquina']) > 7 ){
+				$model = new Celda;
+				$model->creaPRGCelda( $data['maquina']);
+			}
 		}else{
 		  //echo ' existe se actualiza';
 		  
@@ -1257,10 +1304,12 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		$result =$command
 					->createCommand("
-							Select distinct maquina,minutos
-							from pdp_maquina_piezabr 
-							where pieza ='$pieza' and op = $op 
-							order by minutos ASC
+							Select distinct mp.maquina,mp.minutos,*
+							from pdp_maquina_piezabr as mp 
+						RIGHT JOIN pdp_maquina m on  mp.maquina = m.maquina and m.activa = 1
+							 where mp.pieza ='$pieza' and mp.op = $op 
+							
+							order by mp.minutos ASC
 							")
 					->queryAll();
 		

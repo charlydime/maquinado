@@ -89,11 +89,11 @@ data-options="
 			<thead>
 	
 				<tr>
-					<th colspan= 2></th>
+					<th colspan= 4></th>
 					<th colspan= 2>Opeacion</th>
 					<th colspan= 1></th>
 					<th colspan= 2>Embaques</th>
-					<th colspan= 4>Almacenes</th>
+					<th colspan= 5>Almacenes</th>
 					<th colspan= 2>Sem <?=$sem1?></th>
 					<th colspan=5>Lunes</th>
 					<th colspan=5>Martes</th>
@@ -109,13 +109,16 @@ data-options="
 				<tr>
 					
 					<th data-options="field:'Pieza',width:170,sortable:true">Producto</th>
+					<th data-options="field:'casting',width:100,sortable:true">Cast</th>
+					<th data-options="field:'descripcion',width:50,sortable:true">Desc</th>
 					<th data-options="field:'prio',sortable:true,width:40">Prio</th>
 					<th data-options="field:'op',sortable:true,width:40">num</th>
 					<th data-options="field:'minmaq',sortable:true,width:53">Min</th>
 					<th data-options="field:'p_t',sortable:true,width:53">pz*dia</th>
 					<th data-options="field:'e0',sortable:true,width:50">Sem<?=$sem1?></th>
 					<th data-options="field:'e1',sortable:true,width:50">Sem<?=$sem2?></th>
-					<th data-options="field:'PLA',sortable:true,width:50">PLAs</th>
+					<th data-options="field:'PLA1',sortable:true,width:50">PLA1</th>
+					<th data-options="field:'PLA2',sortable:true,width:50">PLA2</th>
 					<th data-options="field:'CTA',sortable:true,width:50">CTAs</th>
 					<th data-options="field:'PMA',sortable:true,width:50">PMAs</th>
 					<th data-options="field:'PTA',sortable:true,width:50">PTA</th>

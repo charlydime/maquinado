@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 
 use frontend\models\ete\captura;
-use frontend\models\ete\calcculo;
+use frontend\models\ete\calculo;
 use frontend\models\ete\celda;
 use Yii;
 use yii\web\Controller;
@@ -28,8 +28,11 @@ class EteController extends Controller
    //inicio para pantalla de captura del ETE 
    public function actionCaptura(){
   
+		$usr = Yii::$app->user->identity; 
+		 
+  
 	  $f  = date('Y-m-d');
-	  $u  = "186";
+	  $u  =$usr->IdEmpleado;
 
 	return $this->render('cap', [ 'fecha' => $f , 'usuario' => $u  ]);
 		
@@ -38,13 +41,13 @@ class EteController extends Controller
    //crea nuevo ETE (encabezado)
    public function actionNuevoete(){
 	  $model = new Captura;
-	  $f  = date('Y-m-d');
-	  $u  = "186"; // jalar el usuario logueado
+	  
+	 
 	  
 	  $d[] = null;
-	  $d['usuario'] = $u; 
-	  $d['fecha']= $f;
-	  $d['maquina'] = 1;
+	  $d['usuario'] = $_REQUEST['operador']; 
+	  $d['fecha']= $_REQUEST['fecha'];
+	  $d['maquina'] = $_REQUEST['maquina'];
 	  
 	  $id = $model->saveETE($d);
 	  
@@ -54,14 +57,14 @@ class EteController extends Controller
    }
    
 	//abre maquina dependiendo programacion
-	public function actionLoadmaquina(){
+	public function actionLoadmaquina($fecha){
 		
 		$model = new Captura;
 		
 		// $op = $_POST['operador'];
 		// $f  = $_POST['fecha'];
 		
-		$maqs = $model->GetMaquina();
+		$maqs = $model->GetMaquina($fecha);
 		
 		 return json_encode($maqs, 0);
 	}
@@ -176,8 +179,8 @@ class EteController extends Controller
 	
 	//salva celda
 	public function actionSalvacelda(){
-		
 		$data = json_decode($_POST['Data']);
+		
 
 		$model = new Celda;
 		$id =$model->saveCelda($data);
@@ -185,6 +188,41 @@ class EteController extends Controller
 		return $id;
 		
 	}
+	//reporte ETE
+	public function actionEte(){
+		//$data = json_decode($_POST['Data']);
+		
+
+		$model = new Calculo;
+		// $id =$model->getOperadoresMaquinado();
+		$model->fechaini = '2015-04-11';
+		$model->fechafin = '2015-04-15';
+		$id =$model->calculaTiempoProgramadoMaquina();
+		
+		return $id;
+		
+	}
+	public function actionGetasistencias(){
+		//$data = json_decode($_POST['Data']);
+		$model = new Calculo;
+		
+		if ( isset ($_REQUEST['fechaini']) and isset ($_REQUEST['fechafin']) ){
+			$model->fechaini = $_REQUEST['fechaini'];
+			$model->fechafin = $_REQUEST['fechafin'];
+		}else{
+			
+		$model->fechaini = '2015-01-01';
+		$model->fechafin = '2015-04-30';
+			
+		}
+
+		// $id =$model->getOperadoresMaquinado();
+		$id =$model->getAsistencias();
+		
+		return $id;
+		
+	}
+	
 	
 	
 }

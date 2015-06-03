@@ -57,24 +57,23 @@ class EteController extends Controller
    }
    
 	//abre maquina dependiendo programacion
-	public function actionLoadmaquina($fecha){
+	public function actionLoadmaquina($fecha,$op){
 		
 		$model = new Captura;
 		
-		// $op = $_POST['operador'];
-		// $f  = $_POST['fecha'];
 		
-		$maqs = $model->GetMaquina($fecha);
+		
+		$maqs = $model->GetMaquina($fecha,$op);
 		
 		 return json_encode($maqs, 0);
 	}
 	
 	//commbobox de parte
-	public function actionLoadparte(){
+	public function actionLoadparte($fecha,$op){
 		
 		$model = new Captura;
 			
-		$part = $model->GetParte();
+		$part = $model->GetParte($fecha,$op);
 		
 		 return json_encode($part, 0);
 	}
@@ -190,18 +189,33 @@ class EteController extends Controller
 	}
 	//reporte ETE
 	public function actionEte(){
-		//$data = json_decode($_POST['Data']);
 		
-
-		$model = new Calculo;
-		// $id =$model->getOperadoresMaquinado();
-		$model->fechaini = '2015-04-11';
-		$model->fechafin = '2015-04-15';
-		$id =$model->calculaTiempoProgramadoMaquina();
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini = "2015-05-25";
+		}
 		
-		return $id;
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin = "2015-05-29";
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "AC";
+		}
+		
+		return $this->render('calculo', [ 'ini' => $ini , 'fin' => $fin  , 'area' => $area]);
+		
+	
 		
 	}
+	
+	
+	// obtiene asistenacias de relox
 	public function actionGetasistencias(){
 		//$data = json_decode($_POST['Data']);
 		$model = new Calculo;
@@ -212,7 +226,7 @@ class EteController extends Controller
 		}else{
 			
 		$model->fechaini = '2015-01-01';
-		$model->fechafin = '2015-04-30';
+		$model->fechafin = '2015-06-02';
 			
 		}
 

@@ -85,21 +85,28 @@ Class MaquinadoInserto extends Model {
 	
 	}
 	
-	public function exist($pieza,$inserto) {
+	public function exist($pieza,$inserto,$herramienta) {
 			
 				$command = \Yii::$app->db_mysql;
 		
-		$result =$command
-					->createCommand("
+			
+		
+		$sql = 
+		"
 					
 					Select  count(Parte) as m 
 					from pdp_inserto 
 					where 
 					Parte ='$pieza'  
-					and Inserto = '$inserto'
-					
-					
-					")->queryAll();
+					 and Inserto = '$inserto' 
+		";
+		
+		
+		$result =$command
+					->createCommand($sql)
+					->queryAll();
+					// ->getRawSql();
+			         // print_r($result);exit;
 					
 		
 		return $result[0]['m'] >  0 ? true : false;
@@ -114,7 +121,12 @@ Class MaquinadoInserto extends Model {
 		 $data = (array) $data;
 		 print_r($data);
 		 
-		if (!$this->exist($data['Parte'],$data['Inserto']) ){
+		 if ( !isset($data['Herramienta']) ) $data['Herramienta'] = '';
+		 if ( !isset($data['Inserto']) ) $data['Inserto'] = '';
+		 
+			 
+		//if (!$this->exist($data['Parte'],$data['Inserto'] ,$data['Herramienta']) || !isset($data['ID'])  ){
+		if ( !isset($data['ID'])  ){
 						
 			$result =$command->createCommand()->insert('pdp_inserto',[
 									'Area' => $data['Area'], 

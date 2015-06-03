@@ -15,12 +15,13 @@ Class MaquinadoCTA2 extends Model {
 		$se2 =  $tmp_s +1;
 		$se3 =  $tmp_s +2;
 		$se4 =  $tmp_s +3;
+		$year = date ("Y");
 		
         $command = \Yii::$app->db_mysql;
         $result =$command->createCommand("
  				
  
-  select 
+  select
 				prod.producto,
 				
 				prod_dux.CAMPOUSUARIO5 as casting,
@@ -70,6 +71,8 @@ Class MaquinadoCTA2 extends Model {
 				datepart(week ,dux2.fechaemb ) as sem12entrega,
 				dux1.cantidad as sem1,
 				 dux2.cantidad as sem2,
+				 dux3.cantidad as sem3,
+				 dux4.cantidad as sem4,
 				
 				CASE 
 						WHEN can_s1.prioridad is not null THEN can_s1.prioridad
@@ -121,8 +124,8 @@ Class MaquinadoCTA2 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						datepart( week,PAROEN.doctoadicionalfecha)  =  $se1
-						-- and almprod.ALMACEN = 'CTB'
+						datepart( week,PAROEN.doctoadicionalfecha)  =  $se1 and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						
 						GROUP BY ALMPROD.producto
 						
 				) as dux1 on prod.PRODUCTO = dux1.producto 
@@ -133,12 +136,34 @@ Class MaquinadoCTA2 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						datepart( week,PAROEN.doctoadicionalfecha) = $se2
-						-- and almprod.ALMACEN = 'CTB'
+						datepart( week,PAROEN.doctoadicionalfecha) = $se2   and datepart( year,PAROEN.doctoadicionalfecha) = $year
 						GROUP BY ALMPROD.producto
 						
 				) as dux2 on prod.PRODUCTO = dux2.producto 
 
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha) = $se3   and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+						
+				) as dux3 on prod.PRODUCTO = dux3.producto 
+				
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha) = $se4 and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+						
+				) as dux4 on prod.PRODUCTO = dux4.producto 
 				
 
 				LEFT JOIN(
@@ -256,22 +281,24 @@ Class MaquinadoCTA2 extends Model {
 				
 LEFT JOIN(
 				
+					 
+
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				
 				
 				) AS ETE_S1 on 
@@ -286,19 +313,19 @@ LEFT JOIN(
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				
 				
 				) AS ETE_S2 on 
@@ -313,20 +340,19 @@ LEFT JOIN(
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				
 				) AS ETE_S3 on 
 					ETE_S3.producto = prod.PRODUCTO and 
@@ -340,20 +366,19 @@ LEFT JOIN(
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
-				
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				
 				) AS ETE_S4 on 
 					ETE_S4.producto = prod.PRODUCTO and 
@@ -486,6 +511,8 @@ LEFT JOIN(
 				$r['PTB'] = (real)$r['PTB'] ;
 				$r['sem1'] = (real)$r['sem1'] ;
 				$r['sem2'] = (real)$r['sem2'] ;
+				$r['sem3'] = (real)$r['sem3'] ;
+				$r['sem4'] = (real)$r['sem4'] ;
 				if ($r['s4_min'] ==  0) $r['s4_min'] = ''; 
 				if ($r['s3_min'] ==  0) $r['s3_min'] = ''; 
 				if ($r['s2_min'] ==  0) $r['s2_min'] = ''; 
@@ -493,6 +520,8 @@ LEFT JOIN(
 				if ($r['Minutos'] ==  0) $r['Minutos'] = ''; 
 				if ($r['sem1'] ==  0) $r['sem1'] = ''; 
 				if ($r['sem2'] ==  0) $r['sem2'] = ''; 
+				if ($r['sem3'] ==  0) $r['sem3'] = ''; 
+				if ($r['sem4'] ==  0) $r['sem4'] = ''; 
 				if ($r['tot_pza'] ==  0) $r['tot_pza'] = ''; 
 				if ($r['tot_min'] ==  0) $r['tot_min'] = ''; 
 				if ($r['CTB'] ==  0) $r['CTB'] = ''; 

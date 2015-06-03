@@ -175,7 +175,7 @@ class MaquinadobrController extends Controller
 			echo "for------------------------";print_r ($data);
 					if ($data->{'maquina1'} == '') exit;
 			 
-					$maquina=explode('-',$data->{'maquina1'});
+					//$maquina=explode('-',$data->{'maquina1'});
 		
 					//armo arreglo de datos a grabar
 					$semana = explode('-',$data->{'sem_actual'});
@@ -183,7 +183,7 @@ class MaquinadobrController extends Controller
 					$datos_a_grabar['producto']= $data->{'producto'}; 
 					// $datos_a_grabar['minutos']= $model->p1tiempos($data->{'producto'},$data->{'maquina1'},$data->{'opx'});
 					$datos_a_grabar['minutos']= $data->{'Minutos'};
-					$datos_a_grabar['maquina']= $maquina[0];
+					$datos_a_grabar['maquina']= $data->{'maquina1'};
 					
 					$datos_a_grabar['aio']= 	$semana[0] ;
 					$datos_a_grabar['semEnmtrega']= $data->{'sem_actual'};

@@ -89,7 +89,7 @@ data-options="
 			<thead>
 	
 				<tr>
-					<th colspan= 3></th>
+					<th colspan= 4></th>
 					<th colspan= 2>Opeacion</th>
 					<th colspan= 1></th>
 					<th colspan= 2>Embaques</th>

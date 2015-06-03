@@ -147,7 +147,7 @@ $this->registerJS("
 									<tr>
 										<th colspan ="6"></th>
 										<th colspan ="2">Operacion</th>
-										<th colspan ="2">Embarques</th>
+										<th colspan ="4">Embarques</th>
 										<th colspan ="4">Almacenes</th>
 										<th colspan ="4">Sem <?=$s1 ?> </th>
 										<th colspan ="4">Sem <?=$s2 ?> </th>
@@ -196,6 +196,8 @@ $this->registerJS("
 									   
 										<th data-options="field:'sem1',width:50,sortable:true">sem<?=$s1 ?></th>
 										<th data-options="field:'sem2',width:50,sortable:true">sem<?=$s2 ?></th>
+										<th data-options="field:'sem3',width:50,sortable:true">sem<?=$s3 ?></th>
+										<th data-options="field:'sem4',width:50,sortable:true">sem<?=$s4 ?></th>
 										<th data-options="field:'PLB',width:50,sortable:true">PLBs</th>
 										<th data-options="field:'CTB',width:50,sortable:true">CTBs</th>
 										<th data-options="field:'PMB',width:50,sortable:true">PMBs</th>

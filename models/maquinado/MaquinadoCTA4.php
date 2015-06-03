@@ -11,6 +11,7 @@ Class MaquinadoCTA4 extends Model {
 		  $tmp_s = substr($tmp[1],1);
 		$se1 =  $tmp_s +0;
 		$se2 =  $tmp_s +1;
+		$year = date ("Y");
 		 
 		 $lun = $this->semana2fecha($tmp[0],$se1,'lun');
 		 $mar = $this->semana2fecha($tmp[0],$se1,'mar');
@@ -157,7 +158,7 @@ Class MaquinadoCTA4 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1
+						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
 						-- and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
 						
@@ -169,7 +170,7 @@ Class MaquinadoCTA4 extends Model {
 						FROM ALMPROD
 						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
-						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2
+						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
 						-- and almprod.ALMACEN = 'CTA'
 						GROUP BY ALMPROD.producto
 						
@@ -275,19 +276,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 					where
 						fecha =	 cast ( '$lun' as datetime2)
 				
@@ -301,19 +302,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 					where
 						fecha =	 cast ( '$mar' as datetime2)
 				
@@ -328,19 +329,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				where
 						fecha =	 cast ( '$mie' as datetime2)
 				
@@ -355,19 +356,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				where
 						fecha =	 cast ( '$jue' as datetime2)
 				
@@ -381,19 +382,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				where
 						fecha =	 cast ( '$vie' as datetime2)
 				
@@ -407,19 +408,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				where
 						fecha =	 cast ( '$sab' as datetime2)
 				
@@ -433,19 +434,19 @@ Class MaquinadoCTA4 extends Model {
 					select 
 
 					Producto,
-					[Num Operacion] * 10  as OP, 
+					[Num Operacion]   as OP, 
 					[Piezas Maquinadas] as hechas, 
 					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
 					
 					idturno, 
 					Descripcion,
 					Area,
-					clave,
+					maquina as clave,
 					fecha
 					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					left join ete.dbo.Maquinas as m on m.[Codigo Maquina] = e.idmaquina	
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
 				where
 						fecha =	 cast ( '$dom' as datetime2)
 				
@@ -455,6 +456,7 @@ Class MaquinadoCTA4 extends Model {
 					and ETE_dom.clave = pdp_cta.Maquina
 				
 				where semana = $se1
+				-- and pdp_cta.Pieza = '100217642(BSK-13080)'
 				
 				order by Maquina
 				

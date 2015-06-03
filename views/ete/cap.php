@@ -18,7 +18,7 @@ use common\models\Grid;
 	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
 				Maquina:
 				 <input id = 'maquina'class="easyui-combobox" style="width:250px" data-options="
-                url: 'loadmaquina?fecha='+$('#fecha').val(),
+                url: 'loadmaquina?fecha='+$('#fecha').val()+'&op='+$('#operador').val(),
                 method:'get',
                 valueField: 'clave',
 				onSelect:setmaquina,
@@ -47,7 +47,7 @@ use common\models\Grid;
 
 </div>
 <script type="text/javascript">
-	
+	var mensaje = ''	
     function setmaquina(record){
 		
 		
@@ -72,7 +72,7 @@ use common\models\Grid;
 								// }
 							// }
 						// );
-						
+			
 		$.ajax({
                 data:  data,
                 url:   'nuevoete',
@@ -83,6 +83,13 @@ use common\models\Grid;
                 success:  function (response) {
                         response.replace(/\"/g, "");
 						console.log(response);
+						if(response == 0 )//ya existe
+						{
+							 mensaje = "no se puede capturar de nuevo al operador "+$('#operador').val()+" en esa maquina/celda" ;
+						}else{
+							mensaje = "Puede iniciar su captura de la maquina/celda ";
+						}
+						alert(mensaje);
 						$('#id').textbox('setValue',response);
 				},
 				error:  function (response) {
@@ -94,7 +101,7 @@ use common\models\Grid;
 
 		
 		
-		alert("Puede iniciar su captura de la maquina ");
+		
 	}
 	
 	function getid(){

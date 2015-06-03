@@ -70,7 +70,7 @@ use common\models\Grid;
 					valueField:'pieza',
 					textField:'pieza',
 					panelWidth:200,
-					url:'loadparte',
+					url:'loadparte?fecha='+$('#fecha').val()+'&op='+$('#operador').val(),
 					method:'get'
 						}
 				}
@@ -168,9 +168,16 @@ use common\models\Grid;
 			
 			inicio  = $(ed_inicio.target).textbox('getValue');
 			fin  = $(ed_fin.target).textbox('getValue');
+			//
+			if (inicio == "" || fin == "") 
+				{alert("inicio o fin vacios"); exit;}
 			parte  = $(ed_parte.target).combobox('getValue');
 			op  = $(ed_op.target).combobox('getValue');
+			if (parte == "" || op == "" ) 
+				{alert("operacion o parte vacia"); exit;}
 			maq  = $(ed_maq.target).numberbox('getValue');
+			if (maq == "" || maq == 0  ) 
+				{alert("numkero de piezas maquinadas  vacia o 0 "); exit;}
 			r_maq  = $(ed_r_maq.target).numberbox('getValue');
 			r_fun  = $(ed_r_fun.target).numberbox('getValue');
 			desc   = $(ed_desc.target).textbox('getValue');

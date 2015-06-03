@@ -85,7 +85,7 @@ Class Captura extends Model {
 					from ete
 					where 
 					Empleado = $operador and 
-					Fecha = $fecha and
+					Fecha = '$fecha' and
 					idmaquina = $maquina
 					
 					")->queryAll();
@@ -146,6 +146,9 @@ Class Captura extends Model {
 			
 			$ultimo = 	$command->getLastInsertID();
 			
+		
+		 } else{
+		 $ultimo = 0;
 		 }
 		
 		//echo " ULTIMO ID : $ultimo"; exit;
@@ -301,11 +304,11 @@ Class Captura extends Model {
 	
 	
 	//busca la maquina combobox
-	public function GetMaquina($fecha){
+	public function GetMaquina($fecha,$op){
 		
 		 $cmd = \Yii::$app->db_mysql;
 
-		 
+		 // restringido----------------------------
 		 	 // select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
 		// from pdp_maquina as m
 
@@ -316,13 +319,25 @@ Class Captura extends Model {
 
 		// ) as pdp_ct on pdp_ct.maquina = m.Maquina
 		// where pdp_ct.dia =  '$fecha'
+		
+		//sin rectriccion------------------------
+				  // select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
+		 // from pdp_maquina
+		 // where activa = 1 
+		 // order by  Descripcion
 		 $sql = "
 
-					 select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
-		 from pdp_maquina
-		 where activa = 1 
-		 order by Descripcion
+		select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		from pdp_maquina as m
 
+		LEFT JOIN (
+		select * from pdp_cta_dia 
+		union 
+		select * from pdp_ctb_dia 
+
+		) as pdp_ct on pdp_ct.maquina = m.Maquina
+		where pdp_ct.dia =  '$fecha'
+		
 		
 		 ";
 		  $result =$cmd->createCommand($sql)
@@ -366,13 +381,13 @@ Class Captura extends Model {
 	
 		//busca  operaciones  combobox
 		//TODO: restriccion aqui
-	public function GetParte(){
+	public function GetParte($fecha,$op){
 		
 		 $cmd = \Yii::$app->db_mysql;
 		  $sql = "
-		 select pieza from pdp_maquina_pieza
+		  select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
 			Union
-		 select pieza from pdp_maquina_piezabr
+		  select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
 		
 		 ";
 		  $result =$cmd->createCommand($sql)

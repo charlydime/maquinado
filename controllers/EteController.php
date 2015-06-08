@@ -48,6 +48,8 @@ class EteController extends Controller
 	  $d['usuario'] = $_REQUEST['operador']; 
 	  $d['fecha']= $_REQUEST['fecha'];
 	  $d['maquina'] = $_REQUEST['maquina'];
+	  $d['hini'] = $_REQUEST['hini'];
+	  $d['hfin'] = $_REQUEST['hfin'];
 	  
 	  $id = $model->saveETE($d);
 	  
@@ -61,9 +63,17 @@ class EteController extends Controller
 		
 		$model = new Captura;
 		
-		
-		
 		$maqs = $model->GetMaquina($fecha,$op);
+		
+		 return json_encode($maqs, 0);
+	}
+	
+		//abre maquina dependiendo programacion
+	public function actionLoadmaquina2(){
+		
+		$model = new Celda;
+	
+		$maqs = $model->GetMaquina();
 		
 		 return json_encode($maqs, 0);
 	}
@@ -226,7 +236,7 @@ class EteController extends Controller
 		}else{
 			
 		$model->fechaini = '2015-01-01';
-		$model->fechafin = '2015-06-02';
+		$model->fechafin = '2015-06-08';
 			
 		}
 

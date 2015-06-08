@@ -187,6 +187,45 @@ public function saveCeldaPrg(){
 	echo "guarda";
 }
 
+
+//busca la maquina combobox
+	public function GetMaquina(){
+		
+		 $cmd = \Yii::$app->db_mysql;
+
+		 // restringido----------------------------
+		 	 // select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		// from pdp_maquina as m
+
+		// LEFT JOIN (
+		// select * from pdp_cta_dia 
+		// union 
+		// select * from pdp_ctb_dia 
+
+		// ) as pdp_ct on pdp_ct.maquina = m.Maquina
+		// where pdp_ct.dia =  '$fecha'
+		
+		//sin rectriccion------------------------
+				  // select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
+		 // from pdp_maquina
+		 // where activa = 1 
+		 // order by  Descripcion
+		 $sql = "
+
+select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		from pdp_maquina as m
+		where len(maquina) <= 7 and activa = 1
+		
+		
+		 ";
+		  $result =$cmd->createCommand($sql)
+							->queryAll();
+		 
+		return $result;
+		
+	}
+
+
 //obtiene celda con base en el ID celda
 public function getMaquinasCelda($celda){
 

@@ -16,6 +16,10 @@ use common\models\Grid;
 <div class "easyui-panel" title"Reposrte de Maquinado" style="width:100%;height:500px;">
 
 	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+				
+				ID:
+				<input id="id" class="easyui-textbox" type="text" name="id"  ></input></td>
+				<br/><br/>
 				Maquina:
 				 <input id = 'maquina'class="easyui-combobox" style="width:250px" data-options="
                 url: 'loadmaquina?fecha='+$('#fecha').val()+'&op='+$('#operador').val(),
@@ -23,18 +27,32 @@ use common\models\Grid;
                 valueField: 'clave',
 				onSelect:setmaquina,
                 textField: 'Descripcion'
-            "> 
-			
-				ID:
-				<input id="id" class="easyui-textbox" type="text" name="id"  ></input></td>
-		
+				"> 
 			
 				Operador:
-				<input id="operador" class="easyui-textbox" type="text" name="operador" value = "<?php echo $usuario;?>" ></input></td>
-			
-			
+				<input id="operador" class="easyui-textbox" type="text" name="operador" value = "<?php echo $usuario;?>" disabled></input></td>
+				
 				Fecha:
-				<input id="fecha" class="easyui-textbox" type="text" name="fecha" value = "<?php echo $fecha;?>"></input>
+				<input id="fecha" class="easyui-textbox" type="text" name="fecha" value = "<?php echo $fecha;?>" disabled></input>
+				
+				<?php 
+				
+				echo Html::a('Nueva captura',"javascript:void(0)",[
+					'class'=>"easyui-linkbutton",
+					'data-options'=>"iconCls:'icon-reload',plain:true",
+					'onclick'=>"recargaPagina()"
+				]);
+				
+				?>
+				
+				
+				<br/>
+				hora inicio:
+				<input id="hini" class="easyui-textbox" type="text" name="hini" value = "7:00"></input>
+
+				hora fin:
+				<input id="hfin" class="easyui-textbox" type="text" name="hfin" value = "17:00"></input>
+	
 
 				
 				<div id = 'resultado'><div>
@@ -49,12 +67,19 @@ use common\models\Grid;
 <script type="text/javascript">
 	var mensaje = ''	
     function setmaquina(record){
+		var hini =$('#hini').val();
+		var hfin =$('#hfin').val();
 		
+		if (hini == '' || hfin == ''){
+			alert("debe capturar hora inicio fin en formato 24 horas ");exit;
+		}
 		
 		var data= {
 		  operador : $('#operador').val(),
 		  fecha : $('#fecha').val(),
 		  id: $('#id').val(),
+		  hini: $('#hini').val(),
+		  hfin: $('#hfin').val(),
 		  maquina: record.id
 		};
 		
@@ -107,6 +132,13 @@ use common\models\Grid;
 	function getid(){
 			 return $('#id').val(); 
 			
+			
+		}
+		
+	function recargaPagina(){
+			
+			
+			window.location.href = 'captura' ;
 			
 		}
 	</script>

@@ -18,7 +18,7 @@ use common\models\Grid;
 </td>
 </tr>		
 <tr>
-<td>Descripcion :</td>
+<td>CATALOGO Descripcion :</td>
 <td>				<input id="descripcion" class="easyui-textbox" type="text" name="descripcion" value = "" ></input></td>
 </td>
 </tr>			
@@ -76,7 +76,7 @@ use common\models\Grid;
 					valueField:'id',
 					textField:'Descripcion',
 					panelWidth:300,
-					url:'loadmaquina',
+					url:'loadmaquina2',
 					method:'get'
 						}
 				}

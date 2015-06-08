@@ -41,6 +41,7 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="controlcap.add()">Agregar</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="controlcap.del()">Borrar </a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="controlcap.deshacerfila2()">Escape </a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="controlcap.guarda()">guarda </a>
 						<!-- <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
 						
@@ -169,21 +170,25 @@ use common\models\Grid;
 			inicio  = $(ed_inicio.target).textbox('getValue');
 			fin  = $(ed_fin.target).textbox('getValue');
 			//
-			if (inicio == "" || fin == "") 
-				{alert("inicio o fin vacios"); exit;}
+			// if (inicio == "" || fin == "") 
+				// {alert("inicio o fin vacios"); exit;}
 			parte  = $(ed_parte.target).combobox('getValue');
 			op  = $(ed_op.target).combobox('getValue');
 			if (parte == "" || op == "" ) 
-				{alert("operacion o parte vacia"); exit;}
+				{alert("operacion o parte vacia"); return;}
 			maq  = $(ed_maq.target).numberbox('getValue');
 			if (maq == "" || maq == 0  ) 
-				{alert("numkero de piezas maquinadas  vacia o 0 "); exit;}
+				{alert("numkero de piezas maquinadas  vacia o 0 "); return;}
 			r_maq  = $(ed_r_maq.target).numberbox('getValue');
 			r_fun  = $(ed_r_fun.target).numberbox('getValue');
 			desc   = $(ed_desc.target).textbox('getValue');
-			
+			if (inicio == "" || fin == "") {
+			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = $('#hini').val();
+			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = $('#hfin').val();
+			}else{
 			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = inicio;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = fin;
+			}
 			$(this.grid).datagrid('getRows')[this.editIndex2]['parte'] = parte;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['op'] = op;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['maq'] = maq;
@@ -207,9 +212,14 @@ use common\models\Grid;
 		
 		this.add = function() {
 			
+		rows = 	$(this.grid).datagrid('getRows');
 		
+			
+			// si no esta siendo editado
+			if (this.editIndex2 == undefined){
+			
 			$(this.grid).datagrid('insertRow',{
-				index:1,
+				index:rows.length+1,
 				row:{
 				inicio:'',
 				fin:'',
@@ -221,9 +231,14 @@ use common\models\Grid;
 				desc:''
 				}
 			});
-			
-		rows = 	$(this.grid).datagrid('getRows');
-		$(this.grid).datagrid('selectRow',rows.length-1);
+					
+			$(this.grid).datagrid('selectRow',rows.length+1);
+								
+				} else{
+					
+					this.guarda 
+				}
+		
 		
 		}
 		
@@ -326,7 +341,7 @@ use common\models\Grid;
 	}
 	
 		var controlcap = new control('#<?php echo $id2 ?>'); 
-		
+
 		
 		
 	</script>

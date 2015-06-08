@@ -33,7 +33,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 	?>
 
 <br>
-<embed id= "rep" width="1000" height="768" src="<?= $url ?>">
+<embed id= "rep" width="1300px " height="768" src="<?= $url ?>">
 
 <script type="text/javascript">
 

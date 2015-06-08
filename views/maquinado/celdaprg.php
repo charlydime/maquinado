@@ -13,7 +13,7 @@ use common\models\Grid;
 ?>
 
  
-<div id="win_cel" class="easyui-window" data-options="modal:true,closed:true,title:'configuracion de Celda',inline:true" style="width:600px;height:400px;padding:10px">
+<div id="win_cel" class="easyui-window" data-options="modal:true,closed:true,title:'configuracion de Celda',inline:true" style="width:800px;height:400px;padding:10px">
            
         
     
@@ -28,7 +28,14 @@ use common\models\Grid;
 <td>Descripcion :</td>
 <td>				<input id="descripcion" class="easyui-textbox" type="text" name="descripcion" value = "" ></input></td>
 </td>
-</tr>			
+</tr>	
+<tr>
+<td>semana   </td>   <td>  <input type="radio" name="sem" value="<?=$s1 ?>" checked> <?=$s1 ?> 
+    <input type="radio" name="sem" value="<?=$s2 ?>" > <?=$s2 ?> 
+    <input type="radio" name="sem" value="<?=$s3 ?>" > <?=$s3 ?>  
+    <input type="radio" name="sem" value="<?=$s4 ?>" > <?=$s4 ?>  </td>
+
+</tr>	
 </table>
 
 <table id="<?php echo $id2 ?>" title="Maquinas de nueva Celda"  class="easyui-datagrid " style="width:90%;height:300px;"
@@ -72,9 +79,16 @@ use common\models\Grid;
 	
         <tr>
 
-		
+			<th data-options="
+										field:'Hold',
+										width:50,
+										align:'center',
+										formatter:cellStyler,
+										sortable:true,
+										editor:{type:'checkbox',options:{on:'1',off:'0'}}
+			">Hold</th>
 			
-			<th data-options="field:'maquina',width:200,
+			<th data-options="field:'maquina',width:50,
 										
 											
 				editor:{
@@ -92,6 +106,8 @@ use common\models\Grid;
 		
 			<th data-options="field:'clave',width:100">clave</th>
 			<th data-options="field:'Descripcion',width:300">desc</th>
+			<th data-options="field:'razon',editor:'numberbox',width:300">razon</th>
+			
 			
 			
             
@@ -285,6 +301,19 @@ use common\models\Grid;
 		
 		function getid(){
 			 return $('#id').val(); 
+			
+			
+		}
+		
+		function cellStyler(value,row,index){
+			
+			if(parseInt(row.Hold) > 0 ){
+				var style = '<input type="checkbox" checked >';
+					return style;
+			}else{
+				var style = '<input type="checkbox" >';
+					return style;	
+			}
 			
 			
 		}

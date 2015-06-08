@@ -64,6 +64,8 @@ Class MaquinadoCTA2 extends Model {
 				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
 				isnull(almpma.existencia,0)+isnull(almpma2.existencia,0) as PMA,
 				isnull(almcta.existencia,0)+isnull(almcta2.existencia,0) as CTA,
+				isnull(almcta.existencia,0) as CTA1,
+				isnull(almcta2.existencia,0) as CTA2,
 				
 				almpta.existencia as PTA,
 							
@@ -411,6 +413,8 @@ Class MaquinadoCTA2 extends Model {
 			 $ts3=0;
 			 $ts4=0;
 			 $cta=0;
+			 $cta1=0;
+			 $cta2=0;
 			 $rows = 0;
 			 $ok = 0;
 			 $cast = '';
@@ -418,7 +422,7 @@ Class MaquinadoCTA2 extends Model {
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
 					
 					if ($ok == 0 || $cast <> $r['casting']){
-						  $alm =  $this->getInvCasting( $r['casting'] );
+						 // $alm =  $this->getInvCasting( $r['casting'] );
 							$ok = 1;
 
 							
@@ -454,6 +458,8 @@ Class MaquinadoCTA2 extends Model {
 				 $r['PLA1'] = '';	
 				 $r['PLA2'] = '';	
 				 $r['CTA'] = '';	
+				 $r['CTA1'] = '';	
+				 $r['CTA2'] = '';	
 				 $r['PMA'] = '';	
 				 $r['PTA'] = '';	
 
@@ -465,9 +471,13 @@ Class MaquinadoCTA2 extends Model {
 						$ts3 +=  $r["s3"] * $min;
 						$ts4 +=  $r["s4"] * $min;
 						$cta +=  $r["CTA"] * $min;
+						$cta1 +=  $r["CTA1"] * $min;
+						$cta2 +=  $r["CTA2"] * $min;
 					}
 					
 				$r['CTA'] = (real)$r['CTA'] ;
+				$r['CTA1'] = (real)$r['CTA1'] ;
+				$r['CTA2'] = (real)$r['CTA2'] ;
 				$r['PLA'] = (real)$r['PLA'] ;
 				$r['PLA1'] = (real)$r['PLA1'] ;
 				$r['PLA2'] = (real)$r['PLA2'] ;
@@ -489,6 +499,8 @@ Class MaquinadoCTA2 extends Model {
 				if ($r['tot_pza'] ==  0) $r['tot_pza'] = ''; 
 				if ($r['tot_min'] ==  0) $r['tot_min'] = ''; 
 				if ($r['CTA'] ==  0) $r['CTA'] = ''; 
+				if ($r['CTA1'] ==  0) $r['CTA1'] = ''; 
+				if ($r['CTA2'] ==  0) $r['CTA2'] = ''; 
 				if ($r['PLA'] ==  0) $r['PLA'] = ''; 
 				if ($r['PLA1'] ==  0) $r['PLA1'] = ''; 
 				if ($r['PLA2'] ==  0) $r['PLA2'] = ''; 
@@ -501,11 +513,13 @@ Class MaquinadoCTA2 extends Model {
 				 $rows++; 
 				}
 				
-				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1) ;;
-				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
-				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
-				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;;
-				$totales[0]['CTA'] = $cta;
+				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1) ;
+				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;
+				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;
+				$totales[0]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4) ;
+				$totales[0]['CTA'] = $cta == 0 ? '' : number_format($cta);
+				$totales[0]['CTA'] = $cta1 == 0 ? '' : number_format($cta1);
+				$totales[0]['CTA'] = $cta2 == 0 ? '' : number_format($cta2);
 			
 				$totales[0]['maquina1'] = 'Minutos';
 				
@@ -514,6 +528,8 @@ Class MaquinadoCTA2 extends Model {
 				$totales[1]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3/60) ;
 				$totales[1]['s4_min'] = $ts4 == 0 ? '' : number_format($ts4/60) ;
 				$totales[1]['CTA'] = $cta == 0 ? '' : number_format($cta/60) ;
+				$totales[1]['CTA1'] = $cta1 == 0 ? '' : number_format($cta1/60) ;
+				$totales[1]['CTA2'] = $cta2 == 0 ? '' : number_format($cta2/60) ;
 		
 				$totales[1]['maquina1'] = 'Horas';
 				
@@ -530,6 +546,8 @@ Class MaquinadoCTA2 extends Model {
 				$totales[2]['s3_min'] = $ts3 == 0 ? '' : number_format(($ts3/60)/9,1) ;
 				$totales[2]['s4_min'] = $ts4 == 0 ? '' : number_format(($ts4/60)/9,1) ;
 				$totales[2]['CTA'] = $cta == 0 ? '' : number_format(($cta/60)/9,1) ;
+				$totales[2]['CTA1'] = $cta1 == 0 ? '' : number_format(($cta1/60)/9,1) ;
+				$totales[2]['CTA2'] = $cta2 == 0 ? '' : number_format(($cta2/60)/9,1) ;
 			
 				$totales[2]['maquina1'] = 'Turno 9H';
 	

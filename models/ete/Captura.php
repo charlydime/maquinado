@@ -138,6 +138,8 @@ Class Captura extends Model {
 									'empleado' => $data['usuario'],
 									'fecha' => $data['fecha'], 
 									'idmaquina' => $data['maquina'],
+									'hini' => $data['hini'],
+									'hfin' => $data['hfin'],
 									// 'idturno' => $data['fecha'], //jalar de empleados
 
 							])->execute();
@@ -148,7 +150,8 @@ Class Captura extends Model {
 			
 		
 		 } else{
-		 $ultimo = 0;
+			 // indica que el operador ya existe en la maquina mandando 0
+		 //$ultimo = 0;
 		 }
 		
 		//echo " ULTIMO ID : $ultimo"; exit;
@@ -280,7 +283,7 @@ Class Captura extends Model {
 		$data = (array) $data;
 
 		$result =$command->createCommand()->delete('Detalle de ete',[
-												'id' =>  $data['idtm']
+												'id' =>  $data['idcap']
 											])->execute();
 											// ])->getRawSql();
 											// print_r($result);

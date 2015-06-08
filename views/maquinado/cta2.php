@@ -148,7 +148,7 @@ $this->registerJS("
 										<th colspan ="6"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="4">Embarques</th>
-										<th colspan ="5">Almacenes</th>
+										<th colspan ="6">Almacenes</th>
 										<th colspan ="4">Sem <?=$s1 ?> </th>
 										<th colspan ="4">Sem <?=$s2 ?> </th>
 										<th colspan ="4">Sem <?=$s3 ?> </th>
@@ -201,7 +201,9 @@ $this->registerJS("
 										<th data-options="field:'sem4',width:50,sortable:true">sem<?=$s4 ?></th>
 										<th data-options="field:'PLA1',width:50,sortable:true">PLA1</th>
 										<th data-options="field:'PLA2',width:50,sortable:true">PLA2</th>
-										<th data-options="field:'CTA',width:50,sortable:true">CTAs</th>
+										<!--<th data-options="field:'CTA',width:50,sortable:true">CTAs</th> -->
+										<th data-options="field:'CTA1',width:50,sortable:true">CTA1</th>
+										<th data-options="field:'CTA2',width:50,sortable:true">CTA2</th>
 										<th data-options="field:'PMA',width:50,sortable:true">PMAs</th>
 										<th data-options="field:'PTA',width:50,sortable:true">PTA</th>
 										
@@ -379,7 +381,11 @@ data-options="
 								'semana'=>$sem4,
 								'sem'=>$s4,
 								'idOpMaq'  => '8',
-								'idOP'  => '9'
+								'idOP'  => '9',
+								's1' => $s1,
+								's2' => $s2,
+								's3' => $s3,
+								's4' => $s4,
 							]);?>						
 							
 						

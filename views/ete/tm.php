@@ -40,6 +40,7 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="controltm.add()">Agregar</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="controltm.del()">Borrar </a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="controltm.deshacerfila2()">Escape </a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="controltm.guarda()">guarda </a>
 						<!-- <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
 						
@@ -185,21 +186,33 @@ use common\models\Grid;
 		
 		this.add = function() {
 			
+		rows = 	$(this.grid).datagrid('getRows');
 		
+			
+			// si no esta siendo editado
+			if (this.editIndex2 == undefined){
+			
 			$(this.grid).datagrid('insertRow',{
-				index:1,
+				index:rows.length+1,
 				row:{
-					inicio:'',
-					fin:'',
-					omtto:'',
-					osetup:'',
-					desc:'',
-					herram:''
+				inicio:'',
+				fin:'',
+				parte:'',
+				op:'',
+				maq:'',
+				RMaq:'0',
+				RFun:'',
+				desc:''
 				}
 			});
-			
-		rows = 	$(this.grid).datagrid('getRows');
-		$(this.grid).datagrid('selectRow',rows.length);
+					
+			$(this.grid).datagrid('selectRow',rows.length+1);
+								
+				} else{
+					
+					this.guarda 
+				}
+		
 		
 		}
 		

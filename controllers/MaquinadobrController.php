@@ -9,7 +9,7 @@ use frontend\models\maquinadobr\maquinadocta;
 use frontend\models\maquinadobr\maquinadocta2;
 use frontend\models\maquinadobr\maquinadocta4;
 use frontend\models\maquinadobr\maquinadoPzaMaq;
-use frontend\models\ete\celda;
+use frontend\models\ete\celdaprg;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -514,60 +514,67 @@ class MaquinadobrController extends Controller
 		return $this->render('celda', [  ]);
 	}
 	
-	//lista celdas
+	
+	//lista celdas FORM
 	public function actionLstcelda(){
 		
 		$id = 0;
-		$model = new Celda;
+		$model = new Celdaprg;
 		if (isset($_REQUEST['id']))
 			$id = $_REQUEST['id'];
+		if (isset($_REQUEST['sem']))
+			$sem = $_REQUEST['sem'];
 	
 		// $f  = $_POST['fecha'];
 		
-		$celda = $model->lstcelda($id);
+		$celda = $model->lstcelda($id,$sem);
 		
 		return json_encode($celda, 0);
 		
 	}
 	
-	//salva celda
+	//salva celda FORM
 	public function actionSalvacelda(){
 		
 		$data = json_decode($_POST['Data']);
 
-		$model = new Celda;
+		$model = new Celdaprg;
 		$id =$model->saveCelda($data);
 		
 		return $id;
 		
 	}
 	
-	//obtiene id de celda
+	//obtiene id de celda FORM
 	public function actionGetcelid(){
 		//$data = json_decode(']);
 		
 		// print_r($_GET['maquina']);exit;
 		
 		
-		$model = new Celda;
+		$model = new Celdaprg;
 		$id =$model->getCelId( $_GET['maquina']  );
 		
 		return $id;
 		
 	}
 	
-	//obtiene nombre de celda
+	//obtiene nombre de celda FORM
 	public function actionGetcelname(){
 		//$data = json_decode(']);
 		
 		// print_r($_GET['maquina']);exit;
 		
 		
-		$model = new Celda;
+		$model = new Celdaprg;
 		$id =$model->getCelName( $_GET['idcelda']  );
 		
 		return $id;
 		
 	}
+	
+	
+	
+	
 	
 }

@@ -19,6 +19,15 @@ use common\models\Grid;
 				
 				ID:
 				<input id="id" class="easyui-textbox" type="text" name="id"  ></input></td>
+			<?php 
+				
+				// echo Html::a('volver a ultimo',"javascript:void(0)",[
+					// 'class'=>"easyui-linkbutton",
+					// 'data-options'=>"iconCls:'icon-reload',plain:true",
+					// 'onclick'=>"ultimo()"
+				// ]);
+				
+				?>
 				<br/><br/>
 				Maquina:
 				 <input id = 'maquina'class="easyui-combobox" style="width:250px" data-options="
@@ -47,13 +56,16 @@ use common\models\Grid;
 				
 				
 				<br/>
-				hora inicio:
+			<!--	hora inicio:
 				<input id="hini" class="easyui-textbox" type="text" name="hini" value = "7:00"></input>
 
 				hora fin:
 				<input id="hfin" class="easyui-textbox" type="text" name="hfin" value = "17:00"></input>
-	
-
+			-->
+				<input type="radio" name="turno" value="1" > Matutino
+				<input type="radio" name="turno" value="2" >Vespertino
+				<input type="radio" name="turno" value="3" > Nocturno 
+				<input type="radio" name="turno" value="4" checked> Mixto
 				
 				<div id = 'resultado'><div>
 	</form>
@@ -66,20 +78,30 @@ use common\models\Grid;
 </div>
 <script type="text/javascript">
 	var mensaje = ''	
-    function setmaquina(record){
-		var hini =$('#hini').val();
-		var hfin =$('#hfin').val();
+	
+	function ultimo(){
 		
-		if (hini == '' || hfin == ''){
-			alert("debe capturar hora inicio fin en formato 24 horas ");exit;
-		}
+		
+		
+	}
+    function setmaquina(record){
+		// var hini =$('#hini').val();
+		// var hfin =$('#hfin').val();
+		
+		// if (hini == '' || hfin == ''){
+			// alert("debe capturar hora inicio fin en formato 24 horas ");exit;
+		// }
+		var ok = confirm("Desea Iniciar Captura para :"+ record.clave);
+		
+		if (ok != true ) return;
 		
 		var data= {
 		  operador : $('#operador').val(),
 		  fecha : $('#fecha').val(),
 		  id: $('#id').val(),
-		  hini: $('#hini').val(),
-		  hfin: $('#hfin').val(),
+		  idturno: $("input[name=turno]:checked").val(),
+		  // hini: $('#hini').val(),
+		  // hfin: $('#hfin').val(),
 		  maquina: record.id
 		};
 		

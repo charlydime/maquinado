@@ -7,7 +7,7 @@ use yii\base\Model;
 Class Celda extends Model {
     
 
-   public function lstcelda($id){
+   public function lstcelda($id=0){
 	   
 	    $cmd = \Yii::$app->db_mysql;
 		  $sql = "

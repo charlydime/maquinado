@@ -121,26 +121,108 @@ Class Captura extends Model {
 	}
 	
 	
+// detecta si el operador esta en el tuno nocturno del dia actual
+//si es verdadero retorna el dia de ayer
+public function detectanoche($op){
+		$command = \Yii::$app->db_mysql;
+		
+        $result =$command->createCommand("
+		
+		select count(dia) as m ,cast (dateadd( day, -1 ,getdate() ) as date ) as d   from  pdp_maquina_turno_dia
+		where turno = 'Nocturno' and
+		dia =  cast (dateadd( day, -1 ,getdate() ) as date ) and 
+		op = $op
+		
+		")->queryAll();
+		
+		
+		
+		return $result[0]['m'] >  0 ? $result[0]['d'] : false;
+	
+}
+
+public function ChecaOp($data){
+	
+	 // [op] => 30
+    // [fecha] => 2015-06-17
+    // [maquina] => 
+    // [pieza] => 005154-00X
+	
+		$command = \Yii::$app->db_mysql;
+		$fecha= $data['fecha'];
+		$maquina= $data['maquina'];
+		$op= $data['op'];
+		$pieza= $data['pieza'];
+		
+        $result =$command->createCommand("
+		
+		select count(op) as m  from pdp_cta_dia  
+		where 
+		dia =  '$fecha' and 
+		maquina = '$maquina' and 
+		op =  $op and
+		pieza = '$pieza'
+
+		
+		"
+		)->queryAll();
+		// ])->getRawSql();
+		// echo $result;exit;
+	
+		return $result[0]['m'] ;
+}
+
+	// trae los horarios del turno 
+	public function datosTurno($idturno){
+		
+		$command = \Yii::$app->db_ete;
+		
+        $result =$command->createCommand("
+		
+		select idturno,cast(hinicio as time) as hinicio,cast(htermino as time) as htermino,Turno from turnos where idturno = $idturno
+		")->queryAll();
+		
+		
+		
+		return $result;
+		
+	}
+	
+	public function getUltimo(){
+		
+		$command = \Yii::$app->db_ete;
+		
+        $result =$command->createCommand("
+		
+		select idturno,cast(hinicio as time) as hinicio,cast(htermino as time) as htermino,Turno from turnos where idturno = $idturno
+		")->queryAll();
+		
+		
+		
+		return $result;
+	}
 
 	public function saveETE($data){
 
 		// echo "salvar"; 
 		 
 		 $data = (array) $data;
-		 // print_r($data);
+		  // print_r($data);
 		 
 		 $command = \Yii::$app->db_ete;
 		 $data['fecha'] = str_replace('-','', $data['fecha']);
 		 // $data['fecha'] =  $data['fecha'] ;
-		 if (!$this->existeEte($data['usuario'],$data['fecha'],$data['maquina']))
-		 {
+		 $turno = $this->datosTurno($data['idturno']);
+		 //print_r($turno); exit;
+		 // if (!$this->existeEte($data['usuario'],$data['fecha'],$data['maquina']))
+		 // {
 			 $result =$command->createCommand()->insert('ETE',[
 									'empleado' => $data['usuario'],
 									'fecha' => $data['fecha'], 
 									'idmaquina' => $data['maquina'],
-									'hini' => $data['hini'],
-									'hfin' => $data['hfin'],
-									// 'idturno' => $data['fecha'], //jalar de empleados
+									'hini' => $turno[0]['hinicio'],
+									'hfin' => $turno[0]['htermino'],
+									'idturno' => $turno[0]['idturno']
 
 							])->execute();
 							// ])->getRawSql();
@@ -149,14 +231,39 @@ Class Captura extends Model {
 			$ultimo = 	$command->getLastInsertID();
 			
 		
-		 } else{
+		 // } else{
 			 // indica que el operador ya existe en la maquina mandando 0
-		 //$ultimo = 0;
-		 }
+		 // $id = %this->traeUltimo($data['usuario'],$data['fecha'],$data['maquina']);
+		 // }
 		
 		//echo " ULTIMO ID : $ultimo"; exit;
 	 return  $ultimo;
 	}
+	
+	//funcion para insertar nuevo ete
+	public function getoppza($parte,$op,$id){
+		 $command = \Yii::$app->db_mysql;
+		 
+		
+		
+        $result =$command->createCommand("
+		
+		select * from pdp_maquina_pieza as mp
+		LEFT JOIN ete.dbo.ETE as e on  e.consecutivo  = $id
+		left join pdp_maquina  as m on m.id = e.idmaquina
+		where
+		mp.pieza = '$parte'
+		and mp.op = $op
+		and  mp.maquina = m.maquina
+
+
+		")->queryAll();
+		
+		
+		
+		return $result;
+	}
+
 	
 	//funcion para insertar nuevo ete
 	public function saveCap($data){
@@ -164,8 +271,12 @@ Class Captura extends Model {
 		
 		 $data =  $data[0];
 		 $data = (array) $data;
-		 // print_r($data);
+		  // print_r($data);
 		 $command = \Yii::$app->db_ete;
+		 
+		 $op = $this->getoppza($data['parte'],$data['op'],$data['ID']);
+		 // print_r($op);exit;
+		 
 		 if ( !$this->existeCap($data['parte'],$data['op'],$data['ID']) )
 		 {  
 			
@@ -178,7 +289,8 @@ Class Captura extends Model {
 									'Rechazo Fund' =>  $data['RFun'],
 									'Rechazo Maq' =>  $data['RMaq'],
 									'obs' =>  $data['desc'],
-									'consecutivo' =>  $data['ID']
+									'consecutivo' =>  $data['ID'],
+									'tiempoOperacion' => $op[0]['Minutos']
 			
 							])->execute();
 							// ])->getRawSql();
@@ -322,24 +434,65 @@ Class Captura extends Model {
 
 		// ) as pdp_ct on pdp_ct.maquina = m.Maquina
 		// where pdp_ct.dia =  '$fecha'
+		//actual restringido -----------
+		// select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		// from pdp_maquina as m
+
+		// LEFT JOIN (
+		// select * from pdp_cta_dia 
+		// union 
+		// select * from pdp_ctb_dia 
+
+		// ) as pdp_ct on pdp_ct.maquina = m.Maquina
+		// where pdp_ct.dia =  '$fecha'
 		
 		//sin rectriccion------------------------
 				  // select Maquina+'-'+Descripcion as Descripcion, Maquina as clave , id
 		 // from pdp_maquina
 		 // where activa = 1 
 		 // order by  Descripcion
+		 
+		 //MASS restriccion
+		 // select 
+// DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+// ,pdp_ct.op
+		 // from pdp_maquina as m
+
+		 // LEFT JOIN (
+		 // select * from pdp_maquina_turno_dia 
+		 // union 
+		 // select * from pdp_maquina_turno_diabr 
+
+		 // ) as pdp_ct on pdp_ct.maquina = m.Maquina
+		 // where 
+// pdp_ct.dia =  '2015-06-16' and
+// pdp_ct.op = 
 		 $sql = "
 
-		select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
-		from pdp_maquina as m
+		 select 
+		DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave , m.id
+		,pdp_ct.op
+		 from pdp_maquina as m
 
-		LEFT JOIN (
-		select * from pdp_cta_dia 
-		union 
-		select * from pdp_ctb_dia 
+		 LEFT JOIN (
+		 select dia,maquina,turno,minutos,
+			CASE 
+				WHEN op > 10000 then op-10000
+				ELSE op
+			END as op
+		from pdp_maquina_turno_dia 
+		 union 
+		 select dia,maquina,turno,minutos,
+			CASE 
+				WHEN op > 10000 then op-10000
+				ELSE op
+			END as op
+		from pdp_maquina_turno_diabr
 
-		) as pdp_ct on pdp_ct.maquina = m.Maquina
-		where pdp_ct.dia =  '$fecha'
+		 ) as pdp_ct on pdp_ct.maquina = m.Maquina
+		 where 
+		pdp_ct.dia =  '$fecha' and
+		pdp_ct.op = $op
 		
 		
 		 ";
@@ -386,11 +539,51 @@ Class Captura extends Model {
 		//TODO: restriccion aqui
 	public function GetParte($fecha,$op){
 		
+		//--restringido
+		// select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
+			// MASSS
+		  // select * from pdp_cta_dia as cta
+				// left JOIN pdp_maquina_turno_dia as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
+			// where 
+				// cta.dia =  '$fecha' and
+				// turno.op =   $op
+		
+		
 		 $cmd = \Yii::$app->db_mysql;
 		  $sql = "
-		  select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
-			Union
-		  select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
+					select * from pdp_cta_dia as cta
+				left JOIN  
+				(
+					select dia,maquina,turno,minutos,
+						CASE 
+							WHEN op > 10000 then op-10000
+							ELSE op
+						END as op
+					from pdp_maquina_turno_dia 
+				
+				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
+			where 
+				cta.dia =  '$fecha' and
+				turno.op =   $op
+
+			UNION
+
+			select * from pdp_ctb_dia as cta
+				left JOIN  
+				(
+					select dia,maquina,turno,minutos,
+						CASE 
+							WHEN op > 10000 then op-10000
+							ELSE op
+						END as op
+					from pdp_maquina_turno_diabr 
+				
+				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
+			where 
+				cta.dia =  '$fecha' and
+				turno.op =   $op
+			
+				
 		
 		 ";
 		  $result =$cmd->createCommand($sql)

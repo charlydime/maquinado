@@ -86,10 +86,23 @@ data-options="
 							}
 				"
 					>
+					
+			<thead data-options="frozen:true">
+				<tr>
+					<th colspan= 3></th>
+				</tr>
+				<tr>
+					<th data-options="field:'Pieza',width:170,sortable:true">Producto</th>
+					<th data-options="field:'casting',width:100,sortable:true">Cast</th>
+					<th data-options="field:'descripcion',width:50,sortable:true">Desc</th>
+	
+					
+				</tr>
+			</thead>
 			<thead>
 	
 				<tr>
-					<th colspan= 4></th>
+					<th colspan= 1></th>
 					<th colspan= 2>Opeacion</th>
 					<th colspan= 1></th>
 					<th colspan= 2>Embaques</th>
@@ -108,9 +121,7 @@ data-options="
 				</tr>
 				<tr>
 					
-					<th data-options="field:'Pieza',width:170,sortable:true">Producto</th>
-					<th data-options="field:'casting',width:100,sortable:true">Cast</th>
-					<th data-options="field:'descripcion',width:50,sortable:true">Desc</th>
+					
 					<th data-options="field:'prio',sortable:true,width:40">Prio</th>
 					<th data-options="field:'op',sortable:true,width:40">num</th>
 					<th data-options="field:'minmaq',sortable:true,width:53">Min</th>
@@ -489,7 +500,8 @@ data-options="
 							var producto = $(this.grid).datagrid('getRows')[this.editIndex2]['Pieza'] ;
 							var Maquina  = $(this.grid).datagrid('getRows')[this.editIndex2]['Maquina'] ;
 							var diario = $(this.grid).datagrid('getRows')[this.editIndex2]['sum'] ;
-							var minutos = $(this.grid).datagrid('getRows')[this.editIndex2]['sum_min'] 
+						//	var minutos = $(this.grid).datagrid('getRows')[this.editIndex2]['sum_min'] 
+							var minutos = $(this.grid).datagrid('getRows')[this.editIndex2]['minmaq'] 
 							var opx = $(this.grid).datagrid('getRows')[this.editIndex2]['op'] ;
 							var prioridad = $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] ? $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] : 0; 
 							var sem_actual =  "<?php echo $semana ?>";

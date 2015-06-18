@@ -87,7 +87,8 @@ use common\models\Grid;
 					textField:'op',
 					panelWidth:100,
 					url:'loadop',
-					method:'get'
+					method:'get',
+					onSelect:function(row){ controlcap.checaop(row) ;}
 						}
 				}
 			">Op</th>
@@ -170,15 +171,24 @@ use common\models\Grid;
 			inicio  = $(ed_inicio.target).textbox('getValue');
 			fin  = $(ed_fin.target).textbox('getValue');
 			//
-			// if (inicio == "" || fin == "") 
-				// {alert("inicio o fin vacios"); exit;}
+			if (inicio == "" || fin == "") 
+				{alert("inicio o fin vacios capture lo que trabajo en la "); return;}
+			//valida hora
+			if( !this.validahora(inicio) ) 
+				{alert("formato de hora inicio no valido 10:00"); return;}
+			
+			if( !this.validahora(fin) ) 
+				{alert("formato de hora fin no valido elemplo 1:00 "); return;}
+			
+			
 			parte  = $(ed_parte.target).combobox('getValue');
 			op  = $(ed_op.target).combobox('getValue');
+			 
 			if (parte == "" || op == "" ) 
 				{alert("operacion o parte vacia"); return;}
 			maq  = $(ed_maq.target).numberbox('getValue');
 			if (maq == "" || maq == 0  ) 
-				{alert("numkero de piezas maquinadas  vacia o 0 "); return;}
+				{alert("numero de piezas maquinadas  vacia o 0 "); return;}
 			r_maq  = $(ed_r_maq.target).numberbox('getValue');
 			r_fun  = $(ed_r_fun.target).numberbox('getValue');
 			desc   = $(ed_desc.target).textbox('getValue');
@@ -189,6 +199,8 @@ use common\models\Grid;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = inicio;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = fin;
 			}
+			
+			
 			$(this.grid).datagrid('getRows')[this.editIndex2]['parte'] = parte;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['op'] = op;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['maq'] = maq;
@@ -206,12 +218,23 @@ use common\models\Grid;
 				this.recargaSigGrid(grid);
 				this.editIndex2 = undefined;
 				$(this.grid).datagrid('endEdit', this.editIndex2);
-				this.deshacerfila2();
+				
 			
 		}
 		
-		this.add = function() {
+	
+		this.validahora = function(hora){
 			
+			var pat = /^(0[1-9]|1\d|2[0-3]):([0-5]\d)$/;
+			
+			return hora.match(pat) ? true : false;
+			
+			
+		}
+		
+		
+		this.add = function() {
+			this.deshacerfila2();
 		rows = 	$(this.grid).datagrid('getRows');
 		
 			
@@ -267,6 +290,7 @@ use common\models\Grid;
 						);
 			
 		}
+		
 		this.endEditing2 = function (){
 						
 				
@@ -275,6 +299,7 @@ use common\models\Grid;
 				
 				
 				this.guarda();
+				this.deshacerfila2();
 				
 				return true;
 			} else {
@@ -338,10 +363,54 @@ use common\models\Grid;
 			
 			
 		}
-	}
+		
+		this.checaop = function(cel) {
+			
+			var ed_parte = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'parte'});
+			parte  = $(ed_parte.target).combobox('getValue');
+			
+			if (parte == "" ) 
+				{alert("parte vacia"); return;} 
+				
+				var data= {
+				   op:cel.op,
+				   fecha : $('#fecha').val(),
+				   maquina: $('#maquina').combobox('getValue'),
+				   pieza: parte 
+				};
+				
+				$.ajax({
+                data:  data,
+                url:   'checaop',
+                type:  'post',
+                beforeSend: function () {
+                        // $("#resultado").html("Creando registro");
+                },
+                success:  function (response) {
+                        response.replace(/\"/g, "");
+						console.log(response);
+						if(response == 0 )//no esta en prog
+						{
+							 mensaje = "Operacion no valida" ;
+						alert(mensaje);
+						
+						}
+						
+				},
+				error:  function (response) {
+                        
+						console.log(response);
+						alert("MAL");
+                }
+				});
+			
+		}
+		
+		
+	}//class
 	
 		var controlcap = new control('#<?php echo $id2 ?>'); 
 
-		
+	
 		
 	</script>

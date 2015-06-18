@@ -104,7 +104,7 @@ Class MaquinadoCTA2 extends Model {
 				
 				
 				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
-				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = maq_piezas.IDENTIFICACION
+				LEFT JOIN  producto as prod_dux on ltrim(RTRIM ( prod_dux.IDENTIFICACION ))= ltrim(RTRIM (prod.producto))
 				 Left JOIN (
 						SELECT pieza,op
 						FROM 	pdp_maquina_pieza
@@ -284,18 +284,23 @@ Class MaquinadoCTA2 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S1 on 
@@ -311,18 +316,23 @@ Class MaquinadoCTA2 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S2 on 
@@ -338,18 +348,23 @@ Class MaquinadoCTA2 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S3 on 
@@ -361,22 +376,29 @@ Class MaquinadoCTA2 extends Model {
 				
 				LEFT JOIN(
 				
+					 
+
 					select 
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S4 on 
@@ -1115,11 +1137,11 @@ public function  GetInfo_pza_op($semana){
 	
 	public function p1save($data) {
 		$command = \Yii::$app->db_mysql;
-		
+		//print_r($data); exit;
 		$fsemana  =$data['semana']  ;
 						
 		$maq_pieza = $this->maquinapieza_todo($data['producto']);
-		
+		//echo "G R A  B O ".$data['semana'];
 		if (!$this->p1exist($data['producto'],$data['semana'],$data['opx']) ){
 			if ($data['cantidad'] == 0) return ;
 			
@@ -1138,6 +1160,8 @@ public function  GetInfo_pza_op($semana){
 									//'semana_q' => $data['semana_q']
 			])->execute();
 			// ])->getRawSql();
+			
+			
 			//se llena pdp_maquina turnos
 			$this->maquinaturnossemana( $data );
 			
@@ -1178,6 +1202,7 @@ public function  GetInfo_pza_op($semana){
 										]
 									)->execute();
 								// )->getRawSql();
+								// echo $result;
 				//se llena pdp_maquina turnos
 				$this->maquinaturnossemana( $data );
 			//si es celda se actualiza pdp_prgcta

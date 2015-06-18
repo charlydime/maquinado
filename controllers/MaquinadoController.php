@@ -175,7 +175,7 @@ class MaquinadoController extends Controller
 			 //programar busqueda cuantas operaciones tiene la pieza
 			 
 			foreach ($datos as $data){ 
-			echo "for------------------------";print_r ($data);
+			//echo "for------------------------";print_r ($data);
 					if ($data->{'maquina1'} == '') exit;
 			 
 					//$maquina=explode('-',$data->{'maquina1'});
@@ -662,5 +662,17 @@ class MaquinadoController extends Controller
 	
 		
 	}
+	
+	//cambio pwd
+	public function actionCambiapass($usr,$pwd){
+		
+		
+		$model = new Eteusr;
+		$id =$model->cambiopassword($pwd,$usr);
+		
+	
+		
+	}
+	
 	
 }

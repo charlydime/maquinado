@@ -38,9 +38,9 @@ Class MaquinadoCTA4 extends Model {
 				pdp_cta.Cantidad,
 				pdp_cta.Maquina,
 				pdp_cta.op,
-				pdp_cta.Minutos as minmaq,
-				round(480/ nullif(pdp_cta.Minutos,0),0) as p_t,
-				pdp_cta.Minutos * pdp_cta.Cantidad as Minutos,
+				mp.Minutos as minmaq,
+				round(480/ nullif(mp.Minutos,0),0) as p_t,
+				mp.Minutos * pdp_cta.Cantidad as Minutos,
 				isnull(almpla.existencia,0) as PLA1,
 				isnull(almpla2.existencia,0) as PLA2,
 				isnull(almpla.existencia,0)+isnull(almpla2.existencia,0) as PLA,
@@ -277,20 +277,20 @@ Class MaquinadoCTA4 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
 					where
 						fecha =	 cast ( '$lun' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_lun on 
 					ETE_lun.producto = pdp_cta.Pieza and 
@@ -299,24 +299,24 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 				
-					select 
+										select 
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
 					where
 						fecha =	 cast ( '$mar' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				
 				) AS ETE_mar on 
@@ -326,24 +326,24 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 				
-					select 
+										select 
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
-				where
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
+					where
 						fecha =	 cast ( '$mie' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_mie on 
 					ETE_mie.producto = pdp_cta.Pieza and 
@@ -357,20 +357,20 @@ Class MaquinadoCTA4 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
-				where
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
+					where
 						fecha =	 cast ( '$jue' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_jue on 
 					ETE_jue.producto = pdp_cta.Pieza and 
@@ -383,20 +383,20 @@ Class MaquinadoCTA4 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
-				where
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
+					where
 						fecha =	 cast ( '$vie' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_vie on 
 					ETE_vie.producto = pdp_cta.Pieza and 
@@ -409,20 +409,20 @@ Class MaquinadoCTA4 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
-				where
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
+					where
 						fecha =	 cast ( '$sab' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_sab on 
 					ETE_sab.producto = pdp_cta.Pieza and 
@@ -435,20 +435,20 @@ Class MaquinadoCTA4 extends Model {
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					fecha
-					
 					 from  ete.dbo.[Detalle de ETE] as DE 
 					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
-				where
+					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 	
+					where
 						fecha =	 cast ( '$dom' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
 				
 				) AS ETE_dom on 
 					ETE_dom.producto = pdp_cta.Pieza and 
@@ -566,6 +566,8 @@ Class MaquinadoCTA4 extends Model {
 					
 					
 					// asunto de 0s para que no se deplieguen en grid
+					if ($r['Minutos'] ==  0) $r['Minutos'] = ''; else $r['Minutos'] = (int)$r['Minutos']  ;
+					if ($r['minmaq'] ==  0) $r['minmaq'] = ''; else $r['minmaq'] = (int)$r['minmaq']  ;
 					if ($r['CTA'] ==  0) $r['CTA'] = ''; else $r['CTA'] = (int)$r['CTA']  ;
 					if ($r['PLA'] ==  0) $r['PLA'] = ''; else $r['PLA'] = (int)$r['PLA']  ;
 					if ($r['PLA1'] ==  0) $r['PLA1'] = ''; else $r['PLA1'] = (int)$r['PLA1']  ;
@@ -791,7 +793,7 @@ Class MaquinadoCTA4 extends Model {
 			$command = \Yii::$app->db_mysql;			
 			$a = date('Y');
 			$datarec=null;
-			
+			//echo "datos save_dia"; print_r($datos); exit; 
 			foreach ($datos as $data){
 			
 					$datarec['Maquina'] = $data->{'Maquina'};
@@ -820,6 +822,7 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
 						
 						 // $data_rec2['minutos'] = $ops['Minutos'];
 						 $data_rec2['minutos'] = $datarec['min'];
@@ -827,19 +830,19 @@ Class MaquinadoCTA4 extends Model {
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -853,26 +856,29 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
-						// echo "ops: ";print_r($ops);
-						
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						echo "savedia opd"; print_r($opd);
+						echo "savedia ops"; print_r($ops);
+						 // $data_rec2['minutos'] = $ops['Minutos'];
 						 $data_rec2['minutos'] = $datarec['min'];
+						// echo "ops: ";print_r($ops);
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Mixto'];
-							$data_rec2['turno'] = 'Mixto';
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
+							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Nocturno'];
-							$data_rec2['turno'] = 'Nocturno';
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
+							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
 					}
@@ -884,25 +890,27 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						
+						 // $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
 						// echo "ops: ";print_r($ops);
-						// $data_rec2['minutos'] = $ops['Minutos'];
-						$data_rec2['minutos'] = $datarec['min'];
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -915,26 +923,27 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
 						
-						// $data_rec2['minutos'] = $ops['Minutos'];
+						 // $data_rec2['minutos'] = $ops['Minutos'];
 						 $data_rec2['minutos'] = $datarec['min'];
 						// echo "ops: ";print_r($ops);
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
-						
-							$data_rec2['operador'] = $ops['Mixto'];
+							
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -947,26 +956,27 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
 						
-						// $data_rec2['minutos'] = $ops['Minutos'];
+						 // $data_rec2['minutos'] = $ops['Minutos'];
 						 $data_rec2['minutos'] = $datarec['min'];
 						// echo "ops: ";print_r($ops);
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -980,26 +990,27 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
-						// echo "ops: ";print_r($ops);
-						// $data_rec2['minutos'] = $ops['Minutos'];
-						 $data_rec2['minutos'] = $datarec['min'];
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
 						
+						 // $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						// echo "ops: ";print_r($ops);
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -1012,26 +1023,27 @@ Class MaquinadoCTA4 extends Model {
 						$this->save($datarec);
 						
 						$ops = $this->traeOpSemanal($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
-						// echo "ops: ";print_r($ops);
-						// $data_rec2['minutos'] = $ops['Minutos'];
-						 $data_rec2['minutos'] = $datarec['min'];
+						$opd = $this->traeOpDia($datarec['Maquina'],$datarec['fecha'],'Matutino',1);
 						
+						 // $data_rec2['minutos'] = $ops['Minutos'];
+						 $data_rec2['minutos'] = $datarec['min'];
+						// echo "ops: ";print_r($ops);
 						$data_rec2['dia'] = $datarec['fecha']; 
 						$data_rec2['cantidad_prog'] = $datarec['cantidad'];
 						
-							$data_rec2['operador'] = $ops['Matutino'];
+							$data_rec2['operador'] =  $opd['Matutino'] == null ? $ops['Matutino'] :$opd['Matutino'];
 							$data_rec2['turno'] = 'Matutino';
 							$this->save_opturno_p2( $data_rec2);
 
-							$data_rec2['operador'] = $ops['Vespertino'];
+							$data_rec2['operador'] = $opd['Vespertino'] == null ? $ops['Vespertino'] : $opd['Vespertino'] ;
 							$data_rec2['turno'] = 'Vespertino';
 							$this->save_opturno_p2( $data_rec2);
 						
-							$data_rec2['operador'] = $ops['Nocturno'];
+							$data_rec2['operador'] = $opd['Nocturno'] == null  ? $ops['Nocturno'] : $opd['Nocturno'];
 							$data_rec2['turno'] = 'Nocturno';
 							$this->save_opturno_p2( $data_rec2);
 							
-							$data_rec2['operador'] = $ops['Mixto'];
+							$data_rec2['operador'] = $opd['Mixto'] == null ? $ops['Mixto'] : $opd['Mixto'];
 							$data_rec2['turno'] = 'Mixto';
 							$this->save_opturno_p2( $data_rec2);
 						
@@ -1191,6 +1203,79 @@ Class MaquinadoCTA4 extends Model {
 			
 			
 		}
+		public function traeOpDia($maquina,$dia,$turno,$multiple=1){
+			$maq = $maquina;
+			echo "$maq -  $dia";
+			$sql = "
+			
+			select d.*, 
+					m.op as Matutino,
+					v.op as Vespertino,
+					n.op as Nocturno,
+					x.op as Mixto
+					
+					 from 
+						(select maquina,
+										sum(min) as Minutos,
+										dia
+						from pdp_cta_dia 
+						where dia = '$dia' 
+						GROUP BY maquina,dia
+						)as d
+					LEFT JOIN  pdp_maquina_turno_dia as m on  d.maquina = m.maquina and   m.dia =  d.dia and m.turno = 'Matutino'  
+					LEFT JOIN  pdp_maquina_turno_dia as v on  d.maquina = v.maquina and   v.dia =  d.dia and v.turno = 'Vespertino'  
+					LEFT JOIN  pdp_maquina_turno_dia as n on  d.maquina = n.maquina and   n.dia =  d.dia and n.turno = 'Nocturno'  
+					LEFT JOIN  pdp_maquina_turno_dia as x on  d.maquina = x.maquina and   x.dia =  d.dia and x.turno = 'Mixto'  
+			where
+			d.maquina = '$maq' and
+			d.dia =  '$dia'
+			
+			";
+			
+			$command = \Yii::$app->db_mysql;
+			
+			$result =$command->createCommand($sql)->queryAll();
+		
+			$op = 0;
+			$opa = [
+			'Matutino'   => '---', 
+			'Vespertino' => '---',
+			'Nocturno'   => '---',
+			'Mixto'   => '---'
+			];
+			
+			
+			$result[0]['Matutino'] = isset ($result[0]['Matutino']) ? $result[0]['Matutino'] : null; 
+			$result[0]['Vespertino'] = isset ($result[0]['Vespertino']) ? $result[0]['Vespertino'] : null; 
+			$result[0]['Nocturno'] = isset ($result[0]['Nocturno']) ? $result[0]['Nocturno'] : null; 
+			$result[0]['Mixto'] = isset ($result[0]['Mixto']) ? $result[0]['Mixto'] : null; 
+			
+			//echo"traeopdia";print_r($result);
+			
+			
+				if( $result[0]['Matutino'] != null ){ 
+					$op = $result[0]['Matutino'];
+					$opa['Matutino'] = $result[0]['Matutino'];
+				}
+				if( $result[0]['Vespertino'] != null ){  
+					$op = $result[0]['Vespertino'];
+					$opa['Vespertino'] = $result[0]['Vespertino'];
+				}
+				if( $result[0]['Nocturno'] != null ){ 
+					$op = $result[0]['Nocturno'];
+					$opa['Nocturno'] = $result[0]['Nocturno'];
+				} 
+				if( $result[0]['Mixto'] != null ){ 
+					$op = $result[0]['Mixto'];
+					$opa['Mixto'] = $result[0]['Mixto'];
+				} 
+			$opa['Minutos']= $result[0]['Minutos'];
+			//echo "OPA:-----------"; print_r($opa);
+			if ($multiple == 0)
+					return $op;
+			else
+					return $opa;
+		}
 		
 		public function traeOpSemanal($maquina,$dia,$turno,$multiple=0){
 			$maq = $maquina;
@@ -1266,7 +1351,7 @@ Class MaquinadoCTA4 extends Model {
 			
 			 
 			$command = \Yii::$app->db_mysql;
-			// echo "         turno :              " ; print_r($data);
+			 echo "         turno :              " ; print_r($data);
 		
 		// echo "save_opturno_p2";print_r($data);
 			
@@ -1299,7 +1384,7 @@ Class MaquinadoCTA4 extends Model {
 					return true; //corta ejecucion y sale
 				}
 			  
-				if ( $data['cantidad_prog'] == 0  ) {
+				if (  !$this->maquinaConPieza($data['maquina'],$data['dia'] ) ) {
 					
 				$result =$command->createCommand()->delete('pdp_maquina_turno_dia',[
 														'dia' => $data['dia'],
@@ -1329,7 +1414,24 @@ Class MaquinadoCTA4 extends Model {
 			
 		}
 			
-			
+		public function maquinaConPieza($maquina,$dia){	
+		
+					$command = \Yii::$app->db_mysql;
+		
+		$result =$command
+					->createCommand("
+					
+					Select  count(Maquina) as m 
+					from pdp_cta_dia 
+					where maquina ='$maquina'  and dia = '$dia' 
+					
+					")->queryAll();
+					$tmp = $result[0]['m'];
+		echo " existe ?  $tmp   \n ";
+		return $result[0]['m'] >  0 ? true : false;
+		
+		
+		}
 		
 		
 		/// operadores

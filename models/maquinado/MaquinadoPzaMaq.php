@@ -50,9 +50,9 @@ Class MaquinadoPzaMaq extends Model {
 		 $sql="
 			select 
 				identificacion as pieza,
-				CONCAT( identificacion,'-',descripcion ) as descripcion
-			from maq_piezas
-			where 	TP = 'AC'		
+				CONCAT( rtrim(identificacion),'-',descripcion ) as descripcion
+			from producto 
+			where 	PRESENTACION = 'ACE'		
 		 ";
 		 $result =$command->createCommand($sql)
 							->queryAll();

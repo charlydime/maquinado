@@ -4,6 +4,7 @@ namespace frontend\Models\Maquinadobr;
 use Yii;
 use yii\base\Model;
 use frontend\models\ete\celda;
+use frontend\models\ete\celdaprg;
 
 Class MaquinadoCTA2 extends Model {
 
@@ -432,7 +433,8 @@ LEFT JOIN(
 				foreach($result as &$r){
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
 					if ($ok == 0 || $cast <> $r['casting']){
-						  $alm =  $this->getInvCasting( $r['casting'] );
+						//alenta mucho
+						//  $alm =  $this->getInvCasting( $r['casting'] );
 							$ok = 1;
 
 							
@@ -442,9 +444,9 @@ LEFT JOIN(
 					
 					$cast = $r['casting'];  
 					
-						$r['pl'] = round( $alm['PL'] );
-						$r['pm'] = round( $alm['PM'] );
-						$r['ct'] = round( $alm['CT'] );
+						// $r['pl'] = round( $alm['PL'] );
+						// $r['pm'] = round( $alm['PM'] );
+						// $r['ct'] = round( $alm['CT'] );
 					
 					
 					if ($r['maquina1'] == null)	
@@ -500,8 +502,8 @@ LEFT JOIN(
 						$ts3 +=  $r["s3"] * $min;
 						$ts4 +=  $r["s4"] * $min;
 						
-					if ($r['cast'] != 1)
-						$ctb +=  $r["ct"] == null ? 0 : $r["ct"] * $min ;// ;
+					// if ($r['cast'] != 1)
+						// $ctb +=  $r["ct"] == null ? 0 : $r["ct"] * $min ;// ;
 					}
 					
 					
@@ -1150,12 +1152,17 @@ public function  GetInfo_pza_op($semana){
 									//'semana_q' => $data['semana_q']
 			])->execute();
 			// ])->getRawSql();
+			
+			//ultimo id insertado en pdp_ctb
+			$insert_id = $command->getLastInsertID();
+			
 			//se llena pdp_maquina turnos
 			$this->maquinaturnossemana( $data );
-		//si es celda inserta en id pdp_prgcelda
-			if( strlen($data['maquina']) > 7 ){
-				$model = new Celda;
-				$model->creaPRGCelda( $data['maquina']);
+			
+			//si es celda inserta en id pdp_prgcelda
+				$model = new Celdaprg;
+			if( $model->es_celda($data['maquina']) ){
+				$model->savePrgCelda( $data,$insert_id);
 			}
 		}else{
 		  //echo ' existe se actualiza';

@@ -18,10 +18,12 @@ public function altamasiva(){
 	
 	
 	foreach($empleados as $e){
+			
+			if ($e[0] == null ) exit ;
 	
 			$e = str_getcsv($e,",");
 			
-			// print_r($e);
+			  print_r($e);
 			echo "  $e[0] , $e[1], $e[2], $e[3] <br>";
 			
 			$user = new User();
@@ -32,6 +34,28 @@ public function altamasiva(){
             $user->generateAuthKey();
             $user->save();
 	}
+	
+}
+
+public function cambiopassword($pwd,$usr){
+	
+	
+	
+	// $command = \Yii::$app->db;
+	$command = \Yii::$app->cont;
+	
+  $p  = Yii::$app->security->generatePasswordHash($pwd);
+	
+	 $result =$command->createCommand()->update('user',[
+												'password_hash' => $p
+												], 	[
+												'username' => $usr
+												]
+								)->execute();
+								
+								
+	
+	
 	
 }
    

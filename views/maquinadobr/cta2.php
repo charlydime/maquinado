@@ -379,8 +379,11 @@ data-options="
 </div>			
 
 <?= $this->render('celdaprg',[
-								'semana'=>$sem4,
-								'sem'=>$s4,
+								
+								's1'=>$s1,
+								's2'=>$s2,
+								's3'=>$s3,
+								's4'=>$s4,
 								'idOpMaq'  => '8',
 								'idOP'  => '9'
 							]);?>						
@@ -893,6 +896,7 @@ function vistas(view){
 			if ( es_celda(maquina) ){
 					//$('#id').val(maquina);
 					//$('#id').textbox('setText',maquina);
+					
 					
 					getCelId(maquina);
 					

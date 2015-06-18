@@ -122,6 +122,7 @@ public function getAsistencias(){
 	
 	
 }
+
 public function calculaTiempoDisponible(){}
 public function calculaTiempoMuerto($tipo){//tipo TMI tipo TMII
 }

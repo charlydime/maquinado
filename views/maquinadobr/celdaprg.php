@@ -13,7 +13,7 @@ use common\models\Grid;
 ?>
 
  
-<div id="win_cel" class="easyui-window" data-options="modal:true,closed:true,title:'configuracion de Celda',inline:true" style="width:600px;height:400px;padding:10px">
+<div id="win_cel" class="easyui-window" data-options="modal:true,closed:true,title:'configuracion de Celda',inline:true" style="width:800px;height:400px;padding:10px">
            
         
     
@@ -28,10 +28,17 @@ use common\models\Grid;
 <td>Descripcion :</td>
 <td>				<input id="descripcion" class="easyui-textbox" type="text" name="descripcion" value = "" ></input></td>
 </td>
-</tr>			
+</tr>	
+<tr>
+<td>semana   </td>   <td>  <input type="radio" name="sem" value="<?=$s1 ?>" checked> <?=$s1 ?> 
+    <input type="radio" name="sem" value="<?=$s2 ?>" > <?=$s2 ?> 
+    <input type="radio" name="sem" value="<?=$s3 ?>" > <?=$s3 ?>  
+    <input type="radio" name="sem" value="<?=$s4 ?>" > <?=$s4 ?>  </td>
+
+</tr>	
 </table>
 
-<table id="<?php echo $id2 ?>" title="Maquinas de nueva Celda"  class="easyui-datagrid " style="width:90%;height:300px;"
+<table id="<?php echo $id2 ?>" title="Maquinas  Celda"  class="easyui-datagrid " style="width:90%;height:300px;"
 
         data-options="
 			url:'lstcelda',
@@ -41,7 +48,8 @@ use common\models\Grid;
 
 			toolbar:tb<?php echo $tb ?>,
 			queryParams: {
-				id: getid 
+				id: getid ,
+				sem: getsem
 				},
 			
 			tools:[{
@@ -72,26 +80,22 @@ use common\models\Grid;
 	
         <tr>
 
-		
+			<th data-options="
+										field:'activa',
+										width:50,
+										align:'center',
+										formatter:cellStyler,
+										sortable:true,
+										editor:{type:'checkbox',options:{on:'0',off:'1'}}
+			">Activa</th>
 			
-			<th data-options="field:'maquina',width:200,
-										
-											
-				editor:{
-					type:'combobox',
-					options:{
-					valueField:'id',
-					textField:'Descripcion',
-					panelWidth:300,
-					url:'loadmaquina',
-					method:'get'
-						}
-				}
-			">maquina</th>
-
+			
 		
+
 			<th data-options="field:'clave',width:100">clave</th>
 			<th data-options="field:'Descripcion',width:300">desc</th>
+			<th data-options="field:'razon',editor:'textbox',width:300">razon</th>
+			
 			
 			
             
@@ -106,6 +110,7 @@ use common\models\Grid;
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
 		 this.s = 'salvacelda'
+		 this.rows = [];
 		 
 		 
 		
@@ -284,6 +289,25 @@ use common\models\Grid;
 		
 		function getid(){
 			 return $('#id').val(); 
+			
+			
+		}
+		
+		function getsem(){
+			
+				return $("input[name=sem]:checked").val();
+		}
+		
+		
+		function cellStyler(value,row,index){
+			
+			if(parseInt(row.Hold) > 0 ){
+				var style = '<input type="checkbox" checked >';
+					return style;
+			}else{
+				var style = '<input type="checkbox" >';
+					return style;	
+			}
 			
 			
 		}

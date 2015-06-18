@@ -142,22 +142,10 @@ $this->registerJS("
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
 						
 					</div>
-								
-								<thead>
+								<thead data-options="frozen:true">
 									<tr>
-										<th colspan ="6"></th>
-										<th colspan ="2">Operacion</th>
-										<th colspan ="4">Embarques</th>
-										<th colspan ="6">Almacenes</th>
-										<th colspan ="4">Sem <?=$s1 ?> </th>
-										<th colspan ="4">Sem <?=$s2 ?> </th>
-										<th colspan ="4">Sem <?=$s3 ?> </th>
-										<th colspan ="4">Sem <?=$s4 ?> </th>
-										
-										<th colspan ="8">Total</th>
-										
+									<th colspan ="6"></th>
 									</tr>
-									
 									<tr>
 										
 										<th data-options="
@@ -189,6 +177,29 @@ $this->registerJS("
 													}
 										
 										">Maquina</th>
+										
+									</tr>
+								
+								
+								</thead>
+								<thead>
+									<tr>
+										
+										<th colspan ="2">Operacion</th>
+										<th colspan ="4">Embarques</th>
+										<th colspan ="6">Almacenes</th>
+										<th colspan ="4">Sem <?=$s1 ?> </th>
+										<th colspan ="4">Sem <?=$s2 ?> </th>
+										<th colspan ="4">Sem <?=$s3 ?> </th>
+										<th colspan ="4">Sem <?=$s4 ?> </th>
+										
+										<th colspan ="8">Total</th>
+										
+									</tr>
+									
+									<tr>
+										
+										
 										
 									
 										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes,sortable:true">num</th>
@@ -465,10 +476,10 @@ data-options="
 					// sales si es igual el dato capturado salgo para que no guarde de nuevo
 					// el controlador recibe  n para saber que no guarde 
 					if (row.opx == 10 ){
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s1'] == s1  ) s1 = 'n' ;
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s2'] == s2  ) s2 = 'n' ;
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] == s3  ) s3 = 'n';
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] == s4  ) s4 = 'n';
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s1'] == s1  ) s1 = 'n' ;
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s2'] == s2  ) s2 = 'n' ;
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] == s3  ) s3 = 'n';
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] == s4  ) s4 = 'n';
 					}
 					
 					

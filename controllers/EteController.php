@@ -27,12 +27,17 @@ class EteController extends Controller
 	
    //inicio para pantalla de captura del ETE 
    public function actionCaptura(){
-  
+		$model = new Captura;
+		
+		
 		$usr = Yii::$app->user->identity; 
-		 
-  
-	  $f  = date('Y-m-d');
-	  $u  =$usr->IdEmpleado;
+		  $u  =$usr->IdEmpleado;
+		  $dia = $model->detectanoche($u);
+		 if ( $dia <> 0){
+			 $f  = $dia;
+		 }else {
+			 $f  = date('Y-m-d');
+		 }
 
 	return $this->render('cap', [ 'fecha' => $f , 'usuario' => $u  ]);
 		
@@ -48,8 +53,8 @@ class EteController extends Controller
 	  $d['usuario'] = $_REQUEST['operador']; 
 	  $d['fecha']= $_REQUEST['fecha'];
 	  $d['maquina'] = $_REQUEST['maquina'];
-	  $d['hini'] = $_REQUEST['hini'];
-	  $d['hfin'] = $_REQUEST['hfin'];
+	  $d['idturno'] = $_REQUEST['idturno'];
+	
 	  
 	  $id = $model->saveETE($d);
 	  
@@ -96,6 +101,23 @@ class EteController extends Controller
 		$op = $model->GetOp();
 		
 		 return json_encode($op, 0);
+	}
+	
+	public function actionChecaop(){
+		$model = new Captura;
+		
+		$data = array(
+		'op' => $_POST['op'],
+		'fecha' => $_POST['fecha'],
+		'maquina' => $_POST['maquina'],
+		'pieza' => $_POST['pieza']
+		);
+		$op = $model->ChecaOp($data); 
+		
+		//print_r($_POST);
+		echo $op;
+		
+		
 	}
 	
 	//salva a detalle ete 
@@ -225,6 +247,56 @@ class EteController extends Controller
 	}
 	
 	
+	public function actionReportecaptura(){
+		
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "AC";
+		}
+		
+		return $this->render('reportecaptura', [ 'ini' => $ini , 'fin' => $fin  , 'area' => $area]);
+		
+	
+		
+	}
+	
+	public function actionReporteprogramado(){
+		
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini = "2015-05-25";
+		}
+		
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin = "2015-05-29";
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "AC";
+		}
+		
+		return $this->render('reporteprogramado', []);
+		
+	}
+	
 	// obtiene asistenacias de relox
 	public function actionGetasistencias(){
 		//$data = json_decode($_POST['Data']);
@@ -236,7 +308,7 @@ class EteController extends Controller
 		}else{
 			
 		$model->fechaini = '2015-01-01';
-		$model->fechafin = '2015-06-08';
+		$model->fechafin = date('Y-m-d');
 			
 		}
 

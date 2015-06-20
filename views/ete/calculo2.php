@@ -9,19 +9,19 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\URL;
 use common\models\Grid;
 
-//$url = "http://192.168.0.110:8080/birt/frameset?__report=ete.rptdesign&ini=$ini&fin=$fin&area=$area";
-$url = "http://192.168.0.4:8080/birt/frameset?__report=capturas_maq.rptdesign&ini=$ini&fin=$fin";
+$url = "http://192.168.0.110:8080/birt/frameset?__report=ete_ch.rptdesign&ini=$ini&fin=$fin&area=$area";
+	
 ?>
 Fecha ini : 
-<input id="ini" type="text" class="easyui-datebox" required="required">
+<input id="ini" type="text" class="easyui-datebox" required="required" value="<?= $ini ?>">
 Fecha fin : 
-<input id="fin" type="text" class="easyui-datebox" required="required">
-<!--Area :
+<input id="fin" type="text" class="easyui-datebox" required="required" value="<?= $fin ?>">
+Area :
 <select id="area" class="easyui-combobox" name="area" style="width:200px;">
-    <option value="AC">Aeros</option>
+    <option value="AC">Aceros</option>
     <option value="BR">Bronces</option>
 </select>
--->
+
 <?php
 echo Html::a('Actualizar',"javascript:void(0)",[
         'class'=>"easyui-linkbutton",
@@ -41,9 +41,9 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 			
 			var ini = $('#ini').datebox('getValue');
 			var fin = $('#fin').datebox('getValue');
-			//var area = $('#area').combobox('getValue');
+			var area = $('#area').combobox('getValue');
 			
-			window.location.href = 'reportecaptura' + "?ini=" + ini +  "&fin=" + fin  ;
+			window.location.href = 'etech' + "?ini=" + ini +  "&fin=" + fin +  "&area=" + area ;
 			
 		}
 

@@ -156,24 +156,25 @@ public function ChecaOp($data){
 		
         $result =$command->createCommand("
 		
-		select count(op) as m from 
-			(
-			select * from pdp_cta_dia  
-			union 
-			select *  from pdp_ctb_dia 
-			)	as ct
+		select count(op) as m  from pdp_cta_dia  
 		where 
 		dia =  '$fecha' and 
 		maquina = '$maquina' and 
 		op =  $op and
 		pieza = '$pieza'
-		
+		union
+		select count(op) as m  from pdp_ctb_dia  
+		where 
+		dia =  '$fecha' and 
+		maquina = '$maquina' and 
+		op =  $op and
+		pieza = '$pieza'
 
 		
 		"
 		)->queryAll();
-		 // )->getRawSql();
-		 // echo $result;exit;
+		// ])->getRawSql();
+		// echo $result;exit;
 	
 		return $result[0]['m'] ;
 }
@@ -254,13 +255,7 @@ public function ChecaOp($data){
 		
         $result =$command->createCommand("
 		
-		select * from  (
-		
-		select * from pdp_maquina_pieza
-		Union
-		select * from pdp_maquina_piezabr
-		
-		)as mp
+		select * from pdp_maquina_pieza as mp
 		LEFT JOIN ete.dbo.ETE as e on  e.consecutivo  = $id
 		left join pdp_maquina  as m on m.id = e.idmaquina
 		where
@@ -502,9 +497,7 @@ public function ChecaOp($data){
 		from pdp_maquina_turno_diabr
 
 		 ) as pdp_ct on pdp_ct.maquina = m.Maquina
-		 where 
-		pdp_ct.dia =  '$fecha' and
-		pdp_ct.op = $op
+		
 		
 		
 		 ";
@@ -574,9 +567,7 @@ public function ChecaOp($data){
 					from pdp_maquina_turno_dia 
 				
 				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
-			where 
-				cta.dia =  '$fecha' and
-				turno.op =   $op
+			
 
 			UNION
 
@@ -591,9 +582,8 @@ public function ChecaOp($data){
 					from pdp_maquina_turno_diabr 
 				
 				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
-			where 
-				cta.dia =  '$fecha' and
-				turno.op =   $op
+			
+				
 			
 				
 		

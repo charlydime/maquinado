@@ -225,13 +225,13 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini = "2015-05-25";
+			$ini  = date('Y-m-d');
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin = "2015-05-29";
+			$fin = date('Y-m-d');
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -241,6 +241,33 @@ class EteController extends Controller
 		}
 		
 		return $this->render('calculo', [ 'ini' => $ini , 'fin' => $fin  , 'area' => $area]);
+		
+	
+		
+	}
+	
+	//reporte ETE
+	public function actionEtech(){
+		
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini =  date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin =  date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "AC";
+		}
+		
+		return $this->render('calculo2', [ 'ini' => $ini , 'fin' => $fin  , 'area' => $area]);
 		
 	
 		

@@ -13,9 +13,9 @@ $url = "http://192.168.0.110:8080/birt/frameset?__report=ete.rptdesign&ini=$ini&
 	
 ?>
 Fecha ini : 
-<input id="ini" type="text" class="easyui-datebox" required="required">
+<input id="ini" type="text" class="easyui-datebox" required="required" value="<?= $ini ?>">
 Fecha fin : 
-<input id="fin" type="text" class="easyui-datebox" required="required">
+<input id="fin" type="text" class="easyui-datebox" required="required" value="<?= $fin ?>">
 Area :
 <select id="area" class="easyui-combobox" name="area" style="width:200px;">
     <option value="AC">Aeros</option>

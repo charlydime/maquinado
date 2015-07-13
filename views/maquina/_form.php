@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\maquinado\pdpmaquina */
+/* @var $model frontend\models\maquinado\pdpMaquina */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="pdpmaquina-form">
+<div class="pdp-maquina-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -21,8 +21,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'Area')->textInput() ?>
 
     <?= $form->field($model, 'activa')->textInput() ?>
-
-    <?= $form->field($model, 'id')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

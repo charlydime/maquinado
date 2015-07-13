@@ -8,7 +8,7 @@ use frontend\models\ete\celdaprg;
 
 Class MaquinadoCTA2 extends Model {
 
-    public function GetInfo($semana) {
+    public function GetInfo($semana,$page,$row) {
           $tmp = explode('-',$semana);
 		  $tmp_s = substr($tmp[1],1);
 		  $aio = date("Y");
@@ -18,6 +18,9 @@ Class MaquinadoCTA2 extends Model {
 		$se4 =  $tmp_s +3;
 		$year = date ("Y");
 		
+		
+		// $page = $page * $row +1;
+		$page = $page * $row - $row;
         $command = \Yii::$app->db_mysql;
         $result =$command->createCommand("
  				
@@ -27,15 +30,12 @@ Class MaquinadoCTA2 extends Model {
 				
 				prod_dux.CAMPOUSUARIO5 as casting,
 				prod_dux.DESCRIPCION as descripcion,
-				CASE 
-				WHEN can_s1.maquina is not null THEN can_s1.maquina
-				WHEN can_s2.maquina is not null THEN can_s2.maquina
-				WHEN can_s3.maquina is not null THEN can_s3.maquina
-				WHEN can_s4.maquina is not null THEN can_s4.maquina
-				ELSE '' 
-				END 
 				
-				as maquina1, 
+				sem.[$se1] as s1,
+				sem.[$se2] as s2,
+				sem.[$se3] as s3,
+				sem.[$se4] as s4,
+				sem.maquina as maquina1,
 				
 				CASE 
 					WHEN  prod.producto <>  prod_dux.CAMPOUSUARIO5 THEN 0
@@ -45,28 +45,29 @@ Class MaquinadoCTA2 extends Model {
  				
 				pdp_maquina_piezabr.op as opx,
 				
-				can_s1.cantidad as s1,
-				can_s2.cantidad as s2,
-				can_s3.cantidad as s3,			
-				can_s4.cantidad as s4,
+				0 as prioridad,
 				
-				ETE_S1.hechas as hechas1,
-				ETE_S1.rechazadas as rechazadas1,
-				
-				ETE_S2.hechas as hechas2,
-				ETE_S2.rechazadas as rechazadas2,
-				
-				ETE_S3.hechas as hechas3,
-				ETE_S3.rechazadas as rechazadas3,
-				
-				ETE_S4.hechas as hechas4,
-				ETE_S4.rechazadas as rechazadas4,
+				ETE_S1.hechas,
+				ETE_S1.rechazadas,
+				ETE_S2.hechas,
+				ETE_S2.rechazadas,
+				ETE_S3.hechas,
+				ETE_S3.rechazadas,				
+				ETE_S4.hechas,
+				ETE_S4.rechazadas,
 				
 				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLB,
 				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMB,
 				isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) as CTB,
 				
 				almptb.existencia as PTB,
+				
+				almgpc.existencia as GPC,
+				almgpcb.existencia as GPCB,
+				almgpl.existencia as GPL,
+				almgpm.existencia as GPM,
+				almgpp.existencia as GPP,
+				almgpt.existencia as GPT,
 							
 				datepart(week ,dux1.fechaemb ) as sem1entrega,
 				datepart(week ,dux2.fechaemb ) as sem12entrega,
@@ -75,14 +76,7 @@ Class MaquinadoCTA2 extends Model {
 				 dux3.cantidad as sem3,
 				 dux4.cantidad as sem4,
 				
-				CASE 
-						WHEN can_s1.prioridad is not null THEN can_s1.prioridad
-						WHEN can_s2.prioridad is not null THEN can_s2.prioridad
-						WHEN can_s3.prioridad is not null THEN can_s3.prioridad
-						WHEN can_s4.prioridad is not null THEN can_s4.prioridad
-						ELSE '' 
-				END 
-				     as prioridad,
+				
 
 				maq_piezas.Hold
 				
@@ -93,7 +87,7 @@ Class MaquinadoCTA2 extends Model {
 									select  distinct almprod.PRODUCTO 
 									from almprod 
 									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
-									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2') 
+									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2','GPCB','GPL','GPM') 
 									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
 									)
 								
@@ -102,7 +96,18 @@ Class MaquinadoCTA2 extends Model {
 								select DISTINCT pdp_ctb.Pieza 
 								from pdp_ctb
 								where pdp_ctb.Semana between $se1  and $se2   
-								and hecho = 0
+								-- and hecho = 0
+								
+								Union
+								
+								
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where p.identificacion in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
 				) as prod
 				
 				
@@ -116,8 +121,7 @@ Class MaquinadoCTA2 extends Model {
 						
 				) AS	pdp_maquina_piezabr  on pdp_maquina_piezabr.Pieza = prod.PRODUCTO 
 				
-			
-				
+
 				
 				LEFT JOIN(
 						SELECT 
@@ -231,83 +235,109 @@ Class MaquinadoCTA2 extends Model {
 				) as almpmb2 on prod.PRODUCTO = almpmb2.producto
 
 				
-				LEFT JOIN pdp_ctb as ctb on ctb.Pieza = prod.producto and  
-				((ctb.semana = $se1)) and 
-				ctb.op = pdp_maquina_piezabr.op
-
-
 				LEFT JOIN(
-				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
-				FROM pdp_ctb
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPC'
+					GROUP BY almprod.producto
+				) as almgpc on prod.PRODUCTO = almgpc.producto
 				
-				) as can_s1 on 
-					   can_s1.pieza = prod.PRODUCTO and  
-					   can_s1.Semana = $se1  and 
-					   can_s1.op = pdp_maquina_piezabr.op 
-					
-
 				LEFT JOIN(
-				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
-				FROM pdp_ctb
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPCB'
+					GROUP BY almprod.producto
+				) as almgpcb on prod.PRODUCTO = almgpcb.producto
 				
-				) as can_s2 on 
-					   can_s2.pieza = prod.PRODUCTO and  
-					   can_s2.Semana = $se2  and 
-					   can_s2.op = pdp_maquina_piezabr.op 
-					 
-
 				LEFT JOIN(
-				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
-				FROM pdp_ctb
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPL'
+					GROUP BY almprod.producto
+				) as almgpl on prod.PRODUCTO = almgpl.producto
 				
-				) as can_s3 on 
-					   can_s3.pieza = prod.PRODUCTO and  
-					   can_s3.Semana = $se3  and 
-					   can_s3.op = pdp_maquina_piezabr.op 
-					 
-
 				LEFT JOIN(
-				SELECT   
-				  Cantidad,pieza,semana,op,maquina,prioridad
-				FROM pdp_ctb
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPM'
+					GROUP BY almprod.producto
+				) as almgpm on prod.PRODUCTO = almgpm.producto
 				
-				) as can_s4 on 
-					   can_s4.pieza = prod.PRODUCTO and  
-					   can_s4.Semana = $se4  and 
-					   can_s4.op = pdp_maquina_piezabr.op 
-					  
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPP'
+					GROUP BY almprod.producto
+				) as almgpp on prod.PRODUCTO = almgpp.producto
 				
-LEFT JOIN(
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPT'
+					GROUP BY almprod.producto
+				) as almgpt on prod.PRODUCTO = almgpt.producto
 				
-					 
-
+			
+				
+				LEFT JOIN (
+						SELECT * from (
+						select 
+						Pieza, op, Maquina ,
+						Semana,
+						Cantidad 
+						from pdp_ctb 
+						) as p
+						PIVOT
+						(
+						 sum(cantidad)
+							FOR semana in ([$se1],[$se2],[$se3],[$se4])
+						) as piv
+						where  [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
+				) as sem  on sem.pieza = prod.PRODUCTO  and  sem.op = pdp_maquina_piezabr.op 		
+				
+				LEFT JOIN(
+				
 					select 
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S1 on 
 					ETE_S1.producto = prod.PRODUCTO and 
 					ETE_S1.semana = 	$se1 and
 					ETE_S1.aio  =   $aio and
-					ETE_S1.OP =	pdp_maquina_piezabr.op
-					and ETE_S1.clave = ctb.maquina
+					ETE_S1.OP =	sem.op
+					and ETE_S1.clave = sem.maquina
 
 				LEFT JOIN(
 				
@@ -315,26 +345,31 @@ LEFT JOIN(
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
 				
 				
 				) AS ETE_S2 on 
 					ETE_S2.producto = prod.PRODUCTO and 
 					ETE_S2.semana = 	$se2 and
 					ETE_S2.aio  =   $aio and
-					ETE_S2.OP =	pdp_maquina_piezabr.op
-					and ETE_S2.clave = ctb.maquina
+					ETE_S2.OP =	sem.op
+					and ETE_S2.clave = sem.maquina
 				
 				LEFT JOIN(
 				
@@ -342,25 +377,31 @@ LEFT JOIN(
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
+				
 				
 				) AS ETE_S3 on 
 					ETE_S3.producto = prod.PRODUCTO and 
 					ETE_S3.semana = 	$se3 and
 					ETE_S3.aio  =   $aio and
-					ETE_S3.OP =	pdp_maquina_piezabr.op
-					and ETE_S3.clave = ctb.maquina
+					ETE_S3.OP =	sem.op
+					and ETE_S3.clave = sem.maquina
 				
 				LEFT JOIN(
 				
@@ -368,34 +409,41 @@ LEFT JOIN(
 
 					Producto,
 					[Num Operacion]   as OP, 
-					[Piezas Maquinadas] as hechas, 
-					isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 )  as rechazadas ,
-					
-					idturno, 
-					Descripcion,
-					Area,
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
+					
+
+				
+					GROUP BY
+					Producto,
+					DATEPART(year,fecha),
+					DATEPART(WEEK, fecha),
+					[Num Operacion],
+					maquina
+				
 				
 				) AS ETE_S4 on 
 					ETE_S4.producto = prod.PRODUCTO and 
 					ETE_S4.semana = 	$se4 and
 					ETE_S4.aio  =   $aio and
-					ETE_S4.OP =	pdp_maquina_piezabr.op 
-					and ETE_S4.clave = ctb.maquina
-				
+					ETE_S4.OP =	sem.op
+					and ETE_S4.clave = sem.maquina
+
 				
 				where  prod_dux.CAMPOUSUARIO5 is not null 
 				 and prod.PRODUCTO  not in (select pieza from pdp_maquinado_blbr)
 				-- and prod.PRODUCTO <> prod_dux.CAMPOUSUARIO5
+				 -- and  prod_dux.CAMPOUSUARIO5 in ( '126120-2','126142','FW135X')
 				ORDER BY 
 
-				Hold,
-				prioridad desc,
+				Hold ,
+				-- prioridad desc,
 				prod_dux.CAMPOUSUARIO5 ,
 				cast desc,
 				
@@ -407,7 +455,7 @@ LEFT JOIN(
 				dux1.fechaemb,
  				dux2.fechaemb
 				     
-				     
+				offset $page rows fetch next $row rows only     
  
 				
 		")->queryAll();
@@ -430,6 +478,7 @@ LEFT JOIN(
 			 $alm= [];
 			 $ok = 0;
 			 $cast = '';
+			 $cast_m = 0; 
 				foreach($result as &$r){
 					//echo " producto : ".$r['producto']." op : ".$r['opx'];
 					if ($ok == 0 || $cast <> $r['casting']){
@@ -448,15 +497,18 @@ LEFT JOIN(
 						// $r['pm'] = round( $alm['PM'] );
 						// $r['ct'] = round( $alm['CT'] );
 					
-					
-					if ($r['maquina1'] == null)	
+					// if ($r['cast'] == '1'){
+					   // $cast_m = $this->getMinCasting($cast);
+					   // $ctb += $r['CTB']*$cast_m;
+					// }
+					if ($r['maquina1'] == null && $r['cast'] != '1')	
 						$r['maquina1']=$this->maquina($r['producto'],$r['opx']);
 					
 					$min =  $this->p1tiempos($r['producto'], $r['maquina1'],$r['opx']);
 						//echo '('.$min.')     p'.$r['producto'].'   m'.$r['maquina1'].'  s'.$r["s1"].' ' .$r["s2"].' '.$r["s3"].' '.$r["s4"];			  
 					
-					$r['Minutos'] =  $this->p1tiempos($r['producto'], $r['maquina1'],$r['opx']);
-					$r['Minutos'] = number_format ($r['Minutos']);
+					$r['Minutos'] =  $min;
+					//$r['Minutos'] = number_format ($r['Minutos']);
 					$r['op'] =  $this->p1ops($r['producto'], $r['maquina1']);
 					
 					$r['s1_min'] = $min * $r["s1"];
@@ -472,10 +524,10 @@ LEFT JOIN(
 					 if ($r['cast'] == '1'){
 							
 							
-							$r['s1_min'] = $tcs1;
-							$r['s2_min'] = $tcs2;
-							$r['s3_min'] = $tcs3;
-							$r['s4_min'] = $tcs4;
+							// $r['s1_min'] = $tcs1;
+							// $r['s2_min'] = $tcs2;
+							// $r['s3_min'] = $tcs3;
+							// $r['s4_min'] = $tcs4;
 							
 							 $tcs1=0;
 							 $tcs2=0;
@@ -502,8 +554,9 @@ LEFT JOIN(
 						$ts3 +=  $r["s3"] * $min;
 						$ts4 +=  $r["s4"] * $min;
 						
-					// if ($r['cast'] != 1)
+					 // if ($r['cast'] != 1)
 						// $ctb +=  $r["ct"] == null ? 0 : $r["ct"] * $min ;// ;
+					 // $ctb += $r['CTB']*$min ; 
 					}
 					
 					
@@ -534,7 +587,12 @@ LEFT JOIN(
 				if ($r['sem2'] ==  0) $r['sem2'] = ''; 
 				 $rows++; 
 				}
-				
+				$ctb = $this->GetInfo_resumen($semana);
+				$resumen = $this->GetInfo_resumen2($semana);
+				$ts1=$resumen['s1'];
+				$ts2=$resumen['s2'];
+				$ts3=$resumen['s3'];
+				$ts4=$resumen['s4'];
 				$totales[0]['s1_min'] = $ts1 == 0 ? '' : number_format($ts1) ;;
 				$totales[0]['s2_min'] = $ts2 == 0 ? '' : number_format($ts2) ;;
 				$totales[0]['s3_min'] = $ts3 == 0 ? '' : number_format($ts3) ;;
@@ -570,13 +628,481 @@ LEFT JOIN(
 			
 		$datos['rows'] = $result;
 		$datos['footer'] = $totales;
-		$datos['total'] = $rows;
+		// $datos['footer'] = $this->GetInfo_resumen($semana);
+		
+		// $datos['total'] = $rows;
+		$datos['total'] = $this->GetInfo_total($semana) ;
 		
           return $datos;   
         }   
         
         return null;
     }
+	
+	    public function GetInfo_total($semana) {
+          $tmp = explode('-',$semana);
+		  $tmp_s = substr($tmp[1],1);
+		  $aio = date("Y");
+		$se1 =  $tmp_s +0;
+		$se2 =  $tmp_s +1;
+		$se3 =  $tmp_s +2;
+		$se4 =  $tmp_s +3;
+		$year = date ("Y");
+		
+        $command = \Yii::$app->db_mysql;
+        $result =$command->createCommand("
+
+			select
+				count(prod.producto) as cuenta
+				
+								from 
+				(				
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where CAMPOUSUARIO5 in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2','GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+								
+								Union 
+								
+								select DISTINCT pdp_ctb.Pieza 
+								from pdp_ctb
+								where pdp_ctb.Semana between $se1  and $se2   
+								-- and hecho = 0
+								
+								Union
+								
+								
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where p.identificacion in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+				) as prod
+				
+				
+				
+				
+				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = maq_piezas.IDENTIFICACION
+				 Left JOIN (
+						SELECT pieza,op
+						FROM 	pdp_maquina_piezabr
+						where op <> 0
+						GROUP BY pieza ,OP
+						
+				) AS	pdp_maquina_piezabr  on pdp_maquina_piezabr.Pieza = prod.PRODUCTO 
+				
+				LEFT JOIN (
+						SELECT * from (
+						select 
+						Pieza, op, Maquina ,
+						Semana,
+						Cantidad 
+						from pdp_ctb 
+						) as p
+						PIVOT
+						(
+						 sum(cantidad)
+							FOR semana in ([$se1],[$se2],[$se3],[$se4])
+						) as piv
+						where  [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
+				) as sem  on sem.pieza = prod.PRODUCTO  and  sem.op = pdp_maquina_piezabr.op 		
+				
+				
+
+				
+				
+				where  prod_dux.CAMPOUSUARIO5 is not null 
+				 and prod.PRODUCTO  not in (select pieza from pdp_maquinado_blbr)
+				-- and prod.PRODUCTO <> prod_dux.CAMPOUSUARIO5
+				 -- and  prod_dux.CAMPOUSUARIO5 in ( '126120-2','126142','FW135X')
+				
+ 
+				
+		")->queryAll();
+		
+		return $result[0]['cuenta'];
+		// return 300;
+		
+		}
+		
+		 public function GetInfo_resumen($semana) {
+          $tmp = explode('-',$semana);
+		  $tmp_s = substr($tmp[1],1);
+		  $aio = date("Y");
+		$se1 =  $tmp_s +0;
+		$se2 =  $tmp_s +1;
+		$se3 =  $tmp_s +2;
+		$se4 =  $tmp_s +3;
+		$year = date ("Y");
+		
+        $command = \Yii::$app->db_mysql;
+        $result =$command->createCommand("
+
+			select
+				sum ( (isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) ) * dbo.f_getmin(prod_dux.CAMPOUSUARIO5) ) as ctb_min
+				
+								from 
+				(				
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where CAMPOUSUARIO5 in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2','GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+								
+								Union 
+								
+								select DISTINCT pdp_ctb.Pieza 
+								from pdp_ctb
+								where pdp_ctb.Semana between $se1  and $se2   
+								-- and hecho = 0
+								
+								Union
+								
+								
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where p.identificacion in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+				) as prod
+				
+				
+				
+				
+				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = maq_piezas.IDENTIFICACION
+				 Left JOIN (
+						SELECT pieza,op
+						FROM 	pdp_maquina_piezabr
+						where op <> 0
+						GROUP BY pieza ,OP
+						
+				) AS	pdp_maquina_piezabr  on pdp_maquina_piezabr.Pieza = prod.PRODUCTO 
+				
+				LEFT JOIN (
+						SELECT * from (
+						select 
+						Pieza, op, Maquina ,
+						Semana,
+						Cantidad 
+						from pdp_ctb 
+						) as p
+						PIVOT
+						(
+						 sum(cantidad)
+							FOR semana in ([$se1],[$se2],[$se3],[$se4])
+						) as piv
+						where [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
+				) as sem  on sem.pieza = prod.PRODUCTO  and  sem.op = pdp_maquina_piezabr.op 		
+				
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB'
+					GROUP BY almprod.producto
+				) as almctb on prod.PRODUCTO = almctb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY almprod.producto
+				) as almctb2 on prod.PRODUCTO = almctb2.producto
+				
+				where  prod_dux.CAMPOUSUARIO5 is not null 
+				 and prod.PRODUCTO  not in (select pieza from pdp_maquinado_blbr)
+				 and prod.PRODUCTO = prod_dux.CAMPOUSUARIO5
+				 -- and  prod_dux.CAMPOUSUARIO5 in ( '126120-2','126142','FW135X')
+				
+ 
+				
+		")->queryAll();
+		
+		return $result[0]['ctb_min'];
+		
+		}
+
+		public function GetInfo_resumen2($semana) {
+          $tmp = explode('-',$semana);
+		  $tmp_s = substr($tmp[1],1);
+		  $aio = date("Y");
+		$se1 =  $tmp_s +0;
+		$se2 =  $tmp_s +1;
+		$se3 =  $tmp_s +2;
+		$se4 =  $tmp_s +3;
+		$year = date ("Y");
+		
+        $command = \Yii::$app->db_mysql;
+        $result =$command->createCommand("
+ select
+				
+			sum(sem.[$se1]*mp.minutos) as s1,
+			sum(sem.[$se2]*mp.minutos) as s2,
+			sum(sem.[$se3]*mp.minutos) as s3,
+			sum(sem.[$se4]*mp.minutos) as s4
+			
+			
+				
+				from 
+				(				
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where CAMPOUSUARIO5 in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2','GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+								
+								Union 
+								
+								select DISTINCT pdp_ctb.Pieza 
+								from pdp_ctb
+								where pdp_ctb.Semana between $se1  and $se2   
+								-- and hecho = 0
+								
+								Union
+								
+								
+								select DISTINCT p.IDENTIFICACION as PRODUCTO from producto as p  where p.identificacion in (
+									select  distinct almprod.PRODUCTO 
+									from almprod 
+									 LEFT JOIN	producto as p on p.IDENTIFICACION = almprod.PRODUCTO 
+									where almprod.ALMACEN in ('GPCB','GPL','GPM') 
+									and almprod.EXISTENCIA <> 0 and p.PRESENTACION =  'BRO'
+									)
+				) as prod
+				
+				
+				LEFT JOIN maq_piezas on producto = maq_piezas.IDENTIFICACION
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = maq_piezas.IDENTIFICACION
+				 Left JOIN (
+						SELECT pieza,op
+						FROM 	pdp_maquina_piezabr
+						where op <> 0
+						GROUP BY pieza ,OP
+						
+				) AS	pdp_maquina_piezabr  on pdp_maquina_piezabr.Pieza = prod.PRODUCTO 
+				
+
+				
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha)  =  $se1 and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						
+						GROUP BY ALMPROD.producto
+						
+				) as dux1 on prod.PRODUCTO = dux1.producto 
+
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha) = $se2   and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						GROUP BY ALMPROD.producto
+						
+				) as dux2 on prod.PRODUCTO = dux2.producto 
+
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha) = $se3   and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+						
+				) as dux3 on prod.PRODUCTO = dux3.producto 
+				
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						datepart( week,PAROEN.doctoadicionalfecha) = $se4 and datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+						
+				) as dux4 on prod.PRODUCTO = dux4.producto 
+				
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB'
+					GROUP BY almprod.producto
+				) as almctb on prod.PRODUCTO = almctb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY almprod.producto
+				) as almctb2 on prod.PRODUCTO = almctb2.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PTB'
+					GROUP BY almprod.producto
+				) as almptb on prod.PRODUCTO = almptb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB'
+					GROUP BY almprod.producto
+				) as almplb on prod.PRODUCTO = almplb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB2'
+					GROUP BY almprod.producto
+				) as almplb2 on prod.PRODUCTO = almplb2.producto
+	
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB'
+					GROUP BY almprod.producto
+				) as almpmb on prod.PRODUCTO = almpmb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB2'
+					GROUP BY almprod.producto
+				) as almpmb2 on prod.PRODUCTO = almpmb2.producto
+
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPC'
+					GROUP BY almprod.producto
+				) as almgpc on prod.PRODUCTO = almgpc.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPCB'
+					GROUP BY almprod.producto
+				) as almgpcb on prod.PRODUCTO = almgpcb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPL'
+					GROUP BY almprod.producto
+				) as almgpl on prod.PRODUCTO = almgpl.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPM'
+					GROUP BY almprod.producto
+				) as almgpm on prod.PRODUCTO = almgpm.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPP'
+					GROUP BY almprod.producto
+				) as almgpp on prod.PRODUCTO = almgpp.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPT'
+					GROUP BY almprod.producto
+				) as almgpt on prod.PRODUCTO = almgpt.producto
+				
+			
+				
+				LEFT JOIN (
+						SELECT * from (
+						select 
+						Pieza, op, Maquina ,
+						Semana,
+						Cantidad 
+						from pdp_ctb 
+						) as p
+						PIVOT
+						(
+						 sum(cantidad)
+							FOR semana in ([$se1],[$se2],[$se3],[$se4])
+						) as piv
+						where [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
+				) as sem  on sem.pieza = prod.PRODUCTO  and  sem.op = pdp_maquina_piezabr.op 		
+				
+				
+				LEFT JOIN(
+				select maquina,op,minutos,pieza from pdp_maquina_piezabr
+				) as mp  on mp.pieza = sem.pieza and mp.op = sem.op and mp.maquina=sem.maquina
+				
+				
+				where  prod_dux.CAMPOUSUARIO5 is not null 
+				 and prod.PRODUCTO  not in (select pieza from pdp_maquinado_blbr)
+				 and prod.PRODUCTO <> prod_dux.CAMPOUSUARIO5
+				 -- and  prod_dux.CAMPOUSUARIO5 in ( '126120-2','126142','FW135X')
+				
+ 
+				
+		")->queryAll();
+		
+		return $result[0];
+		
+		}
+		
 	public function GetInfo_Maquina($semana){
 	
 	 $tmp = explode('-',$semana);
@@ -662,6 +1188,92 @@ semana = $s
  
 
 } 
+//saca mintos teoricos que tarda una parte de casting en maquinar
+//dbo.getmin hace lo mismo para uso en querys
+public function getMinCasting($cast){
+	
+	
+	$sql="
+		select t.pieza,
+--sum(min)as minmaq,sum(celda.celmin) as mincel ,
+case
+when sum(celda.celmin) > 0 then sum(celda.celmin)
+else sum(min)
+end as minutos
+
+from 
+(
+			
+
+				select pieza,max(minutos) as min from pdp_maquina_piezabr as mp 
+				where mp.Pieza  
+				in (
+					select top 1 IDENTIFICACION from producto 
+					where  CAMPOUSUARIO5<>IDENTIFICACION and  CAMPOUSUARIO5 = '$cast'
+					and  identificacion not in (select pieza from pdp_maquinado_blbr)
+				) and op = 10
+				and LEN(Maquina) <8
+				GROUP BY  pieza
+
+		UNION
+
+				select pieza,max(minutos) as min from pdp_maquina_piezabr as mp 
+				where mp.Pieza  
+				in (
+					select top 1 IDENTIFICACION from producto 
+					where  CAMPOUSUARIO5<>IDENTIFICACION and  CAMPOUSUARIO5 = '$cast'
+					and  identificacion not in (select pieza from pdp_maquinado_blbr)
+				) and op = 20
+				and LEN(Maquina) <8
+				GROUP BY  pieza
+		UNION
+
+				select pieza,max(minutos) as min from pdp_maquina_piezabr as mp 
+				where mp.Pieza  
+				in (
+					select top 1 IDENTIFICACION from producto 
+					where  CAMPOUSUARIO5<>IDENTIFICACION and  CAMPOUSUARIO5 = '$cast'
+					and  identificacion not in (select pieza from pdp_maquinado_blbr)
+				) and op = 30
+				and LEN(Maquina) <8
+				GROUP BY  pieza
+		UNION
+
+				select pieza,max(minutos) as min from pdp_maquina_piezabr as mp 
+				where mp.Pieza  
+				in (
+					select top 1 IDENTIFICACION from producto 
+					where  CAMPOUSUARIO5<>IDENTIFICACION and  CAMPOUSUARIO5 = '$cast'
+					and  identificacion not in (select pieza from pdp_maquinado_blbr)
+				) and op = 40
+				and LEN(Maquina) <8
+				GROUP BY  pieza
+) as t
+LEFT JOIN
+(
+select  pieza,max(minutos) as celmin from pdp_maquina_piezabr as mp 
+				where mp.Pieza  
+				in (
+					select top 1 IDENTIFICACION from producto 
+					where  CAMPOUSUARIO5<>IDENTIFICACION and  CAMPOUSUARIO5 = '$cast'
+					and  identificacion not in (select pieza from pdp_maquinado_blbr)
+				) and op = 10
+				and LEN(Maquina) >8
+				GROUP BY  pieza
+) as celda on t.pieza = celda.pieza
+GROUP BY t.pieza	
+	
+	";
+		
+		$command = \Yii::$app->db_mysql;
+        $result =$command
+					->createCommand($sql)
+					->queryAll();
+					
+	return  isset($result[0]) > 0 ? $result[0]['minutos'] : 0 ;	
+	
+	
+}
 
 public function getInvCasting($parte){
 	$sql = "
@@ -1022,7 +1634,7 @@ public function  GetInfo_pza_op($semana){
 		// return $result[0]['maq'] >  0 ? true : false;
 	// }
 
-	public function p1exist($pieza,$semana,$op){
+	public function p1exist($pieza,$semana,$op,$maq){
 		
 		$command = \Yii::$app->db_mysql;
 		
@@ -1030,14 +1642,12 @@ public function  GetInfo_pza_op($semana){
 					
 					Select  count(Maquina) as min 
 					from pdp_ctb
-					where pieza ='$pieza'  and semana = '$semana' and op = $op 
+					where pieza ='$pieza'  and semana = '$semana' and op = $op and Maquina = '$maq'
 					
 					";
 		
 		$result =$command->createCommand($sql)->queryAll();
-		$res =$command->createCommand($sql)->getRawSql();
-					print_r($res);
-					print_r($result);
+		 $res =$command->createCommand($sql)->getRawSql();
 					
 		
 		return $result[0]['min'] >  0 ? true : false;
@@ -1082,6 +1692,8 @@ public function  GetInfo_pza_op($semana){
 		
 		$tmp = explode('-',$semana);
 		  $semana = substr($tmp[1],1);
+		  
+		 $data['semana'] = $semana;
 				
 				$data['minutos_m'] = str_replace(',','',$data['minutos_m']);
 				if ($data['Matutino'] == 0) $data['Matutino'] = "";
@@ -1090,7 +1702,7 @@ public function  GetInfo_pza_op($semana){
 				if ($data['Mixto'] == 0) $data['Mixto'] = "";
 	
 			print_r($data);
-		$min = $this->p2minutos($data['maquina'], $semana);
+		//$min = $this->p2minutos($data['maquina'], $semana);
 		
 		// $turnosActual = $this->p2Turnos($data['maquina'],$semana);
 		 // $turnoCapturado = array(  'Matutino'   => $data['Matutino'],
@@ -1124,6 +1736,7 @@ public function  GetInfo_pza_op($semana){
 									]
 								)->execute();
 		
+		$this->maquinaturnossemana($data);
 		
 	}
 	
@@ -1134,9 +1747,46 @@ public function  GetInfo_pza_op($semana){
 						
 		$maq_pieza = $this->maquinapieza_todo($data['producto']);
 		
-		if (!$this->p1exist($data['producto'],$data['semana'],$data['opx']) ){
+		if( $data['otramaq'] == 1){
+			
+				$result =$command->createCommand()->insert('pdp_ctb',[
+
+									'pieza' => $data['producto'], //captura row
+									'maquina' => $data['maquina'], // captura row  maquina1 maquina2 maquina3
+									'cantidad' => $data['cantidad'],// captura row s1 s2 s3 s4
+									'minutos' => $data['minutos'], // hacer funcion para sacar de maquina_pieza
+									'semana' => $data['semana'], // de inpul cal
+									'aio' => $data['aio'],// scaar año de sem actual
+									'semEntrega' => $fsemana,
+									'prioridad' => $data['prioridad'],
+									'programado' => $data['programado'],
+									'op' => $data['opx'],
+		
+			 ])->execute();
+			// ])->getRawSql();
+			// echo $result;
+			$this->maquinaturnossemana( $data );
+			 return true;
+			
+		}
+		// $cambio_maq = 1;
+		//echo 'grabando  existe : ' ;  echo $this->p1exist($data['producto'],$data['semana'],$data['opx'],$data['maquina']) ;print_r($data);exit;
+		if (isset($data['oldmaq'])  ){
+					$maquina = $data['oldmaq'];
+					$actualiza = 1;
+		}else{
+					$maquina = $data['maquina'];
+					$actualiza = 0;
+		}
+		
+		if (!$this->p1exist($data['producto'],$data['semana'],$data['opx'],$maquina) && $actualiza !=0 ){
+			echo "entro a grabar---------------------";
 			if ($data['cantidad'] == 0) return ;
 			
+			// if (isset($data['otramaq']))
+					// if ($data['otramaq']==1) $cambio_maq = 1; else $cambio_maq = 0;
+			
+		 if ($data['otramaq'] == 0)
 			$result =$command->createCommand()->insert('pdp_ctb',[
 
 									'pieza' => $data['producto'], //captura row
@@ -1162,10 +1812,10 @@ public function  GetInfo_pza_op($semana){
 			//si es celda inserta en id pdp_prgcelda
 				$model = new Celdaprg;
 			if( $model->es_celda($data['maquina']) ){
-				$model->savePrgCelda( $data,$insert_id);
+				//$model->savePrgCelda( $data,$insert_id);
 			}
 		}else{
-		  //echo ' existe se actualiza';
+		  echo ' existe se actualiza';
 		  
 			  if($data['cantidad'] == 0  ){
 					
@@ -1173,7 +1823,8 @@ public function  GetInfo_pza_op($semana){
 														
 														'semana' => $data['semana'],
 														'op' => $data['opx'],
-														'pieza' => $data['producto']
+														'pieza' => $data['producto'],
+														'maquina' => $data['maquina']
 																					])->execute();
 																					// ])->getRawSql();
 																					// print_r($result);
@@ -1192,7 +1843,8 @@ public function  GetInfo_pza_op($semana){
 										
 										'pieza' => $data['producto'],
 										'op' => $data['opx'],
-										'semana' => $data['semana']
+										'semana' => $data['semana'],
+										'maquina' => $maquina
 										]
 									)->execute();
 								// )->getRawSql();
@@ -1201,7 +1853,7 @@ public function  GetInfo_pza_op($semana){
 			
 									
 		  }
-		echo "query: $result \n";	
+		//echo "query: $result \n";	
 
 		
 		
@@ -1270,9 +1922,12 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		
 		$sql = 
-		"Select  sum(Minutos*Cantidad) as min  
-			from pdp_ctb
-			where maquina = '$maquina' and semana = $semana";
+		"
+		select sum(ct.cantidad*mp.Minutos)  as min 
+		from pdp_ctb as ct 
+		LEFT JOIN pdp_maquina_piezabr as mp on mp.Pieza = ct.Pieza and mp.Maquina = ct.Maquina and ct.op = mp.OP
+		where ct.maquina = '$maquina' and ct.semana = $semana 
+			";
 		
 		$result =$command
 					->createCommand($sql)
@@ -1286,9 +1941,9 @@ public function  GetInfo_pza_op($semana){
 	public function maquinaturnossemana($data){
 		$command = \Yii::$app->db_mysql;
 	
-		$pieza = $data['producto']; 
+		//$pieza = $data['producto']; 
 		$maquina = $data['maquina'];
-		$cantidad = $data['cantidad'];
+		//$cantidad = $data['cantidad'];
 		$semana = $data['semana'];
 			
 			$minutos =  $this->calMaquinaSemana($maquina,$semana);
@@ -1381,12 +2036,12 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		$r1 =$command
 					->createCommand("
-					select operador , empleado.NOMBRECOMPLETO
+					select operador , rtrim( empleado.CODIGOANTERIOR)+'-'+empleado.NOMBRECOMPLETO as NOMBRECOMPLETO
 					from maquina_operador
 					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'
 					UNION
-					select operador+10000 , concat ('FAN-', empleado.NOMBRECOMPLETO) as NOMBRECOMPLETO
+					select operador+10000 , concat ('FAN-',rtrim(empleado.CODIGOANTERIOR) ,'-',empleado.NOMBRECOMPLETO) as NOMBRECOMPLETO
 					from maquina_operador
 					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'

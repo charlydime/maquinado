@@ -117,7 +117,7 @@ $this->registerJS("
 										rownumbers:true,
 										
 										view:groupview,
-										groupField:'casting',
+										groupField:'producto',
 										groupFormatter:function(value,rows){
 											
 										   return value ;

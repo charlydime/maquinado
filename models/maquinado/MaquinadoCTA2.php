@@ -289,9 +289,9 @@ Class MaquinadoCTA2 extends Model {
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
 					
 
 				
@@ -321,9 +321,9 @@ Class MaquinadoCTA2 extends Model {
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
 					
 
 				
@@ -353,9 +353,9 @@ Class MaquinadoCTA2 extends Model {
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
 					
 
 				
@@ -387,9 +387,9 @@ Class MaquinadoCTA2 extends Model {
 					maquina as clave,
 					DATEPART(WEEK, fecha) as semana ,
 					DATEPART(year,fecha) as aio
-					 from  ete.dbo.[Detalle de ETE] as DE 
-					left join ete.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN Maquinado.dbo.pdp_maquina as m on e.idmaquina = m.id 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 
 					
 
 				
@@ -1090,6 +1090,7 @@ public function  GetInfo_pza_op($semana){
 		
 		$tmp = explode('-',$semana);
 		  $semana = substr($tmp[1],1);
+		 $data['semana'] = $semana;
 				
 				$data['minutos_m'] = str_replace(',','',$data['minutos_m']);
 				if ($data['Matutino'] == 0) $data['Matutino'] = "";
@@ -1132,6 +1133,7 @@ public function  GetInfo_pza_op($semana){
 									]
 								)->execute();
 		
+			$this->maquinaturnossemana($data);
 		
 	}
 	
@@ -1277,9 +1279,12 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		
 		$sql = 
-		"Select  sum(Minutos*Cantidad) as min  
-			from pdp_cta 
-			where maquina = '$maquina' and semana = $semana";
+		"
+		select sum(ct.cantidad*mp.Minutos)  as min 
+		from pdp_cta as ct 
+		LEFT JOIN pdp_maquina_pieza as mp on mp.Pieza = ct.Pieza and mp.Maquina = ct.Maquina and ct.op = mp.OP
+
+		where ct.maquina = '$maquina' and ct.semana = $semana ";
 		
 		$result =$command
 					->createCommand($sql)
@@ -1293,13 +1298,13 @@ public function  GetInfo_pza_op($semana){
 	public function maquinaturnossemana($data){
 		$command = \Yii::$app->db_mysql;
 	
-		$pieza = $data['producto']; 
+		//$pieza = $data['producto']; 
 		$maquina = $data['maquina'];
-		$cantidad = $data['cantidad'];
+		//$cantidad = $data['cantidad'];
 		$semana = $data['semana'];
 			
 			$minutos =  $this->calMaquinaSemana($maquina,$semana);
-	   
+	    $minutos = (int)$minutos; 
 		if($this->maquinaturnosexist($maquina,$semana)){
 			// update o delete
 		

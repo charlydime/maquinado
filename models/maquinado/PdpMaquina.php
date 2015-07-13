@@ -11,10 +11,10 @@ use Yii;
  * @property string $Descripcion
  * @property double $TiempoDisponible
  * @property string $Area
- * @property integer $activa
+ * @property string $activa
  * @property integer $id
  */
-class PdpMaquina extends \yii\db\ActiveRecord
+class pdpmaquina extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -38,9 +38,8 @@ class PdpMaquina extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Maquina', 'Descripcion', 'Area'], 'string'],
-            [['TiempoDisponible'], 'number'],
-            [['activa', 'id'], 'integer']
+            [['Maquina', 'Descripcion', 'Area', 'activa'], 'string'],
+            [['TiempoDisponible'], 'number']
         ];
     }
 

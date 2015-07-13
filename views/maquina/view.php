@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\maquinado\pdpmaquina */
+/* @var $model frontend\models\maquinado\pdpMaquina */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Pdpmaquinas', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Pdp Maquinas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="pdpmaquina-view">
+<div class="pdp-maquina-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

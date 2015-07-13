@@ -71,8 +71,11 @@ use common\models\Grid;
 					valueField:'pieza',
 					textField:'pieza',
 					panelWidth:200,
-					url:'loadparte?fecha='+$('#fecha').val()+'&op='+$('#operador').val(),
-					method:'get'
+					method:'get',
+					onSelect:function(row){ controlcap.getop(row) ;}
+						
+					
+					
 						}
 				}
 			">parte</th>
@@ -110,6 +113,7 @@ use common\models\Grid;
 	function control(grid){
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
+		 
 		 
 		 this.url = 'pzamaqsalva';
 
@@ -170,15 +174,15 @@ use common\models\Grid;
 			
 			inicio  = $(ed_inicio.target).textbox('getValue');
 			fin  = $(ed_fin.target).textbox('getValue');
-			//
+			
 			if (inicio == "" || fin == "") 
 				{alert("inicio o fin vacios capture lo que trabajo en la "); return;}
 			//valida hora
 			if( !this.validahora(inicio) ) 
-				{alert("formato de hora inicio no valido 10:00"); return;}
+				{alert("formato de hora inicio no valido 01:00"); return;}
 			
 			if( !this.validahora(fin) ) 
-				{alert("formato de hora fin no valido elemplo 1:00 "); return;}
+				{alert("formato de hora fin no valido elemplo 07:00 "); return;}
 			
 			
 			parte  = $(ed_parte.target).combobox('getValue');
@@ -321,7 +325,13 @@ use common\models\Grid;
 		}
 		
 		this.onClickRow2 = function (inx,row){
-
+			
+			
+			 var pza  = $(this.grid).datagrid('getColumnOption','parte');
+			 var fecha =  $('#fecha').val() ;
+			 var op = $('#operador').val();
+			 var maq = $('#maquina').combobox('getValue');
+		     pza.editor.options.url = 'loadparte?fecha=' + fecha + '&op='+ op + '&maq=' + maq ;
 					var ed = null
 			if (this.editIndex != inx){
 				if (this.endEditing2()){
@@ -361,6 +371,20 @@ use common\models\Grid;
 			$(nextgrid).datagrid('reload');
 			
 			
+			
+		}
+		
+		this.getop = function(cel){
+			
+			 var op  = $(this.grid).datagrid('getColumnOption','op');
+			 var fecha =  $('#fecha').val() ;
+			 var parte = cel.pieza;
+			 var maq = $('#maquina').combobox('getValue');
+		     // op.editor.options.url = 'loadop?fecha=' + fecha + '&parte='+ parte + '&maq=' + maq ;
+		     var url = 'loadop?fecha=' + fecha + '&parte='+ parte + '&maq=' + maq ;
+			 
+			  ed = $(this.grid).datagrid('getEditor', {index:this.editIndex2,field:'op'});
+			  ed.target.combobox('reload',url);
 			
 		}
 		

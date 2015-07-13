@@ -84,21 +84,21 @@ class EteController extends Controller
 	}
 	
 	//commbobox de parte
-	public function actionLoadparte($fecha,$op){
+	public function actionLoadparte($fecha,$op,$maq){
 		
 		$model = new Captura;
 			
-		$part = $model->GetParte($fecha,$op);
+		$part = $model->GetParte($fecha,$op,$maq);
 		
 		 return json_encode($part, 0);
 	}
 	
 	//combobox de operacion
-	public function actionLoadop(){
+	public function actionLoadop($maq,$parte,$fecha){
 		
 		$model = new Captura;
 			
-		$op = $model->GetOp();
+		$op = $model->GetOp($maq,$parte,$fecha);
 		
 		 return json_encode($op, 0);
 	}
@@ -219,7 +219,11 @@ class EteController extends Controller
 		return $id;
 		
 	}
-	//reporte ETE
+
+	
+	
+	
+	//reporte ETE new
 	public function actionEte(){
 		
 		if ( isset ($_REQUEST["ini"]) ){
@@ -246,7 +250,7 @@ class EteController extends Controller
 		
 	}
 	
-	//reporte ETE
+	//reporte ETE old
 	public function actionEtech(){
 		
 		if ( isset ($_REQUEST["ini"]) ){
@@ -273,7 +277,7 @@ class EteController extends Controller
 		
 	}
 	
-	
+	//reporte de capturado bronce /aceros
 	public function actionReportecaptura(){
 		
 		if ( isset ($_REQUEST["ini"]) ){
@@ -299,7 +303,7 @@ class EteController extends Controller
 	
 		
 	}
-	
+	//reporte de lo programado en la semana en acero 
 	public function actionReporteprogramado(){
 		
 		if ( isset ($_REQUEST["ini"]) ){
@@ -321,6 +325,74 @@ class EteController extends Controller
 		}
 		
 		return $this->render('reporteprogramado', []);
+		
+	}
+	//reporte de lo programado en la semana en bronce 
+	public function actionReporteprogramado2(){
+		
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini = "2015-05-25";
+		}
+		
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin = "2015-05-29";
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "BR";
+		}
+		
+		return $this->render('reporteprogramado2', []);
+		
+	}
+	
+	//reporte ETO acreos / bronce
+		public function actionEto(){
+		
+		if ( isset ($_REQUEST["fecha"]) ){
+			$fecha = $_REQUEST["fecha"] ;
+		}else{
+			$fecha = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["fecha2"]) ){
+			$fecha2 = $_REQUEST["fecha2"] ;
+		}else{
+			$fecha2 = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "MAA";
+		}
+		
+		return $this->render('eto', [ 'fecha' => $fecha , 'fecha2' => $fecha2  , 'area' => $area]);
+		
+	
+		
+	}
+	
+	//reporte ETO acreos / bronce
+		public function actionResumenturnodiarioac(){
+		
+		if ( isset ($_REQUEST["FECHA"]) ){
+			$fecha = $_REQUEST["FECHA"] ;
+		}else{
+			$fecha = date('Y-m-d');
+		}
+		
+		
+		
+		return $this->render('resumenturnodiario', [ 'fecha' => $fecha ]);
+		
+	
 		
 	}
 	

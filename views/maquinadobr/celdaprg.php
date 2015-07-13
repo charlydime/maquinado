@@ -86,7 +86,7 @@ use common\models\Grid;
 										align:'center',
 										formatter:cellStyler,
 										sortable:true,
-										editor:{type:'checkbox',options:{on:'0',off:'1'}}
+										editor:{type:'checkbox',options:{on:'1',off:'0'}}
 			">Activa</th>
 			
 			
@@ -109,7 +109,7 @@ use common\models\Grid;
 	function control(grid){
 		 this.editIndex2 = undefined;
 		 this.grid = grid;
-		 this.s = 'salvacelda'
+		 this.s = 'salvaceldaprg2'
 		 this.rows = [];
 		 
 		 
@@ -143,7 +143,8 @@ use common\models\Grid;
 				idcel = getid(); 
 				var data = { descripcion : desc,
 							 maquinas : grid,
-							id: idcel};
+							id: idcel,
+							semana:26};
 				
 				this.save(data,this.s);
 				this.recargaSigGrid(grid);

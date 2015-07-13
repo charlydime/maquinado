@@ -31,7 +31,8 @@ use yii\helpers\URL;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Deshacer fila</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="agregar()">Agregar</a>
-						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="guardarcambios()">Guardar</a>
+						
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-rest',plain:true" onclick="delmaqop()">borra</a>
 					</div>
    
     <thead>
@@ -55,6 +56,7 @@ use yii\helpers\URL;
 					options:{
 					valueField:'CODIGOANTERIOR',
 					textField:'NOMBRECOMPLETO',
+					panelWidth:250,
 					url:'op',
 					method:'get',
 						}
@@ -71,6 +73,7 @@ use yii\helpers\URL;
 					options:{
 					valueField:'Maquina',
 					textField:'Maquina',
+					panelWidth:250,
 					url:'maq',
 					method:'get',
 						}
@@ -108,31 +111,11 @@ use yii\helpers\URL;
 				
 				$('#<?php echo $id ?>').datagrid('getRows')[editIndex]['maquina'] = maquina;
 				$('#<?php echo $id ?>').datagrid('getRows')[editIndex]['operador'] = operador;
-				
+				var data = $('#<?php echo $id ?>').datagrid('getRows')[editIndex];
 				var grid = '#<?php echo $id ?>';
 				$('#<?php echo $id ?>').datagrid('endEdit', editIndex);
-				guardarcambios();
-				$('#<?php echo $id ?>').datagrid('reload', editIndex);
-			}
-		}
-		
-		function deshacerfila(){
-					var sel = $('#<?php echo $id ?>').datagrid('getSelected');
-					var row=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
-					$('#<?php echo $id ?>').datagrid('cancelEdit',row);
-					editIndex = undefined;
-					$('#<?php echo $id ?>').datagrid('clearSelections');
-					
-		}
-		
-		function guardarcambios(){
-		  var grid = '#<?php echo $id ?>';
-			if (endEditing()){
-				//$(grid).datagrid('acceptChanges');
 				
-					var data = $(grid).datagrid('getChanges');
-					//$.post('".URL::to('/Fimex/programacion/save_semanal')."',
-					$.post('mosave',
+				$.post('mosave',
 						{Data: JSON.stringify(data)},
 						function(data,status){
 							if(status == 'success' ){
@@ -146,8 +129,54 @@ use yii\helpers\URL;
 						}
 					);
 				
-				
+				$('#<?php echo $id ?>').datagrid('reload', editIndex);
 			}
+		}
+		
+		function deshacerfila(){
+					var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+					var row=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+					$('#<?php echo $id ?>').datagrid('cancelEdit',row);
+					editIndex = undefined;
+					$('#<?php echo $id ?>').datagrid('clearSelections');
+					
+		}
+		
+		function delmaqop(){
+		  var grid = '#<?php echo $id ?>';
+		  
+		   var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+			var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+							
+				 // var maquina = $('#<?php echo $id ?>').datagrid('getEditor', {index:inx,field:'maquina1'});
+				 // var m = maquina.target.combobox('getData');
+				 // var op = $('#<?php echo $id ?>').datagrid('getEditor', {index:inx,field:'maquina1'});
+				 // var o = op.target.combobox('getData');
+				
+			
+				//$(grid).datagrid('acceptChanges');
+				var row = {
+				 'operador' : sel.operador,
+				 'maquina' : sel.maquina
+				};
+					
+					//$.post('".URL::to('/Fimex/programacion/save_semanal')."',
+					$.post('model',
+						{Data: JSON.stringify(row)},
+						function(data,status){
+							if(status == 'success' ){
+								$(grid).datagrid('load');
+								console.log(data);
+								$var = $(grid).datagrid('getChanges');
+							}else{
+								reject('#$id');
+								alert('Error al guardar los datos');
+							}
+						}
+					);
+				
+				
+			
 		}
 		
 		function onClickRow(inx,row){

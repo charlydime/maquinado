@@ -4,6 +4,7 @@ namespace frontend\Models\ete;
 use Yii;
 use yii\base\Model;
 
+date_default_timezone_set('America/Mexico_City');
 Class Captura extends Model {
 	
 	//lista cap
@@ -128,10 +129,16 @@ public function detectanoche($op){
 		
         $result =$command->createCommand("
 		
-		select count(dia) as m ,cast (dateadd( day, -1 ,getdate() ) as date ) as d   from  pdp_maquina_turno_dia
-		where turno = 'Nocturno' and
-		dia =  cast (dateadd( day, -1 ,getdate() ) as date ) and 
-		op = $op
+				select count(dia) as m ,cast (dateadd( day, -1 ,getdate() ) as date ) as d   from 
+				(
+					select * from 	pdp_maquina_turno_dia
+					Union 
+					select * from 	pdp_maquina_turno_diabr
+
+			   ) as turno
+				where turno = 'Nocturno' and
+				dia =  cast (dateadd( day, -1 ,getdate() ) as date ) and 
+				op = $op
 		
 		")->queryAll();
 		
@@ -163,7 +170,7 @@ public function ChecaOp($data){
 			select *  from pdp_ctb_dia 
 			)	as ct
 		where 
-		dia =  '$fecha' and 
+		dia   between   DATEADD(day, -1, cast ('$fecha' as date) ) and cast('$fecha' as date)  and 
 		maquina = '$maquina' and 
 		op =  $op and
 		pieza = '$pieza'
@@ -261,7 +268,7 @@ public function ChecaOp($data){
 		select * from pdp_maquina_piezabr
 		
 		)as mp
-		LEFT JOIN ete.dbo.ETE as e on  e.consecutivo  = $id
+		LEFT JOIN ete2.dbo.ETE as e on  e.consecutivo  = $id
 		left join pdp_maquina  as m on m.id = e.idmaquina
 		where
 		mp.pieza = '$parte'
@@ -332,8 +339,11 @@ public function ChecaOp($data){
 	}
 	
 	// verifica si existe tm
-	public function existeTM($tm,$id){
+	public function existeTM($id){
 			$command = \Yii::$app->db_ete;
+		
+		
+		if( isset ($id) || $id = '' || $id = 0) return false;
 		
 		$result =$command
 					->createCommand("
@@ -341,7 +351,7 @@ public function ChecaOp($data){
 					Select  count(idconsecutivo) as m 
 					from [Tiempos Muertos]
 					where 
-					tiempomuerto = '$tm' and 
+					
 					idconsecutivo = $id 
 					
 					"
@@ -360,7 +370,7 @@ public function ChecaOp($data){
 		 $data = (array) $data;
 		 // print_r($data);
 		 $command = \Yii::$app->db_ete;
-		 if ( !$this->existeTM($data['tm'],$data['ID']) )
+		 if ( !$this->existeTM($data['ID']) )
 		 {  
 			
 			 $result =$command->createCommand()->insert('Tiempos Muertos',[
@@ -503,7 +513,7 @@ public function ChecaOp($data){
 
 		 ) as pdp_ct on pdp_ct.maquina = m.Maquina
 		 where 
-		pdp_ct.dia =  '$fecha' and
+		pdp_ct.dia between   DATEADD(day, -1, cast ('$fecha' as date) ) and cast('$fecha' as date)  and
 		pdp_ct.op = $op
 		
 		
@@ -533,11 +543,20 @@ public function ChecaOp($data){
 	}
 	
 	//busca  operaciones  combobox
-	public function GetOp(){
+	public function GetOp($maq,$pieza,$fecha){
 		
 		 $cmd = \Yii::$app->db_mysql;
 		  $sql = "
-		 select op from pdp_ops
+		 select op from 
+			(
+			select * from pdp_cta_dia  
+			union 
+			select *  from pdp_ctb_dia 
+			)	as ct
+		where 
+		dia   between   DATEADD(day, -1, cast ('$fecha' as date) ) and cast('$fecha' as date)  and 
+		maquina = '$maq' and 
+		pieza = '$pieza'
 		
 		 ";
 		  $result =$cmd->createCommand($sql)
@@ -549,7 +568,7 @@ public function ChecaOp($data){
 	
 		//busca  operaciones  combobox
 		//TODO: restriccion aqui
-	public function GetParte($fecha,$op){
+	public function GetParte($fecha,$op,$maquina){
 		
 		//--restringido
 		// select DISTINCT pieza from pdp_cta_dia where dia = '$fecha'
@@ -575,8 +594,9 @@ public function ChecaOp($data){
 				
 				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
 			where 
-				cta.dia =  '$fecha' and
+				cta.dia  between   DATEADD(day, -1, cast ('$fecha' as date) ) and cast('$fecha' as date)  and
 				turno.op =   $op
+				and turno.maquina = '$maquina'
 
 			UNION
 
@@ -592,8 +612,9 @@ public function ChecaOp($data){
 				
 				)	as turno on cta.dia = turno.dia and cta.maquina = turno.maquina 
 			where 
-				cta.dia =  '$fecha' and
+				cta.dia   between   DATEADD(day, -1, cast ('$fecha' as date) ) and cast('$fecha' as date) and
 				turno.op =   $op
+				 and turno.maquina = '$maquina'
 			
 				
 		

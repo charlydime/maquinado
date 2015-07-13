@@ -78,9 +78,11 @@ class MaquinadobrController extends Controller
         $model = new MaquinadoCta2;
         
 		   $fecha=$_REQUEST['fecha'];
+		   $page=$_REQUEST['page'];
+		   $row=$_REQUEST['rows'];
 		
         
-		$cat = $model->GetInfo($fecha);
+		$cat = $model->GetInfo($fecha,$page,$row);
                     
         return json_encode($cat, 0);
         
@@ -184,6 +186,10 @@ class MaquinadobrController extends Controller
 					// $datos_a_grabar['minutos']= $model->p1tiempos($data->{'producto'},$data->{'maquina1'},$data->{'opx'});
 					$datos_a_grabar['minutos']= $data->{'Minutos'};
 					$datos_a_grabar['maquina']= $data->{'maquina1'};
+					if (isset($data->{'otramaq'}))
+						$datos_a_grabar['otramaq']= $data->{'otramaq'};
+					if (isset($data->{'oldmaq'}))
+						$datos_a_grabar['oldmaq']= $data->{'oldmaq'};
 					
 					$datos_a_grabar['aio']= 	$semana[0] ;
 					$datos_a_grabar['semEnmtrega']= $data->{'sem_actual'};
@@ -192,14 +198,14 @@ class MaquinadobrController extends Controller
 					$datos_a_grabar['programado']= substr($semana[1],1);
 					
 					
-					// print_r($data);
+					 //echo"controler";print_r($datos_a_grabar);exit;
 					
 						//grabo recibiendo de diario
 						if($data->{'diario'} != '' && $data->{'diario'} != 'n') {
 							 $datos_a_grabar['cantidad'] =$data->{'diario'};
 							 $datos_a_grabar['semana']= substr($semana[1],1)-0;
 							 $model->p1save($datos_a_grabar);
-							echo "dia datos_a_grabar------------"; print_r($datos_a_grabar);
+							
 							
 						}else{
 							//grabo hold  lo actualiza con su valor capturado
@@ -219,9 +225,9 @@ class MaquinadobrController extends Controller
 						if($data->{'s2'} != '' && $data->{'s2'} != 'n') {
 							$datos_a_grabar['cantidad'] =$data->{'s2'};
 							$datos_a_grabar['semana']= substr($semana[1],1)+1;
+							//echo "dia datos_a_grabar s2------------"; print_r($datos_a_grabar);
 							$model->p1save($datos_a_grabar);
 							 // print_r($datos_a_grabar);
-							
 						}	
 						
 						if($data->{'s3'} != '' && $data->{'s3'} != 'n') {
@@ -342,6 +348,10 @@ class MaquinadobrController extends Controller
 	          $sem = date('W');
 			  $aio = date('Y');
 			  $semana=$aio.'-W'.$sem;
+			  
+		 if ( isset( $_GET['semana']) ){
+		   $semana=$_GET['semana'];
+		} ;
         
         return $this->render('cta4', ['semana' => $semana,  ]);
    
@@ -353,12 +363,15 @@ class MaquinadobrController extends Controller
 			 $aio = date('Y');
 			 $semana=$aio.'-W'.$sem;
         
-		 if ( isset( $_POST['semana']) and $_POST['semana'] == ''){
+		 if ( isset( $_POST['semana']) ){
 		   $semana=$_POST['semana'];
 		} ;
 		
+		 $page=$_REQUEST['page'];
+		 $row=$_REQUEST['rows'];
+		
 		$model = new MaquinadoCTA4;
-			$prog = $model->GetInfo($semana);
+			$prog = $model->GetInfo($semana,$page,$row);
 			return json_encode($prog, 0);
    
     }
@@ -508,10 +521,10 @@ class MaquinadobrController extends Controller
 	
 	//---------------celdaprg
 	
-	// celdas
+	// celdas para lolamar de prueba a  celdaprg 
 	public function actionCelda(){
 		
-		return $this->render('celda', [  ]);
+		return $this->render('pruebaceldaprg', [ 's1' => 25,'s2' => 26,'s3' => 27,'s4' => 28, ]);
 	}
 	
 	
@@ -534,12 +547,12 @@ class MaquinadobrController extends Controller
 	}
 	
 	//salva celda FORM
-	public function actionSalvacelda(){
+	public function actionSalvaceldaprg2(){
 		
 		$data = json_decode($_POST['Data']);
 
 		$model = new Celdaprg;
-		$id =$model->saveCelda($data);
+		$id =$model->savePrgCelda2($data);
 		
 		return $id;
 		
@@ -568,6 +581,18 @@ class MaquinadobrController extends Controller
 		
 		$model = new Celdaprg;
 		$id =$model->getCelName( $_GET['idcelda']  );
+		
+		return $id;
+		
+	}
+	
+	//salva celdaprg
+	public function actionSalvaceldaprg(){
+		$data = json_decode($_POST['Data']);
+		
+
+		$model = new Celdaprg;
+		$id =$model->savePrgCelda($data);
 		
 		return $id;
 		

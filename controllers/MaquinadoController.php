@@ -309,6 +309,15 @@ class MaquinadoController extends Controller
    
    }
    
+    public function actionModel(){
+	
+					$data = json_decode($_POST['Data']);
+	
+					$model = new MaquinadoMaqOp;
+					$maqop = $model->DelMaqOp($data);
+   
+   }
+   
    public function actionCtaprog(){
 	          
 	          $sem = date('W');

@@ -112,7 +112,7 @@ $this->registerJS("
 										view:groupview,
 										remoteSort:false,
 										collapsible:true,
-
+										pagination:true,
 										rownumbers:true,
 										
 										view:groupview,
@@ -135,7 +135,8 @@ $this->registerJS("
 								<div id="tb" style="height:auto">
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(1)">pieza</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(2)">maquina</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="ocultacolumnas()">Muetrsa/oculta ALM molde perm</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="dosmaq()">En dos maq</a>
 								
 
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
@@ -202,6 +203,13 @@ $this->registerJS("
 										<th data-options="field:'CTB',width:50,sortable:true">CTBs</th>
 										<th data-options="field:'PMB',width:50,sortable:true">PMBs</th>
 										<th data-options="field:'PTB',width:50,sortable:true">PTB</th>
+										
+										<th data-options="field:'GPC',sortable:true,width:50,hidden:1">GPC</th>
+										<th data-options="field:'GPCB',sortable:true,width:50,hidden:1">GPCB</th>
+										<th data-options="field:'GPL',sortable:true,width:50,hidden:1">GPL</th>
+										<th data-options="field:'GPM',sortable:true,width:50,hidden:1">GPM</th>
+										<th data-options="field:'GPP',sortable:true,width:50,hidden:1">GPP</th>
+										<th data-options="field:'GPT',sortable:true,width:50,hidden:1">GPT</th>
 										
 										
 										<th id= "thsem1" data-options="field:'s1',width:60, styler:formateo_sem_celda_pza,editor:'numberbox',sortable:true">pza</th>
@@ -433,6 +441,49 @@ data-options="
 			return true;
 		}
 		
+		
+		
+		function dosmaq(){
+			 var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+			 var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+				
+				 // var maquina = $('#<?php echo $id ?>').datagrid('getRows')[inx]['maquina1'];
+				 var maquina = $('#<?php echo $id ?>').datagrid('getEditor', {index:inx,field:'maquina1'});
+				var	maqs = maquina.target.combobox('getData');
+				
+				if(maqs.length > 1 ){
+						for(i= 0; i<= maqs.length; i++){
+							var m= maqs[i].Maquina;
+							
+							 if  (m != sel.maquina1){  sel.maquina1 = m ; break;	 }
+						}
+				}else{
+					alert("La pieza solo se trabaja en una Maquina"); exit;
+				}
+				
+				sel.sem_actual = $('#semana1').val();
+				sel.diario =  'n'; // diferencia entre alctualizacion desde mensual 
+				sel.otramaq = 1 ;
+				var data = [];
+				data.push(sel);
+				
+				
+				$.post('ctap1',
+						{Data: JSON.stringify(data)},
+						function(data,status){
+							if(status == 'success' ){
+								reloadcta3(false);
+								console.log(data);
+								$var = $(grid).datagrid('getChanges');
+							}else{
+								reject('#$id');
+								alert('Error al guardar los datos');
+							}
+						}
+					);
+				
+		}
+		
 		function guarda(){
 			
 			var maq1 = null;
@@ -481,7 +532,7 @@ data-options="
 					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] >  0 && s3 == '' ) s3 = "0";
 					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] >  0 && s4 == '' ) s4 = "0";
 				 
-				 
+				 var oldmaq = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['maquina1'];
 				 prioridad = $(ed_prio.target).numberbox('getValue');
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['Hold'] = hold;
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['maquina1'] = maq1;
@@ -517,6 +568,8 @@ data-options="
 					
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['sem_actual'] = sem_actual;
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['diario'] = 'n'; // diferencia entre alctualizacion desde mensual 
+					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['otramaq'] = 0; // diferencia entre alctualizacion desde mensual 
+					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['oldmaq'] = oldmaq; // diferencia entre alctualizacion desde mensual 
 					data.push ( $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i] );
 
 					i++;
@@ -846,7 +899,6 @@ data-options="
 		
 		function formateo_celda_faltantes(val,row,inx){
 			
-			
 			// amarillo no tan grosero
 		   if (row.opx == null && row.cast == 0)
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
@@ -855,8 +907,37 @@ data-options="
 
 			   return 'font-weight:bold;background-color: #FFFF66 ;';
 			
-
 		}
+		
+		var toggle = 0;
+		function  ocultacolumnas(){
+			if (!toggle){
+			//setParentColspan("PLB",1,this.grid);
+			$('#<?php echo $id ?>').datagrid('hideColumn',"PLB");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"CTB");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"PMB");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"PTB");
+			
+			$('#<?php echo $id ?>').datagrid('showColumn',"GPL");
+			$('#<?php echo $id ?>').datagrid('showColumn',"GPCB");
+			$('#<?php echo $id ?>').datagrid('showColumn',"GPM");
+			$('#<?php echo $id ?>').datagrid('showColumn',"GPT");
+			this.toggle = 1; 
+			}else{
+			//setParentColspan("PLB",4,this.grid);
+			$('#<?php echo $id ?>').datagrid('showColumn',"PLB");
+			$('#<?php echo $id ?>').datagrid('showColumn',"CTB");
+			$('#<?php echo $id ?>').datagrid('showColumn',"PMB");
+			$('#<?php echo $id ?>').datagrid('showColumn',"PTB");
+			
+			$('#<?php echo $id ?>').datagrid('hideColumn',"GPL");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"GPCB");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"GPM");
+			$('#<?php echo $id ?>').datagrid('hideColumn',"GPT");
+			this.toggle = 0; 
+			}
+		}
+		
 function vistas(view){
 			var defaultOpt =   $('#<?php echo $id ?>').datagrid('options');
 			var opt = $.extend(true, {}, defaultOpt);

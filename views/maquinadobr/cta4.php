@@ -42,6 +42,7 @@ $model = new MaquinadoCTA4;
 
 <div id="tb" style="height:auto">
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.deshacerfila2()">Escape</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.ocultacolumnas()">Muetrsa/oculta ALM molder perm</a>
 </div>
 
 <div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;"
@@ -64,7 +65,7 @@ data-options="
 				onClickRow:function(inx,row){ control<?php echo $sem1 ?>.onClickRow2(inx,row); },
 				rowStyler:formateo_dia,
 				showFooter: true,
-				
+				pagination:true,
 				
 				collapsible:true,
 
@@ -93,7 +94,7 @@ data-options="
 					<th colspan= 2>Opeacion</th>
 					<th colspan= 1></th>
 					<th colspan= 2>Embaques</th>
-					<th colspan= 4>Almacenes</th>
+					<th colspan= 4 id = 'almacen'>Almacenes</th>
 					<th colspan= 2>Sem <?=$sem1?></th>
 					<th colspan=5>Lunes</th>
 					<th colspan=5>Martes</th>
@@ -121,6 +122,15 @@ data-options="
 					<th data-options="field:'CTB',sortable:true,width:50">CTBs</th>
 					<th data-options="field:'PMB',sortable:true,width:50">PMBs</th>
 					<th data-options="field:'PTB',sortable:true,width:50">PTB</th>
+					
+					<th data-options="field:'GPC',sortable:true,width:50,hidden:1">GPC</th>
+					<th data-options="field:'GPCB',sortable:true,width:50,hidden:1">GPCB</th>
+					<th data-options="field:'GPL',sortable:true,width:50,hidden:1">GPL</th>
+					<th data-options="field:'GPM',sortable:true,width:50,hidden:1">GPM</th>
+					<th data-options="field:'GPP',sortable:true,width:50,hidden:1">GPP</th>
+					<th data-options="field:'GPT',sortable:true,width:50,hidden:1">GPT</th>
+					
+					
 					<th data-options="field:'Cantidad',sortable:true,width:35">Prg</th>
 					<th data-options="field:'Minutos',sortable:true,width:35">Min</th>
 										
@@ -184,7 +194,7 @@ data-options="
 <style>
 	.hbox{
 			display: inline-block;
-			width:19%;
+			width:19.8%;
 			height:100%;
 			vertical-align: text-top;
 			
@@ -287,6 +297,7 @@ data-options="
 		 this.grid = grid;
 		 this.semana = <?php echo $id?> ? <?php echo $id ?> : 0;
 		 this.url = 'cta4salva';
+		 this.toggle = 0;
 		 
 		this.llena = function(){
 				var row =  $(this.grid).datagrid('getRows')[this.editIndex2];
@@ -404,7 +415,7 @@ data-options="
 				vie_prg = $(ed_vie.target).numberbox('getValue');
 				sab_prg = $(ed_sab.target).numberbox('getValue');
 				dom_prg = $(ed_dom.target).numberbox('getValue');
-				maq1    = $(ed_maq1.target).numberbox('getValue');
+				//maq1    = $(ed_maq1.target).numberbox('getValue');
 				
 				var row = $(this.grid).datagrid('getRows')[this.editIndex2]; 
 				
@@ -694,17 +705,54 @@ data-options="
 				$(tablas[i]).datagrid('reload');
 
 			}
+		
+		}
+		
+		
+		this.ocultacolumnas = function(){
+			if (!this.toggle){
+			//setParentColspan("PLB",1,this.grid);
+			$(this.grid).datagrid('hideColumn',"PLB");
+			$(this.grid).datagrid('hideColumn',"CTB");
+			$(this.grid).datagrid('hideColumn',"PMB");
+			$(this.grid).datagrid('hideColumn',"PTB");
 			
+			$(this.grid).datagrid('showColumn',"GPL");
+			$(this.grid).datagrid('showColumn',"GPCB");
+			$(this.grid).datagrid('showColumn',"GPM");
+			$(this.grid).datagrid('showColumn',"GPT");
+			this.toggle = 1; 
+			}else{
+			//setParentColspan("PLB",4,this.grid);
+			$(this.grid).datagrid('showColumn',"PLB");
+			$(this.grid).datagrid('showColumn',"CTB");
+			$(this.grid).datagrid('showColumn',"PMB");
+			$(this.grid).datagrid('showColumn',"PTB");
 			
-			
+			$(this.grid).datagrid('hideColumn',"GPL");
+			$(this.grid).datagrid('hideColumn',"GPCB");
+			$(this.grid).datagrid('hideColumn',"GPM");
+			$(this.grid).datagrid('hideColumn',"GPT");
+			this.toggle = 0; 
+			}
 		}
 
 	}	//class control
 
 var control<?php echo $sem1 ?> = new control('#<?php echo $id ?>'); 
 
+function setParentColspan(columnText, colSpan,grid) {
+	var dg = $(grid),
+	    dc = dg.data('datagrid');
+	    htable = dc.header2.find('.datagrid-htable');
 
-
+	htable.find('tr.datagrid-header-row:first td').each(function() {
+		var innerHtml = $(this).html();
+		if (innerHtml.indexOf(columnText) > -1) {
+			$(this).attr('colspan', colSpan);
+		}
+	});
+}
 
 function formateo_dia(index,row){
 		var m = row.sum;
@@ -735,7 +783,7 @@ function formateo_dia(index,row){
 			if ( minutos_o >= minutos_m )
 				return 'background-color: lightblue;';
 		
-	}
+	}//class
 		
 		
 		function formateo_dia_celda(val,row,inx){

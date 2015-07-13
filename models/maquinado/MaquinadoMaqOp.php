@@ -67,6 +67,7 @@ Class MaquinadoMaqOp extends Model {
 	
 	//da de alta  maquina operador
 	public function SetMaqOp($data){
+		$data = (array)$data;
 					$command = \Yii::$app->db_mysql;
 			$result = $command->createCommand()->insert('maquina_operador',[
 														'maquina' =>  $data['maquina'], 
@@ -78,8 +79,11 @@ Class MaquinadoMaqOp extends Model {
 	
 	//borra maquina operador
 	public function DelMaqOp($data){
-	print_r($data);exit;
-			$result =$command->createCommand()->delete('pdp_maquina_turnos',[
+	$data = (array)$data;
+	
+	
+	$command = \Yii::$app->db_mysql;
+			$result =$command->createCommand()->delete('maquina_operador',[
 													'maquina'  =>  $data['maquina'], 
 													'operador' =>  $data['operador'] 
 											])->execute();

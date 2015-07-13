@@ -164,6 +164,18 @@ use common\models\Grid;
 			desc   = $(ed_desc.target).textbox('getValue');
 			herram   = $(ed_desc.target).textbox('getValue');
 			
+			if (inicio == "" || fin == "") 
+				{alert("inicio o fin vacios capture lo que trabajo en la "); return;}
+			//valida hora
+			if( !this.validahora(inicio) ) 
+				{alert("formato de hora inicio no valido 07:00"); return;}
+			
+			if( !this.validahora(fin) ) 
+				{alert("formato de hora fin no valido elemplo 01:00 "); return;}
+			
+			if (tm == "" ) 
+				{alert("Debe capturar un Tipo de Tiempo muerto "); return;}
+			
 			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = inicio;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = fin;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['tm'] = tm;
@@ -181,6 +193,15 @@ use common\models\Grid;
 				this.editIndex2 = undefined;
 				$(this.grid).datagrid('endEdit', this.editIndex2);
 				this.deshacerfila2();
+			
+		}
+		
+		this.validahora = function(hora){
+			
+			var pat = /^(0[1-9]|1\d|2[0-3]):([0-5]\d)$/;
+			
+			return hora.match(pat) ? true : false;
+			
 			
 		}
 		

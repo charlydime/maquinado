@@ -5,16 +5,23 @@ use Yii;
 use yii\base\Model;
 
 Class Celdaprg extends Model {
-    
+   
 
+   // select [codigo Maquina] as maquina, maq.Maquina as clave, Descripcion	
+		// from pdp_celda
+		// LEFT JOIN  pdp_maquina as maq  on maq.id = pdp_celda.[Codigo Maquina]
+		 // where idcelda = $celda
+// old
    public function lstcelda($celda,$sem){
 	   
 	    $cmd = \Yii::$app->db_mysql;
 		  $sql = "
-		 select [codigo Maquina] as maquina, maq.Maquina as clave, Descripcion	
-		from pdp_celda
-		LEFT JOIN  pdp_maquina as maq  on maq.id = pdp_celda.[Codigo Maquina]
-		 where idcelda = $celda
+		 select 
+		id_maquina as maquina, maq.Maquina as clave, Descripcion	, prg.razon, prg.activa
+		from pdp_prgceldas as prg
+		LEFT JOIN  pdp_maquina as maq  on maq.id = prg.id_maquina
+		 where prg.id_celda = $celda
+		 and semana = $sem
 		 ";
 		  $result =$cmd->createCommand($sql)
 							->queryAll();
@@ -149,6 +156,9 @@ Class Celdaprg extends Model {
 		
 		  $result = $cmd->createCommand($sql)
 							->queryAll();
+							// ->getRawSql();
+						 // print_r($result);exit;
+						
 		  $id = $result[0]['id'];
 		  }
 		
@@ -234,20 +244,39 @@ select DISTINCT m.Maquina+'-'+m.Descripcion as Descripcion, m.Maquina as clave ,
 //escribe la tabla prg_celda cuando salva la cantidad programada
 public function savePrgCelda($data,$id_pdp_cta=0){
 	$ok = 0 ; 
+	
+	 echo"es celda".$this->es_celda($data['maquina']);
 	if ($this->es_celda($data['maquina'])){ $ok=1	;}
 	
 
 	if ($ok ==1){
 		$idCelda = $this->getCelId($data['maquina']);	
 		$celdas = $this->obtiene_celda($idCelda);
-		$this->graba_maq_prg_celda($celdas,$id_pdp_cta,$data);
+		$this->graba_maq_prg_celda($celdas,$id_pdp_cta,$data,$idCelda);
 	}
+	
+}
+
+//escribe la tabla prg_celda cuando se cambia parametro desde centana celdas
+public function savePrgCelda2($data,$id_pdp_cta=0){
+$data = (array) $data;
+		$idCelda = $data['id'];
+		$celdas =  $data['maquinas'];
+		
+		foreach($celdas as &$c){
+			$c = (array) $c;
+			$c['idmaq'] = $c['maquina'];
+			
+		}
+		
+		$this->graba_maq_prg_celda($celdas,$id_pdp_cta,$data,$idCelda);
+	
 	
 }
 
 public function es_celda($celda){
 	
-	if ( strlen($celda) > 7 ) return true;
+	if ( strlen( trim($celda) ) > 8 ) return true;
 	else return false; 
 	
 }
@@ -284,7 +313,7 @@ public function existeprg_celda($maquina,$semana){
 		$result =$command->createCommand($sql)
 		->queryAll();
 		// ->getRawSql();
-		// print_r($result);
+		// print_r($result);exit;
 					
 		
 		return $result[0]['m'] >  0 ? true : false;
@@ -292,19 +321,20 @@ public function existeprg_celda($maquina,$semana){
 	
 }
 
-public function graba_maq_prg_celda($celdas,$id_pdp_cta,$data){
+public function graba_maq_prg_celda($celdas,$id_pdp_cta,$data,$idcelda){
 	
 	$command = \Yii::$app->db_mysql;
-	echo "Celdas:----\n"; print_r($celdas);
+	//echo "DATA:----\n"; print_r($data);exit;
 	foreach($celdas as $c){
-		echo "C:----\n"; print_r($c);
+		echo "C:----\n"; 
 			if (!$this->existeprg_celda($c['idmaq'],$data['semana'])){
 				$result =$command->createCommand()
 									->Insert('pdp_prgceldas',
 									['id_pdp_cta' => $id_pdp_cta,
 									 'id_maquina' => $c['idmaq'],
 									 'semana' => $data['semana'],
-									 'activa' => 1
+									 'activa' => 1,
+									 'id_celda' => $idcelda
 									]
 				
 									
@@ -312,16 +342,20 @@ public function graba_maq_prg_celda($celdas,$id_pdp_cta,$data){
 						// )->getRawSql();
 						// print_r($result);
 			}else{
-				$result =$command->createCommand()->update('pdp_prgceldas',[
-										'activa' => $data['maquina'],
-										'razon' => $data['prioridad'],
-										], 	[
-										'id_maquina' => $c['idmaq'],
-										'semana' => $data['semana']
-										]
-									)->execute();
-								// )->getRawSql();
-								// print_r($result);
+				
+				if (isset ($data['activa']) && isset ($data['razon'])){
+						$result =$command->createCommand()->update('pdp_prgceldas',[
+												'activa' => $data['activa'],
+												'razon' => $data['razon'],
+												], 	[
+												'id_maquina' => $c['idmaq'],
+												'semana' => $data['semana']
+												]
+											// )->execute();
+										)->getRawSql();
+										print_r($result);
+				}
+				
 			}
 	}
 	

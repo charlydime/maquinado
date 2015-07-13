@@ -3,14 +3,14 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\maquinado\pdpmaquina;
-use yii\data\ActiveDataProvider;
+use frontend\models\maquinado\pdpMaquina;
+use frontend\models\maquinaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MaquinaController implements the CRUD actions for pdpmaquina model.
+ * MaquinaController implements the CRUD actions for pdpMaquina model.
  */
 class MaquinaController extends Controller
 {
@@ -27,22 +27,22 @@ class MaquinaController extends Controller
     }
 
     /**
-     * Lists all pdpmaquina models.
+     * Lists all pdpMaquina models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => pdpmaquina::find(),
-        ]);
+        $searchModel = new maquinaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single pdpmaquina model.
+     * Displays a single pdpMaquina model.
      * @param integer $id
      * @return mixed
      */
@@ -54,13 +54,13 @@ class MaquinaController extends Controller
     }
 
     /**
-     * Creates a new pdpmaquina model.
+     * Creates a new pdpMaquina model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new pdpmaquina();
+        $model = new pdpMaquina();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,7 +72,7 @@ class MaquinaController extends Controller
     }
 
     /**
-     * Updates an existing pdpmaquina model.
+     * Updates an existing pdpMaquina model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +91,7 @@ class MaquinaController extends Controller
     }
 
     /**
-     * Deletes an existing pdpmaquina model.
+     * Deletes an existing pdpMaquina model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,15 +104,15 @@ class MaquinaController extends Controller
     }
 
     /**
-     * Finds the pdpmaquina model based on its primary key value.
+     * Finds the pdpMaquina model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return pdpmaquina the loaded model
+     * @return pdpMaquina the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = pdpmaquina::findOne($id)) !== null) {
+        if (($model = pdpMaquina::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

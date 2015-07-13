@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\maquinado\pdpmaquina */
+/* @var $model frontend\models\maquinado\pdpMaquina */
 
-$this->title = 'Create Pdpmaquina';
-$this->params['breadcrumbs'][] = ['label' => 'Pdpmaquinas', 'url' => ['index']];
+$this->title = 'Create Pdp Maquina';
+$this->params['breadcrumbs'][] = ['label' => 'Pdp Maquinas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="pdpmaquina-create">
+<div class="pdp-maquina-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

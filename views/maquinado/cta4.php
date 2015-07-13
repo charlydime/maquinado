@@ -197,7 +197,7 @@ data-options="
 <style>
 	.hbox{
 			display: inline-block;
-			width:19%;
+			width:19.8%;
 			height:100%;
 			vertical-align: text-top;
 			
@@ -633,7 +633,7 @@ data-options="
 					$(this.grid).datagrid('getPanel').bind('keydown', function(e) { instancia.teclas(e);} );
 					
 					this.editIndex2 = inx;
-					this.llena();
+					//this.llena();
 				
 				} else {
 					$(this.grid).datagrid('selectRow', this.editIndex2);

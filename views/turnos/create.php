@@ -1,0 +1,21 @@
+<?php
+
+use yii\helpers\Html;
+
+
+/* @var $this yii\web\View */
+/* @var $model frontend\models\maquinado\Turnos */
+
+$this->title = 'Create Turnos';
+$this->params['breadcrumbs'][] = ['label' => 'Turnos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="turnos-create">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
+
+</div>

@@ -82,8 +82,11 @@ class MaquinadoController extends Controller
         if ( isset( $_POST['semana']) and $_POST['semana'] = ''){
 		   $fecha=$_POST['semana'];
 		} ;
+		
+		$page=$_REQUEST['page'];
+		 $row=$_REQUEST['rows'];
         
-		$cat = $model->GetInfo($fecha);
+		$cat = $model->GetInfo($fecha,$page,$row);
                     
         return json_encode($cat, 0);
         
@@ -187,6 +190,10 @@ class MaquinadoController extends Controller
 					// $datos_a_grabar['minutos']= $model->p1tiempos($data->{'producto'},$data->{'maquina1'},$data->{'opx'});
 					$datos_a_grabar['minutos']= $data->{'Minutos'};
 					$datos_a_grabar['maquina']= $data->{'maquina1'};
+					if (isset($data->{'otramaq'}))
+						$datos_a_grabar['otramaq']= $data->{'otramaq'};
+					if (isset($data->{'oldmaq'}))
+						$datos_a_grabar['oldmaq']= $data->{'oldmaq'};
 					
 					$datos_a_grabar['aio']= 	$semana[0] ;
 					$datos_a_grabar['semEnmtrega']= $data->{'sem_actual'};
@@ -379,8 +386,11 @@ class MaquinadoController extends Controller
 		   // $semana=$_POST['semana'];
 		// } ;
 		
+		 $page=$_REQUEST['page'];
+		 $row=$_REQUEST['rows'];
+		
 		$model = new MaquinadoCTA4;
-			$prog = $model->GetInfo($semana);
+				$prog = $model->GetInfo($semana,$page,$row);
 			return json_encode($prog, 0);
    
     }

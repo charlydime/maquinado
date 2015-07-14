@@ -67,7 +67,7 @@ data-options="
 				
 				
 				collapsible:true,
-
+				pagination:true,
 				rownumbers:true,
 								
 				view:groupview,
@@ -510,6 +510,7 @@ data-options="
 							obj:{
 									producto: producto,
 									maquina1: Maquina,
+									oldmaq: Maquina,
 									diario:   diario,
 									Minutos:  minutos,
 									opx:      opx,
@@ -518,7 +519,8 @@ data-options="
 									s1: 'n',
 									s2: 'n',
 									s3: 'n',
-									s4: 'n'
+									s4: 'n',
+									otramaq:0
 									
 							}
 						};

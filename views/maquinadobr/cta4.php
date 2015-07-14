@@ -503,11 +503,13 @@ data-options="
 							var opx = $(this.grid).datagrid('getRows')[this.editIndex2]['op'] ;
 							var prioridad = $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] ? $(this.grid).datagrid('getRows')[this.editIndex2]['prio'] : 0; 
 							var sem_actual =  "<?php echo $semana ?>";
+							var otramaq = 0;
 						
 						var data2 = {
 							obj:{
 									producto: producto,
 									maquina1: Maquina,
+									oldmaq: Maquina,
 									diario:   diario,
 									Minutos:  minutos,
 									opx:      opx,
@@ -516,7 +518,8 @@ data-options="
 									s1: 'n',
 									s2: 'n',
 									s3: 'n',
-									s4: 'n'
+									s4: 'n',
+									otramaq:0
 									
 							}
 						};

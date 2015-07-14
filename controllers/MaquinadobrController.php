@@ -172,9 +172,9 @@ class MaquinadobrController extends Controller
 			 // ');
 			// echo "cta1------------------------";print_r ($datos);
 			 //programar busqueda cuantas operaciones tiene la pieza
-			 
+			 // echo"DOATOS__________";print_r($datos);exit;
 			foreach ($datos as $data){ 
-			echo "for------------------------";print_r ($data);
+			echo "for---ctap1---------------------";print_r ($data);
 					if ($data->{'maquina1'} == '') exit;
 			 
 					//$maquina=explode('-',$data->{'maquina1'});

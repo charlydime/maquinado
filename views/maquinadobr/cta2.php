@@ -545,22 +545,22 @@ data-options="
 				
 		
 				var data = []; 
-				var pro = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['producto'];
-				var pro_next = pro;
+				// var pro = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['producto'];
+				// var pro_next = pro;
 				
-				while(pro == pro_next){
+				// while(pro == pro_next){
 						
-						if(row.opx > 10 && mismaMaq(row) ){
-							s1 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] ;
-							s2 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] ;
-							s3 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] ;
-							s4 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] ;
-						}else{			
+						// if(row.opx > 10 && mismaMaq(row) ){
+							// s1 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] ;
+							// s2 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] ;
+							// s3 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] ;
+							// s4 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] ;
+						// }else{			
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] = s1;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] = s2;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] = s3;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] = s4;
-						}
+						// }
 					 // var tmp = $('#semana1').val().split('W');
 					 // var tmp1 = parseInt(tmp[1]) + i;
 					 // var sem = '';  
@@ -572,9 +572,9 @@ data-options="
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['oldmaq'] = oldmaq; // diferencia entre alctualizacion desde mensual 
 					data.push ( $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i] );
 
-					i++;
-					pro_next = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['producto'];
-				}
+					// i++;
+					// pro_next = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['producto'];
+				// } //while auto llenado de operaciones de una parte 
 				
 				$('#<?php echo $id ?>').datagrid('refreshRow',editIndex);
 				
@@ -653,7 +653,7 @@ data-options="
 							function(data,status){
 								if(status == 'success' ){
 									console.log(row);
-									$var = $(grid).datagrid('getChanges');
+									//$var = $(grid).datagrid('getChanges');
 								}else{
 									reject('#$id');
 									alert('Error al guardar los datos');

@@ -111,9 +111,9 @@ $this->registerJS("
 										
 										view:groupview,
 										remoteSort:false,
-										
+										pagination:true,
 										collapsible:true,
-
+										
 										rownumbers:true,
 										
 										view:groupview,
@@ -137,6 +137,7 @@ $this->registerJS("
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(1)">pieza</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(2)">maquina</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="dosmaq()">En dos maq</a>
 								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
@@ -441,6 +442,46 @@ data-options="
 			return true;
 		}
 		
+			function dosmaq(){
+			 var sel = $('#<?php echo $id ?>').datagrid('getSelected');
+			 var inx=  $('#<?php echo $id ?>').datagrid('getRowIndex',sel);
+				
+				 // var maquina = $('#<?php echo $id ?>').datagrid('getRows')[inx]['maquina1'];
+				 var maquina = $('#<?php echo $id ?>').datagrid('getEditor', {index:inx,field:'maquina1'});
+				var	maqs = maquina.target.combobox('getData');
+				
+				if(maqs.length > 1 ){
+						for(i= 0; i<= maqs.length; i++){
+							var m= maqs[i].Maquina;
+							
+							 if  (m != sel.maquina1){  sel.maquina1 = m ; break;	 }
+						}
+				}else{
+					alert("La pieza solo se trabaja en una Maquina"); exit;
+				}
+				
+				sel.sem_actual = $('#semana1').val();
+				sel.diario =  'n'; // diferencia entre alctualizacion desde mensual 
+				sel.otramaq = 1 ;
+				var data = [];
+				data.push(sel);
+				
+				
+				$.post('ctap1',
+						{Data: JSON.stringify(data)},
+						function(data,status){
+							if(status == 'success' ){
+								reloadcta3(false);
+								console.log(data);
+							//	$var = $(grid).datagrid('getChanges');
+							}else{
+								reject('#$id');
+								alert('Error al guardar los datos');
+							}
+						}
+					);
+				
+		}
 		function guarda(){
 			
 			var maq1 = null;
@@ -489,6 +530,7 @@ data-options="
 					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] >  0 && s3 == '' ) s3 = "0";
 					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] >  0 && s4 == '' ) s4 = "0";
 				 
+				var oldmaq = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['maquina1'];
 				 
 				 prioridad = $(ed_prio.target).numberbox('getValue');
 				 $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['Hold'] = hold;
@@ -502,22 +544,22 @@ data-options="
 				
 		
 				var data = []; 
-				var pro = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['producto'];
-				var pro_next = pro;
+				// var pro = $('#<?php echo $id ?>').datagrid('getRows')[editIndex]['producto'];
+				// var pro_next = pro;
 				
-				while(pro == pro_next){
+				// while(pro == pro_next){
 						
-						if(row.opx > 10 && mismaMaq(row) ){
-							s1 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] ;
-							s2 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] ;
-							s3 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] ;
-							s4 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] ;
-						}else{			
+						// if(row.opx > 10 && mismaMaq(row) ){
+							// s1 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] ;
+							// s2 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] ;
+							// s3 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] ;
+							// s4 = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] ;
+						// }else{			
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s1'] = s1;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s2'] = s2;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s3'] = s3;
 							 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['s4'] = s4;
-						}
+						// }
 					 // var tmp = $('#semana1').val().split('W');
 					 // var tmp1 = parseInt(tmp[1]) + i;
 					 // var sem = '';  
@@ -525,11 +567,13 @@ data-options="
 					
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['sem_actual'] = sem_actual;
 					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['diario'] = 'n'; // diferencia entre alctualizacion desde mensual 
+					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['otramaq'] = 0; // diferencia entre alctualizacion desde mensual 
+					 $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['oldmaq'] = oldmaq; // diferencia entre alctualizacion desde mensual
 					data.push ( $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i] );
 
-					i++;
-					pro_next = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['producto'];
-				}
+					// i++;
+					// pro_next = $('#<?php echo $id ?>').datagrid('getRows')[editIndex+i]['producto'];
+				// } //while auto llenado de operaciones de una parte 
 				
 				$('#<?php echo $id ?>').datagrid('refreshRow',editIndex);
 				
@@ -608,7 +652,7 @@ data-options="
 							function(data,status){
 								if(status == 'success' ){
 									console.log(row);
-									$var = $(grid).datagrid('getChanges');
+									//$var = $(grid).datagrid('getChanges');
 								}else{
 									reject('#$id');
 									alert('Error al guardar los datos');

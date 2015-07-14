@@ -1507,6 +1507,29 @@ public function  GetInfo_pza_op($semana){
 		// return $result[0]['min'];
    
    // }
+   
+   public function exist_hold($prod){
+	   	$command = \Yii::$app->db_mysql;
+		
+		$sql = "
+					
+					Select  count(IDENTIFICACION) as min 
+					from maq_piezas 
+					where IDENTIFICACION ='$prod' 
+					
+					";
+		
+		$result =$command->createCommand($sql)->queryAll();
+		$res =$command->createCommand($sql)->getRawSql();
+					print_r($res);
+					print_r($result);
+					
+		
+		return $result[0]['min'] >  0 ? true : false;
+	   
+	   
+   }
+   
    public function hold($data){
    
 	$command = \Yii::$app->db_mysql;
@@ -1514,7 +1537,9 @@ public function  GetInfo_pza_op($semana){
 	$hold = $data->{'Hold'};
 	$prod =  $data->{'producto'};
 	
-
+	//echo "HOLD $prod"; exit; 
+	
+	if ( $this->exist_hold($prod) ){
 	
 	 $result =$command->createCommand()->update('maq_piezas',[
 												'Hold' => $hold
@@ -1522,6 +1547,20 @@ public function  GetInfo_pza_op($semana){
 												'IDENTIFICACION' => $prod
 												]
 								)->execute();
+								// )->getRawSql();
+								// echo $result;
+	}else{
+		$result =$command->createCommand()->insert('maq_piezas',[
+												'Hold' => 1,
+												'Activo' => 1,
+												'TP' => 'BR',
+												'IDENTIFICACION' => $prod
+												]
+								)->execute();
+								// )->getRawSql();
+								// echo $result;
+		
+	}
 	
 	
 	

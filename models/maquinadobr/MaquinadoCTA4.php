@@ -80,7 +80,7 @@ Class MaquinadoCTA4 extends Model {
 				vie.cantidad as vie_prg,
 				vie.min as vie_min,
 				vie.setup as vie_set,
-				ETE_vie.hechas as hechasvie,
+			ETE_vie.hechas as hechasvie,
 				ETE_vie.rechazadas as rechazadasvie,
 				
 				sab.cantidad as sab_prg,
@@ -743,6 +743,21 @@ Class MaquinadoCTA4 extends Model {
 				
 				$totales[0]['Minutos'] = $tm;
 				
+				$resumen = $this->GetInfo_resumen($semana);
+				$tlm = $resumen['lun_min'];
+				$tlp = $resumen['lun_prg'];
+				$tmm = $resumen['mar_min'];
+				$tmp = $resumen['mar_prg'];
+				$tim = $resumen['mie_min'];
+				$tip = $resumen['mie_prg'];
+				$tjm = $resumen['jue_min'];
+				$tjp = $resumen['jue_prg'];
+				$tvm = $resumen['vie_min'];
+				$tvp = $resumen['vie_prg'];
+				$tsm = $resumen['sab_min'];
+				$tsp = $resumen['sab_prg'];
+				$tdm = $resumen['dom_min'];
+				$tdp = $resumen['dom_prg'];
 
 				$totales[0]['lun_min'] = $tlm == 0 ? '' : number_format($tlm) ;
 
@@ -1250,6 +1265,461 @@ Class MaquinadoCTA4 extends Model {
 			)->queryAll();
 			
 			return $result[0]['cuenta']; 
+			
+			
+		}
+		
+		public function GetInfo_resumen($semana) {
+          $tmp = explode('-',$semana);
+		  $tmp_s = substr($tmp[1],1);
+		$se1 =  $tmp_s +0;
+		$se2 =  $tmp_s +1;
+		$year = date ("Y");
+		 
+		 $lun = $this->semana2fecha($tmp[0],$se1,'lun');
+		 $mar = $this->semana2fecha($tmp[0],$se1,'mar');
+		 $mie = $this->semana2fecha($tmp[0],$se1,'mie');
+		 $jue = $this->semana2fecha($tmp[0],$se1,'jue');
+		 $vie = $this->semana2fecha($tmp[0],$se1,'vie');
+		 $sab = $this->semana2fecha($tmp[0],$se1,'sab');
+		 $dom = $this->semana2fecha($tmp[0],$se1,'dom');
+		
+        $command = \Yii::$app->db_mysql;
+        $result =$command->createCommand("
+
+ 				select 
+				sum(isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) )as PLB,
+				sum(isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) )as PMB,
+				--sum(isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) )as CTB,
+				sum(almctb.existencia )as CTB,
+				sum(almptb.existencia )as PTB,
+				
+				sum(almgpc.existencia )as GPC,
+				sum(almgpcb.existencia )as GPCB,
+				sum(almgpl.existencia )as GPL,
+				sum(almgpm.existencia )as GPM,
+				sum(almgpp.existencia )as GPP,
+				sum(almgpt.existencia )as GPT,
+				
+				
+				sum(lun.cantidad )as lun_prg,
+				sum(lun.min )as lun_min,
+				
+				sum(ETE_lun.hechas) as hechaslun,
+				sum(ETE_lun.rechazadas) as rechazadaslun,
+				
+				sum(mar.cantidad) as mar_prg,
+				sum(mar.min) as mar_min,
+				
+				sum(ETE_mar.hechas) as hechasmar,
+				sum(ETE_mar.rechazadas) as rechazadasmar,
+				
+				sum(mie.cantidad) as mie_prg,
+				sum(mie.min )as mie_min,
+				
+				sum(ETE_mie.hechas) as hechasmie,
+				sum(ETE_mie.rechazadas) as rechazadasmie,
+				
+				sum(jue.cantidad ) as jue_prg,
+				sum(jue.min ) as jue_min,
+				
+				sum(ETE_jue.hechas ) as hechasjue,
+				sum(ETE_jue.rechazadas ) as rechazadasjue,
+				
+				sum(vie.cantidad ) as vie_prg,
+				sum(vie.min ) as vie_min,
+				
+				sum(ETE_vie.hechas ) as hechasvie,
+				sum(ETE_vie.rechazadas ) as rechazadasvie,
+				
+				sum(sab.cantidad ) as sab_prg,
+				sum(sab.min ) as sab_min,
+				
+				sum(ETE_sab.hechas ) as hechassab,
+				sum(ETE_sab.rechazadas) as rechazadassab,
+			
+				sum(dom.cantidad) as dom_prg,
+				sum(dom.min ) as dom_min,
+				
+				sum(ETE_dom.hechas) as hechasdom,
+				sum(ETE_dom.rechazadas) as rechazadasdom
+				
+				
+				from pdp_ctb 
+				
+				LEFT JOIN  producto as prod_dux on prod_dux.IDENTIFICACION = pdp_ctb.Pieza
+				
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+
+						
+				) as dux1 on pdp_ctb.Pieza = dux1.producto 
+				
+				LEFT JOIN(
+						SELECT 
+						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM ALMPROD
+						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						WHERE
+						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
+						-- and almprod.ALMACEN = 'CTB'
+						GROUP BY ALMPROD.producto
+
+						
+				) as dux2 on pdp_ctb.Pieza = dux2.producto 
+
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB'
+					GROUP BY almprod.producto
+				) as almctb on pdp_ctb.Pieza = almctb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY almprod.producto
+				) as almctb2 on pdp_ctb.Pieza = almctb2.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PTB'
+					GROUP BY almprod.producto
+				) as almptb on pdp_ctb.Pieza = almptb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB'
+					GROUP BY almprod.producto
+				) as almplB on pdp_ctb.Pieza = almplb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PLB2'
+					GROUP BY almprod.producto
+				) as almplB2 on pdp_ctb.Pieza = almplb2.producto
+	
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB'
+					GROUP BY almprod.producto
+				) as almpmb on pdp_ctb.Pieza = almpmb.producto
+
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'PMB2'
+					GROUP BY almprod.producto
+				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPC'
+					GROUP BY almprod.producto
+				) as almgpc on pdp_ctb.Pieza = almgpc.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPCB'
+					GROUP BY almprod.producto
+				) as almgpcb on pdp_ctb.Pieza = almgpcb.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPL'
+					GROUP BY almprod.producto
+				) as almgpl on pdp_ctb.Pieza = almgpl.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPM'
+					GROUP BY almprod.producto
+				) as almgpm on pdp_ctb.Pieza = almgpm.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPP'
+					GROUP BY almprod.producto
+				) as almgpp on pdp_ctb.Pieza = almgpp.producto
+				
+				LEFT JOIN(
+					SELECT   
+						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
+					FROM ALMPROD
+					WHERE 
+					ALMPROD.ALMACEN =   'GPT'
+					GROUP BY almprod.producto
+				) as almgpt on pdp_ctb.Pieza = almgpt.producto
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as lun on pdp_ctb.Pieza = lun.pieza and pdp_ctb.op = lun.op and lun.dia = '$lun' and lun.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as mar on pdp_ctb.Pieza = mar.pieza and pdp_ctb.op = mar.op and mar.dia = '$mar' and mar.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as mie on pdp_ctb.Pieza = mie.pieza and pdp_ctb.op = mie.op and mie.dia = '$mie' and mie.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as jue on pdp_ctb.Pieza = jue.pieza and pdp_ctb.op = jue.op and jue.dia = '$jue' and jue.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as vie on pdp_ctb.Pieza = vie.pieza and pdp_ctb.op = vie.op and vie.dia = '$vie' and vie.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as sab on pdp_ctb.Pieza = sab.pieza and pdp_ctb.op = sab.op and sab.dia = '$sab' and sab.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN(
+					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
+				)as dom on pdp_ctb.Pieza = dom.pieza and pdp_ctb.op = dom.op and dom.dia = '$dom' and dom.maquina = pdp_ctb.maquina 
+				
+				LEFT JOIN 
+				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_ctb.Maquina and  mp.OP = pdp_ctb.OP
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$lun' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				) AS ETE_lun on 
+					ETE_lun.producto = pdp_ctb.Pieza and 
+					ETE_lun.OP =	pdp_ctb.op
+					and ETE_lun.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$mar' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				
+				) AS ETE_mar on 
+					ETE_mar.producto = pdp_ctb.Pieza and 
+					ETE_mar.OP =	pdp_ctb.op
+					and ETE_mar.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$mie' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				) AS ETE_mie on 
+					ETE_mie.producto = pdp_ctb.Pieza and 
+					ETE_mie.OP =	pdp_ctb.op
+
+					and ETE_mie.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$jue' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				) AS ETE_jue on 
+					ETE_jue.producto = pdp_ctb.Pieza and 
+					ETE_jue.OP =	pdp_ctb.op
+					and ETE_jue.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$vie' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				) AS ETE_vie on 
+					ETE_vie.producto = pdp_ctb.Pieza and 
+					ETE_vie.OP =	pdp_ctb.op
+					and ETE_vie.clave = pdp_ctb.Maquina
+				
+				
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$sab' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				
+				) AS ETE_sab on 
+					ETE_sab.producto = pdp_ctb.Pieza and 
+					ETE_sab.OP =	pdp_ctb.op
+					and ETE_sab.clave = pdp_ctb.Maquina
+				
+				LEFT JOIN(
+				
+					select 
+
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					fecha
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha =	 cast ( '$dom' as datetime2)
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+				
+				) AS ETE_dom on 
+					ETE_dom.producto = pdp_ctb.Pieza and 
+					ETE_dom.OP =	pdp_ctb.op
+					and ETE_dom.clave = pdp_ctb.Maquina
+				
+				where semana = $se1
+				
+				
+				
+
+			"
+			)->queryAll();
+			
+			return $result[0]; 
 			
 			
 		}

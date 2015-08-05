@@ -405,6 +405,38 @@ class EteController extends Controller
 		
 	}
 	
+	//reporte ETO mensual acreos / bronce
+		public function actionEtom(){
+		
+		if ( isset ($_REQUEST["fecha"]) ){
+			$fecha = $_REQUEST["fecha"] ;
+		}else{
+			  $month = date('m');
+			  $year = date('Y');
+			  $fecha = date('Ymd', mktime(0,0,0, $month, 1, $year));
+		}
+		
+		if ( isset ($_REQUEST["fecha2"]) ){
+			$fecha2 = $_REQUEST["fecha2"] ;
+		}else{
+			 $month = date('m');
+			 $year = date('Y');
+             $day = date("d", mktime(0,0,0, $month+1, 0, $year));
+			$fecha2 = date('Ymd', mktime(0,0,0, $month, $day, $year));
+		}
+		
+		if ( isset ($_REQUEST["area"]) ){
+			$area = $_REQUEST["area"] ;
+		}else{
+			$area = "MAA";
+		}
+		
+		return $this->render('etom', [ 'fecha' => $fecha , 'fecha2' => $fecha2  , 'area' => $area]);
+		
+	
+		
+	}
+	
 	//reporte ETO acreos / bronce
 		public function actionResumenturnodiarioac(){
 			

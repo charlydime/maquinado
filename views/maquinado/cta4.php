@@ -69,7 +69,8 @@ data-options="
 				collapsible:true,
 				pagination:true,
 				rownumbers:true,
-								
+				pageSize:50,
+				pageList: [10,20,50,300],				
 				view:groupview,
 				remoteSort:false,
 				multiSort:true,
@@ -550,7 +551,7 @@ data-options="
 							{Data: JSON.stringify(data2),sem_actual: <?php echo $sem1 ?>},
 							function(data,status){
 								if(status == 'success' ){
-									$(grid).datagrid('load');
+									$(grid).datagrid('reload');
 									
 									console.log(data);
 									$var = $(grid).datagrid('getChanges');
@@ -563,7 +564,8 @@ data-options="
 						
 						alert("Actualizado programacion mensual");
 					}else{
-						this.recargaSigGrid(grid);
+						// this.recargaSigGrid(grid);
+						$(grid).datagrid('reload');
 						this.editIndex2 = undefined;
 						$(this.grid).datagrid('endEdit', this.editIndex2);
 						this.deshacerfila2();
@@ -576,7 +578,7 @@ data-options="
 						{Data: JSON.stringify(data),semana: <?php echo $sem1 ?>},
 						function(data,status){
 							if(status == 'success' ){
-								$(grid).datagrid('load');
+								$(grid).datagrid('reload');
 								
 								console.log(data);
 								$var = $(grid).datagrid('getChanges');
@@ -586,7 +588,8 @@ data-options="
 							}
 						}
 					);
-				this.recargaSigGrid(grid);
+				//this.recargaSigGrid(grid);
+				$(grid).datagrid('reload');
 				this.editIndex2 = undefined;
 				$(this.grid).datagrid('endEdit', this.editIndex2);
 				this.deshacerfila2();

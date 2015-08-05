@@ -79,10 +79,14 @@ Class MaquinadoMaqOp extends Model {
 	//borra maquina operador
 	public function DelMaqOp($data){
 	print_r($data);exit;
+	$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u == 20){
 			$result =$command->createCommand()->delete('pdp_maquina_turnos',[
 													'maquina'  =>  $data['maquina'], 
 													'operador' =>  $data['operador'] 
 											])->execute();
+			}
 	
 	}
 	

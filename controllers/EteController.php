@@ -229,13 +229,13 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini  = date('Y-m-d');
+			$ini  = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin = date('Y-m-d');
+			$fin = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -256,13 +256,13 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini =  date('Y-m-d');
+			$ini =  date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin =  date('Y-m-d');
+			$fin =  date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -283,13 +283,13 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini = date('Y-m-d');
+			$ini = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin = date('Y-m-d');
+			$fin = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -303,19 +303,19 @@ class EteController extends Controller
 	
 		
 	}
-	//reporte de lo programado en la semana en acero 
-	public function actionReporteprogramado(){
+	//reporte de capturado tm bronce /aceros
+	public function actionReportecapturatm(){
 		
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini = "2015-05-25";
+			$ini = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin = "2015-05-29";
+			$fin = date('Y-m-d',strtotime('-1 day'));
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -324,7 +324,33 @@ class EteController extends Controller
 			$area = "AC";
 		}
 		
-		return $this->render('reporteprogramado', []);
+		return $this->render('reportecapturatm', [ 'ini' => $ini , 'fin' => $fin  , 'area' => $area]);
+		
+	
+		
+	}
+	//reporte de lo programado en la semana en acero 
+	public function actionReporteprogramado(){
+		
+		if ( isset ($_REQUEST["ini"]) ){
+			$ini = $_REQUEST["ini"] ;
+		}else{
+			$ini = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["fin"]) ){
+			$fin = $_REQUEST["fin"] ;
+		}else{
+			$fin = date('Y-m-d');
+		}
+		
+		if ( isset ($_REQUEST["grupo"]) ){
+			$grupo = $_REQUEST["grupo"] ;
+		}else{
+			$grupo = "nomina_1";
+		}
+		
+		return $this->render('reporteprogramado', [ 'ini' => $ini , 'fin' => $fin  , 'grupo' => $grupo]);
 		
 	}
 	//reporte de lo programado en la semana en bronce 
@@ -333,22 +359,22 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["ini"]) ){
 			$ini = $_REQUEST["ini"] ;
 		}else{
-			$ini = "2015-05-25";
+			$ini = date('Y-m-d');
 		}
 		
 		if ( isset ($_REQUEST["fin"]) ){
 			$fin = $_REQUEST["fin"] ;
 		}else{
-			$fin = "2015-05-29";
+			$fin = date('Y-m-d');
 		}
 		
-		if ( isset ($_REQUEST["area"]) ){
-			$area = $_REQUEST["area"] ;
+		if ( isset ($_REQUEST["grupo"]) ){
+			$grupo = $_REQUEST["grupo"] ;
 		}else{
-			$area = "BR";
+			$grupo = "nomina_1";
 		}
 		
-		return $this->render('reporteprogramado2', []);
+		return $this->render('reporteprogramado2', [ 'ini' => $ini , 'fin' => $fin  , 'grupo' => $grupo]);
 		
 	}
 	
@@ -358,13 +384,13 @@ class EteController extends Controller
 		if ( isset ($_REQUEST["fecha"]) ){
 			$fecha = $_REQUEST["fecha"] ;
 		}else{
-			$fecha = date('Y-m-d');
+			$fecha = date('Ymd');
 		}
 		
 		if ( isset ($_REQUEST["fecha2"]) ){
 			$fecha2 = $_REQUEST["fecha2"] ;
 		}else{
-			$fecha2 = date('Y-m-d');
+			$fecha2 = date('Ymd');
 		}
 		
 		if ( isset ($_REQUEST["area"]) ){
@@ -381,16 +407,24 @@ class EteController extends Controller
 	
 	//reporte ETO acreos / bronce
 		public function actionResumenturnodiarioac(){
+			
+			$model = new Calculo;
 		
-		if ( isset ($_REQUEST["FECHA"]) ){
-			$fecha = $_REQUEST["FECHA"] ;
+		if ( isset ($_REQUEST["ini"]) ){
+			$fecha = $_REQUEST["ini"] ;
+			// semana a fecha
+
 		}else{
-			$fecha = date('Y-m-d');
+			$fecha = date('Ymd');
+			// $sem = date('W');
+			// $aio = date('Y');
+			// $semana=$aio.'-W'.$sem; 
 		}
 		
+		$fecha = $model->getLunes($fecha);
+		$semana= $model->getSemana($fecha);
 		
-		
-		return $this->render('resumenturnodiario', [ 'fecha' => $fecha ]);
+		return $this->render('resumenturnodiario', [ 'fecha' => $fecha,'semana' => $semana ]);
 		
 	
 		

@@ -134,6 +134,9 @@ Class MaquinadoPzaMaq extends Model {
 			// print_r($result);
 			
 		}else{
+			$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u == 20){
 			 $result =$command->createCommand()->update('pdp_maquina_pieza',[
 									'minutos' => $data['minutos'],
 									'minutos1maquinado' => $data['minutos1maquinado'], 
@@ -147,7 +150,7 @@ Class MaquinadoPzaMaq extends Model {
 									)->execute();
 								// )->getRawSql();
 								// print_r($result);
-			
+			}
 									
 		  }
 		
@@ -160,7 +163,9 @@ Class MaquinadoPzaMaq extends Model {
 		print_r($data);echo "borrando";
 		 $data = (array) $data;
 		
-		
+		$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u == 20){
 			
 		$result =$command->createCommand()->delete('pdp_maquina_pieza',[
 													'maquina'  =>  $data['maquina'], 
@@ -169,6 +174,7 @@ Class MaquinadoPzaMaq extends Model {
 											])->execute();
 											// ])->getRawSql();
 											// print_r($result);
+			}
 		
 	}
 

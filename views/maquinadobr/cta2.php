@@ -113,6 +113,8 @@ $this->registerJS("
 										remoteSort:false,
 										collapsible:true,
 										pagination:true,
+										pageSize:50,
+										pageList: [10,20,50,300],
 										rownumbers:true,
 										
 										view:groupview,
@@ -141,12 +143,17 @@ $this->registerJS("
 
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
+								
+								<span>producto:</span><input id="prod_search" style="line-height:26px;border:1px solid #ccc">
+								<span>maquina:</span><input id="maq_search" style="line-height:26px;border:1px solid #ccc">
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="buscar()">BUSCA</a>
+								
 						
 					</div>
 								
 								<thead>
 									<tr>
-										<th colspan ="6"></th>
+										<th colspan ="7"></th>
 										<th colspan ="2">Operacion</th>
 										<th colspan ="4">Embarques</th>
 										<th colspan ="4">Almacenes</th>
@@ -173,6 +180,7 @@ $this->registerJS("
 										<th data-options="field:'producto',width:100,sortable:true,hidden:0">Parte</th>
 										<th data-options="field:'descripcion',width:50,sortable:true,hidden:0">desc</th>
 										<th data-options="field:'prioridad',width:30,editor:'numberbox',sortable:true">prioridad</th>
+									
 										<th data-options="field:'maquina1',width:100,sortable:true,
 													
 													styler:formatmaq,
@@ -189,6 +197,7 @@ $this->registerJS("
 													}
 										
 										">Maquina</th>
+										<th data-options="field:'decripcionmaq',width:50,sortable:true">desc. maq</th>
 										
 									
 										<th data-options="field:'opx',width:50, styler:formateo_celda_faltantes,sortable:true">num</th>
@@ -1025,6 +1034,23 @@ function vistas(view){
                 }
         });
 			
+		}
+		
+		function buscar(){
+			
+				var semana = $('#semana1').val();
+				var maq_search = $('#maq_search').val();
+				var prod_search = $('#prod_search').val();
+			
+				$('#<?php echo $id ?>').datagrid('load',{
+					semana : semana,
+					maq_search : maq_search,
+					prod_search : prod_search
+					// semana : $('#semana1').val(),
+					// maq_search : $('#maq_search').val(),
+					// prod_search : $('#prod_search').val()
+				});
+				// $('#<?php echo $id ?>').datagrid('reload');
 		}
 		
 		function getCelName(cel){

@@ -85,8 +85,12 @@ class MaquinadoController extends Controller
 		
 		$page=$_REQUEST['page'];
 		 $row=$_REQUEST['rows'];
+		 $maq_search= isset ($_REQUEST['maq_search']) ? $_REQUEST['maq_search'] : null;
+		 $prod_search= isset ($_REQUEST['prod_search']) ? $_REQUEST['prod_search'] : null;
+
+		 // print_r($_REQUEST);exit;
         
-		$cat = $model->GetInfo($fecha,$page,$row);
+		 $cat = $model->GetInfo($fecha,$page,$row,$maq_search,$prod_search);
                     
         return json_encode($cat, 0);
         

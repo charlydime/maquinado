@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Model;
 
 Class MaquinadoCTA4 extends Model {
+	
 
     public function GetInfo($semana,$page,$row) {
           $tmp = explode('-',$semana);
@@ -32,120 +33,83 @@ Class MaquinadoCTA4 extends Model {
 				pdp_ctb.Prioridad,
 				pdp_ctb.Cantidad,
 				pdp_ctb.Maquina,
+				pdp_maquina.descripcion as descripcionmaq,
 				pdp_ctb.op,
 				mp.Minutos as minmaq,
 				round(480/ nullif(pdp_ctb.Minutos,0),0) as p_t,
 				pdp_ctb.Minutos * pdp_ctb.Cantidad as Minutos,
-				isnull(almplb.existencia,0)+isnull(almplb2.existencia,0) as PLB,
-				isnull(almpmb.existencia,0)+isnull(almpmb2.existencia,0) as PMB,
-				isnull(almctb.existencia,0)+isnull(almctb2.existencia,0) as CTB,
-				almctb.existencia as CTB,
-				almptb.existencia as PTB,
 				
-				almgpc.existencia as GPC,
-				almgpcb.existencia as GPCB,
-				almgpl.existencia as GPL,
-				almgpm.existencia as GPM,
-				almgpp.existencia as GPP,
-				almgpt.existencia as GPT,
+				isnull(alm.plb,0)+isnull(alm.plb2,0) as PLB,
+				isnull(alm.pmb,0)+isnull(alm.pmb2,0) as PMB,
+				isnull(alm.ctb,0)+isnull(alm.ctb2,0) as CTB,
+				alm.ctb as CTB,
+				alm.ptb as PTB,
+				
+
 				
 				dux1.cantidad as e0,
 				dux2.cantidad as e1,
 				mp.Minutos1Maquinado as setup,
 				
-				lun.cantidad as lun_prg,
-				lun.min as lun_min,
-				lun.setup as lun_set,
-				ETE_lun.hechas as hechaslun,
-				ETE_lun.rechazadas as rechazadaslun,
+				ctbm.[1] as lun_prg,
+				ctbmi.[1] as lun_min,
+				null as lun_set,
 				
-				mar.cantidad as mar_prg,
-				mar.min as mar_min,
-				mar.setup as mar_set,
-				ETE_mar.hechas as hechasmar,
-				ETE_mar.rechazadas as rechazadasmar,
 				
-				mie.cantidad as mie_prg,
-				mie.min as mie_min,
-				mie.setup as mie_set,
-				ETE_mie.hechas as hechasmie,
-				ETE_mie.rechazadas as rechazadasmie,
+				ctbm.[2] as mar_prg,
+				ctbmi.[2] as mar_min,
+				null as mar_set,
 				
-				jue.cantidad as jue_prg,
-				jue.min as jue_min,
-				jue.setup as jue_set,
-				ETE_jue.hechas as hechasjue,
-				ETE_jue.rechazadas as rechazadasjue,
 				
-				vie.cantidad as vie_prg,
-				vie.min as vie_min,
-				vie.setup as vie_set,
-			ETE_vie.hechas as hechasvie,
-				ETE_vie.rechazadas as rechazadasvie,
+				ctbm.[3] as mie_prg,
+				ctbmi.[3] as mie_min,
+				null as mie_set,
 				
-				sab.cantidad as sab_prg,
-				sab.min as sab_min,
-				sab.setup as sab_set,
-				ETE_sab.hechas as hechassab,
-				ETE_sab.rechazadas as rechazadassab,
+				
+				ctbm.[4] as jue_prg,
+				ctbmi.[4] as jue_min,
+				null as jue_set,
+				
+				
+				ctbm.[5] as vie_prg,
+				ctbmi.[5] as vie_min,
+				null as vie_set,
 			
-				dom.cantidad as dom_prg,
-				dom.min as dom_min,
-				dom.setup as dom_set,
-				ETE_dom.hechas as hechasdom,
-				ETE_dom.rechazadas as rechazadasdom,
 				
-				isnull(lun.cantidad,0)+
-				isnull(mar.cantidad,0)+
-				isnull(mie.cantidad,0)+
-				isnull(jue.cantidad,0)+
-				isnull(vie.cantidad,0)+
-				isnull(sab.cantidad,0)+
-				isnull(dom.cantidad,0)
+				ctbm.[6] as sab_prg,
+				ctbmi.[6] as sab_min,
+				null as sab_set,
+			
+			
+				ctbm.[7] as dom_prg,
+				ctbmi.[7] as dom_min,
+				null as dom_set,
+			
+				
+		null
 				
 				as sum,
 				
-				pdp_ctb.Cantidad  -
-				(
-				isnull(lun.cantidad,0)+
-				isnull(mar.cantidad,0)+
-				isnull(mie.cantidad,0)+
-				isnull(jue.cantidad,0)+
-				isnull(vie.cantidad,0)+
-				isnull(sab.cantidad,0)+
-				isnull(dom.cantidad,0)
-				)
+	null
 				as rest,
 				
-				isnull(lun.min,0)+
-				isnull(mar.min,0)+
-				isnull(mie.min,0)+
-				isnull(jue.min,0)+
-				isnull(vie.min,0)+
-				isnull(sab.min,0)+
-				isnull(dom.min,0)
+		null
 				
 				as sum_min,
 				
 				pdp_ctb.Minutos  * pdp_ctb.Cantidad -
 				(
-				isnull(lun.min,0)+
-				isnull(mar.min,0)+
-				isnull(mie.min,0)+
-				isnull(jue.min,0)+
-				isnull(vie.min,0)+
-				isnull(sab.min,0)+
-				isnull(dom.min,0)
+				isnull(ctbmi.[1],0)+
+				isnull(ctbmi.[2],0)+
+				isnull(ctbmi.[3],0)+
+				isnull(ctbmi.[4],0)+
+				isnull(ctbmi.[5],0)+
+				isnull(ctbmi.[6],0)+
+				isnull(ctbmi.[7],0)
 				)
 				as rest_min,
 				
-				isnull(lun.setup,0)+
-				isnull(mar.setup,0)+
-				isnull(mie.setup,0)+
-				isnull(jue.setup,0)+
-				isnull(vie.setup,0)+
-				isnull(sab.setup,0)+
-				isnull(dom.setup,0)
+				null
 				
 				as maq1
 				
@@ -155,370 +119,87 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux1 on pdp_ctb.Pieza = dux1.producto 
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux2 on pdp_ctb.Pieza = dux2.producto 
 
-
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'CTB'
-					GROUP BY almprod.producto
-				) as almctb on pdp_ctb.Pieza = almctb.producto
+				left join	pdp_maquina  on pdp_maquina.maquina =  pdp_ctb.Maquina
 				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'CTB2'
-					GROUP BY almprod.producto
-				) as almctb2 on pdp_ctb.Pieza = almctb2.producto
-
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'PTB'
-					GROUP BY almprod.producto
-				) as almptb on pdp_ctb.Pieza = almptb.producto
-
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'PLB'
-					GROUP BY almprod.producto
-				) as almplB on pdp_ctb.Pieza = almplb.producto
-
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'PLB2'
-					GROUP BY almprod.producto
-				) as almplB2 on pdp_ctb.Pieza = almplb2.producto
-	
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'PMB'
-					GROUP BY almprod.producto
-				) as almpmb on pdp_ctb.Pieza = almpmb.producto
-
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'PMB2'
-					GROUP BY almprod.producto
-				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPC'
-					GROUP BY almprod.producto
-				) as almgpc on pdp_ctb.Pieza = almgpc.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPCB'
-					GROUP BY almprod.producto
-				) as almgpcb on pdp_ctb.Pieza = almgpcb.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPL'
-					GROUP BY almprod.producto
-				) as almgpl on pdp_ctb.Pieza = almgpl.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPM'
-					GROUP BY almprod.producto
-				) as almgpm on pdp_ctb.Pieza = almgpm.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPP'
-					GROUP BY almprod.producto
-				) as almgpp on pdp_ctb.Pieza = almgpp.producto
-				
-				LEFT JOIN(
-					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
-					WHERE 
-					ALMPROD.ALMACEN =   'GPT'
-					GROUP BY almprod.producto
-				) as almgpt on pdp_ctb.Pieza = almgpt.producto
+				LEFT JOIN (
+					
+						select * from (
+							select PRODUCTO,ALMACEN,EXISTENCIA From DuxSinc.dbo.almprod where -- producto = '200208P' and 
+							almacen in
+							('CTB','CTB2','PTB','PLB','PLB2','PMB','PMB2','GPC','GPCB','GPL','GPM','GPP','GPT')
+						) as p
+						PIVOT
+						(
+							sum(existencia)
+								FOR almacen in ([CTB],[CTB2],[PTB],[PLB],[PLB2],[PMB],[PMB2],[GPC],[GPCB],[GPL],[GPM],[GPP],[GPT])
+						) as piv
+				) alm on pdp_ctb.Pieza  = alm.PRODUCTO
 				
 				LEFT JOIN(
 					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
 				)as lun on pdp_ctb.Pieza = lun.pieza and pdp_ctb.op = lun.op and lun.dia = '$lun' and lun.maquina = pdp_ctb.maquina 
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as mar on pdp_ctb.Pieza = mar.pieza and pdp_ctb.op = mar.op and mar.dia = '$mar' and mar.maquina = pdp_ctb.maquina 
+				select * from (
+						select cantidad,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN '20150803' and '20150808'
+						) as p
+						PIVOT
+						(
+						sum(cantidad)
+								FOR dia in([1],[2],[3],[4],[5],[6],[7])
+						) as piv
+				) as  ctbm 
+				on  pdp_ctb.Pieza = ctbm.pieza 
+				and pdp_ctb.op = ctbm.op 
+				and pdp_ctb.maquina = ctbm.maquina 
 				
 				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as mie on pdp_ctb.Pieza = mie.pieza and pdp_ctb.op = mie.op and mie.dia = '$mie' and mie.maquina = pdp_ctb.maquina 
-				
-				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as jue on pdp_ctb.Pieza = jue.pieza and pdp_ctb.op = jue.op and jue.dia = '$jue' and jue.maquina = pdp_ctb.maquina 
-				
-				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as vie on pdp_ctb.Pieza = vie.pieza and pdp_ctb.op = vie.op and vie.dia = '$vie' and vie.maquina = pdp_ctb.maquina 
-				
-				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as sab on pdp_ctb.Pieza = sab.pieza and pdp_ctb.op = sab.op and sab.dia = '$sab' and sab.maquina = pdp_ctb.maquina 
-				
-				LEFT JOIN(
-					select cantidad,min,operador,pieza,dia,op,setup,maquina from pdp_ctb_dia
-				)as dom on pdp_ctb.Pieza = dom.pieza and pdp_ctb.op = dom.op and dom.dia = '$dom' and dom.maquina = pdp_ctb.maquina 
+				select * from (
+						select min,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN '20150803' and '20150808'
+						) as p
+						PIVOT
+						(
+						sum(min)
+								FOR dia in([1],[2],[3],[4],[5],[6],[7])
+						) as piv
+				) as  ctbmi 
+				on  pdp_ctb.Pieza = ctbmi.pieza 
+				and pdp_ctb.op = ctbmi.op 
+				and pdp_ctb.maquina = ctbmi.maquina 
 				
 				LEFT JOIN 
 				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_ctb.Maquina and  mp.OP = pdp_ctb.OP
 				
-				LEFT JOIN(
 				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$lun' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				) AS ETE_lun on 
-					ETE_lun.producto = pdp_ctb.Pieza and 
-					ETE_lun.OP =	pdp_ctb.op
-					and ETE_lun.clave = pdp_ctb.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$mar' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				
-				) AS ETE_mar on 
-					ETE_mar.producto = pdp_ctb.Pieza and 
-					ETE_mar.OP =	pdp_ctb.op
-					and ETE_mar.clave = pdp_ctb.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$mie' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				) AS ETE_mie on 
-					ETE_mie.producto = pdp_ctb.Pieza and 
-					ETE_mie.OP =	pdp_ctb.op
-
-					and ETE_mie.clave = pdp_ctb.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$jue' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				) AS ETE_jue on 
-					ETE_jue.producto = pdp_ctb.Pieza and 
-					ETE_jue.OP =	pdp_ctb.op
-					and ETE_jue.clave = pdp_ctb.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$vie' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				) AS ETE_vie on 
-					ETE_vie.producto = pdp_ctb.Pieza and 
-					ETE_vie.OP =	pdp_ctb.op
-					and ETE_vie.clave = pdp_ctb.Maquina
-				
-				
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$sab' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				
-				) AS ETE_sab on 
-					ETE_sab.producto = pdp_ctb.Pieza and 
-					ETE_sab.OP =	pdp_ctb.op
-					and ETE_sab.clave = pdp_ctb.Maquina
-				
-				LEFT JOIN(
-				
-					select 
-
-					Producto,
-					[Num Operacion]   as OP, 
-					sum ([Piezas Maquinadas] )as hechas, 
-					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
-					maquina as clave,
-					fecha
-					 from  ete2.dbo.[Detalle de ETE] as DE 
-					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
-					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
-					where
-						fecha =	 cast ( '$dom' as datetime2)
-					GROUP BY
-						Producto,
-						fecha,
-						[Num Operacion],
-						maquina
-				
-				) AS ETE_dom on 
-					ETE_dom.producto = pdp_ctb.Pieza and 
-					ETE_dom.OP =	pdp_ctb.op
-					and ETE_dom.clave = pdp_ctb.Maquina
 				
 				where semana = $se1
 				
 				order by Maquina
-				offset $page rows fetch next $row rows only  
+				--offset $page rows fetch next $row rows only  
 
 			"
 			)->queryAll();
@@ -896,26 +577,26 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux1 on pdp_ctb.Pieza = dux1.producto 
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux2 on pdp_ctb.Pieza = dux2.producto 
@@ -923,119 +604,119 @@ Class MaquinadoCTA4 extends Model {
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'CTB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almctb on pdp_ctb.Pieza = almctb.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almctb2 on pdp_ctb.Pieza = almctb2.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA , DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PTB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PTB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almptb on pdp_ctb.Pieza = almptb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA , DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PLB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almplB on pdp_ctb.Pieza = almplb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PLB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almplB2 on pdp_ctb.Pieza = almplb2.producto
 	
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PMB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almpmb on pdp_ctb.Pieza = almpmb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PMB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPC'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPC'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpc on pdp_ctb.Pieza = almgpc.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPCB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPCB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpcb on pdp_ctb.Pieza = almgpcb.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPL'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPL'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpl on pdp_ctb.Pieza = almgpl.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPM'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPM'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpm on pdp_ctb.Pieza = almgpm.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPP'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPP'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpp on pdp_ctb.Pieza = almgpp.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPT'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPT'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpt on pdp_ctb.Pieza = almgpt.producto
 				
 				LEFT JOIN(
@@ -1351,26 +1032,26 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha ) = $se1 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux1 on pdp_ctb.Pieza = dux1.producto 
 				
 				LEFT JOIN(
 						SELECT 
-						 ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
-						FROM ALMPROD
-						LEFT JOIN PAROEN on ALMPROD.producto = PAROEN.PRODUCTO
+						 DuxSinc.dbo.ALMPROD.producto,min(PAROEN.doctoadicionalfecha) as fechaemb, max(CANTIDAD) as cantidad
+						FROM DuxSinc.dbo.ALMPROD
+						LEFT JOIN PAROEN on DuxSinc.dbo.ALMPROD.producto = PAROEN.PRODUCTO
 						WHERE
 						DATEpart( week,PAROEN.doctoadicionalfecha )= $se2 and  datepart( year,PAROEN.doctoadicionalfecha) = $year
-						-- and almprod.ALMACEN = 'CTB'
-						GROUP BY ALMPROD.producto
+						-- and DuxSinc.dbo.ALMPROD.ALMACEN = 'CTB'
+						GROUP BY DuxSinc.dbo.ALMPROD.producto
 
 						
 				) as dux2 on pdp_ctb.Pieza = dux2.producto 
@@ -1378,119 +1059,119 @@ Class MaquinadoCTA4 extends Model {
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'CTB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almctb on pdp_ctb.Pieza = almctb.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'CTB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'CTB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almctb2 on pdp_ctb.Pieza = almctb2.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA , DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PTB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PTB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almptb on pdp_ctb.Pieza = almptb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA , almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA , DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PLB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almplB on pdp_ctb.Pieza = almplb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PLB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PLB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almplB2 on pdp_ctb.Pieza = almplb2.producto
 	
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PMB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almpmb on pdp_ctb.Pieza = almpmb.producto
 
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'PMB2'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'PMB2'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almpmb2 on pdp_ctb.Pieza = almpmb2.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPC'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPC'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpc on pdp_ctb.Pieza = almgpc.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPCB'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPCB'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpcb on pdp_ctb.Pieza = almgpcb.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPL'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPL'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpl on pdp_ctb.Pieza = almgpl.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPM'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPM'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpm on pdp_ctb.Pieza = almgpm.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPP'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPP'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpp on pdp_ctb.Pieza = almgpp.producto
 				
 				LEFT JOIN(
 					SELECT   
-						sum(ALMPROD.EXISTENCIA) AS EXISTENCIA, almprod.producto
-					FROM ALMPROD
+						sum(DuxSinc.dbo.ALMPROD.EXISTENCIA) AS EXISTENCIA, DuxSinc.dbo.ALMPROD.producto
+					FROM DuxSinc.dbo.ALMPROD
 					WHERE 
-					ALMPROD.ALMACEN =   'GPT'
-					GROUP BY almprod.producto
+					DuxSinc.dbo.ALMPROD.ALMACEN =   'GPT'
+					GROUP BY DuxSinc.dbo.ALMPROD.producto
 				) as almgpt on pdp_ctb.Pieza = almgpt.producto
 				
 				LEFT JOIN(

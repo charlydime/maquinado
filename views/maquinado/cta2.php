@@ -108,10 +108,11 @@ $this->registerJS("
 										singleSelect: true,
 										showFooter: true,
 										rowStyler:formateo,
-										
+										pageSize:50,
 										view:groupview,
 										remoteSort:false,
 										pagination:true,
+										pageList: [10,20,50,300],
 										collapsible:true,
 										
 										rownumbers:true,
@@ -126,7 +127,10 @@ $this->registerJS("
 										onClickCell:celda,
 										toolbar:tb,
 										queryParams: {
-											semana: '<?=$semana?>'
+											
+											semana : $('#semana1').val(),
+											maq_search : $('#maq_search').val(),
+											prod_search : $('#prod_search').val()
 														}
 										"
 								 
@@ -136,13 +140,19 @@ $this->registerJS("
 								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(1)">pieza</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(2)">maquina</a>
-								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="vistas(3)">normal</a>
+								
+								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="dosmaq()">En dos maq</a>
 								
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="deshacerfila()">Escape</a>
 								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="cel()">configura celda</a>
 						
-					</div>
+								<span>producto:</span><input id="prod_search" style="line-height:26px;border:1px solid #ccc">
+								<span>maquina:</span><input id="maq_search" style="line-height:26px;border:1px solid #ccc">
+								<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="buscar()">BUSCA</a>
+								
+								
+								</div>
 								<thead data-options="frozen:true">
 									<tr>
 									<th colspan ="6"></th>
@@ -987,6 +997,23 @@ data-options="
 			
 		}
 		
+		function buscar(){
+			
+				var semana = $('#semana1').val();
+				var maq_search = $('#maq_search').val();
+				var prod_search = $('#prod_search').val();
+			
+				$('#<?php echo $id ?>').datagrid('load',{
+					semana : semana,
+					maq_search : maq_search,
+					prod_search : prod_search
+					// semana : $('#semana1').val(),
+					// maq_search : $('#maq_search').val(),
+					// prod_search : $('#prod_search').val()
+				});
+				// $('#<?php echo $id ?>').datagrid('reload');
+		}
+		
 		function getCelName(cel){
 			var data = { idcelda: cel};
 			$.ajax({
@@ -1009,5 +1036,7 @@ data-options="
         });
 			
 		}
+		
+		
 
 	</script>

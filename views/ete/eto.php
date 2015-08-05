@@ -9,17 +9,18 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\URL;
 use common\models\Grid;
 
-
-$url = "http://192.168.0.110:8080/birt/frameset?__report=eto.rptdesign&fecha=$fecha&fecha2=$fecha2&area=$area%25";
+$per = '%25';
+$url = "http://192.168.0.4:8080/birt/frameset?__report=eto.rptdesign&fecha=$fecha&fecha2=$fecha2&area=$area%25";
 $url = htmlentities($url);
+$per = htmlentities($per);
 ?>
 Fecha ini : 
-<input id="ini" type="text" class="easyui-datebox" required="required">
+<input id="ini" type="text" class="easyui-datebox" required="required" value="formatea_fecha($fecha)">
 Fecha fin : 
-<input id="fin" type="text" class="easyui-datebox" required="required">
+<input id="fin" type="text" class="easyui-datebox" required="required" value="formatea_fecha($fecha2)">
 Area :
 <select id="area" class="easyui-combobox" name="area" style="width:200px;">
-    <option value="MAA">Aeros</option>
+    <option value="MAA">Aceros</option>
     <option value="MAB">Bronces</option>
 </select>
 
@@ -44,7 +45,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 			var fin = $('#fin').datebox('getValue');
 			var area = $('#area').combobox('getValue');
 			
-			window.location.href = 'eto' + "?fecha=" + formatea_fecha(ini) +  "&fecha2=" + formatea_fecha(fin) +  "&area=" + area +"%";
+			window.location.href = 'eto' + "?fecha=" + formatea_fecha(ini) +  "&fecha2=" + formatea_fecha(fin) +  "&area=" + area ;
 			
 		}
 		
@@ -53,7 +54,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 			
 			var y = date.getFullYear();
 			var m = date.getMonth()+1;
-			var d = date.getDate()+1;
+			var d = date.getDate();
 			
 			if (m< 10) var mes = '0'+m ; else mes = m;
 			if (d< 10) var dia = '0'+d ; else dia = d;

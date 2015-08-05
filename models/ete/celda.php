@@ -60,7 +60,7 @@ Class Celda extends Model {
 								// echo $result;
 				$result2 =  $cmd->createCommand()->update('pdp_maquina',[
 									
-									'activa' => 0
+									'activa' => 1
 									
 									], 	[
 									

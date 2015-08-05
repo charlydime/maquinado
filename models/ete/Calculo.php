@@ -126,6 +126,34 @@ public function getAsistencias(){
 public function calculaTiempoDisponible(){}
 public function calculaTiempoMuerto($tipo){//tipo TMI tipo TMII
 }
+public function getLunes($fecha){
+	$command = \Yii::$app->db_mysql;
+	
+		$sql = "
+		
+			SELECT  format( 
+					cast( DATEADD(wk,DATEDIFF(wk,0,cast ('$fecha' as date) ),0)  as date ) ,
+					'yyyyMMdd',
+					'en-US'
+					) as lunes
+		";
+	$result =$command->createCommand($sql)->queryAll();
+
+return $result[0]['lunes']	;
+	
+}
+public function getSemana($fecha){
+	$command = \Yii::$app->db_mysql;
+	
+		$sql = "
+		
+			SELECT   datepart(wk,'$fecha') as semana
+		";
+	$result =$command->createCommand($sql)->queryAll();
+
+return $result[0]['semana']	;
+	
+}
 public function getOperadoresMaquinado(){
 	//coneccion dux interface
 	

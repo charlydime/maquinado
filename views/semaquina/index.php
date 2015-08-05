@@ -9,6 +9,15 @@ use yii\grid\GridView;
 
 $this->title = 'Pdp Maquina Bls';
 $this->params['breadcrumbs'][] = $this->title;
+
+$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+		$barra = ['class' => 'yii\grid\ActionColumn',
+		'template'=>'{delete}'	
+		];
+	if($u == 20)
+		$barra = ['class' => 'yii\grid\ActionColumn'];
+
 ?>
 <div class="pdp-maquina-bl-index">
 
@@ -19,7 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Pdp Maquina Bl', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= GridView::widget([
+    <?= 
+	
+		GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -28,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'pieza',
             'fecha',
 
-            ['class' => 'yii\grid\ActionColumn'],
+           $barra ,
         ],
     ]); ?>
 

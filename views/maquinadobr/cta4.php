@@ -66,7 +66,8 @@ data-options="
 				rowStyler:formateo_dia,
 				showFooter: true,
 				pagination:true,
-				
+				pageSize:50,
+				pageList: [10,20,50,300],
 				collapsible:true,
 
 				rownumbers:true,
@@ -76,7 +77,7 @@ data-options="
 				multiSort:true,
 				groupField:'Maquina',
 				groupFormatter:function(value,rows){			
-								  return value ;
+								  return value +' - '+ rows[0].descripcionmaq;
 								 
 										},				
 				
@@ -549,7 +550,7 @@ data-options="
 							{Data: JSON.stringify(data2),sem_actual: <?php echo $sem1 ?>},
 							function(data,status){
 								if(status == 'success' ){
-									$(grid).datagrid('load');
+									//$(grid).datagrid('load');
 									
 									console.log(data);
 									$var = $(grid).datagrid('getChanges');

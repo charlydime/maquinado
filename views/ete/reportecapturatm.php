@@ -10,10 +10,9 @@ use yii\helpers\URL;
 use common\models\Grid;
 
 //$url = "http://192.168.0.4:8080/birt/frameset?__report=ete.rptdesign&ini=$ini&fin=$fin&area=$area";
-$url = "http://192.168.0.4:8080/birt/frameset?__report=capturas_maq.rptdesign&ini=$ini&fin=$fin";
+$url = "http://192.168.0.4:8080/birt/frameset?__report=captura_tm.rptdesign&ini=$ini&fin=$fin";
 ?>
-
-<h1>Produccion Maquinado</h1>
+<h1>Timepos Muertos</h1>
 Fecha ini : 
 <input id="ini" type="text" class="easyui-datebox" required="required" value="<?= $ini ?>">
 Fecha fin : 
@@ -45,7 +44,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 			var fin = $('#fin').datebox('getValue');
 			//var area = $('#area').combobox('getValue');
 			
-			window.location.href = 'reportecaptura' + "?ini=" + ini +  "&fin=" + fin  ;
+			window.location.href = 'reportecapturatm' + "?ini=" + ini +  "&fin=" + fin  ;
 			
 		}
 

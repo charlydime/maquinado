@@ -9,9 +9,10 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\URL;
 use common\models\Grid;
 
-$url = "http://192.168.0.110:8080/birt/frameset?__report=ete_ch.rptdesign&ini=$ini&fin=$fin&area=$area";
+$url = "http://192.168.0.4:8080/birt/frameset?__report=ete_ch.rptdesign&ini=$ini&fin=$fin&area=$area";
 	
 ?>
+<h1>ETE</h1>
 Fecha ini : 
 <input id="ini" type="text" class="easyui-datebox" required="required" value="<?= $ini ?>">
 Fecha fin : 

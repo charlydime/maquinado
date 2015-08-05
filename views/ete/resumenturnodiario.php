@@ -10,14 +10,20 @@ use yii\helpers\URL;
 use common\models\Grid;
 
 
-$url = "http://192.168.0.110:8080/birt/frameset?__report=resumenturnodiario.rptdesign&FECHA=$fecha";
+$url = "http://192.168.0.4:8080/birt/frameset?__report=resumenturnodiario.rptdesign&FECHA=$fecha";
 $url = htmlentities($url);
 ?>
-Fecha  : 
-<input id="ini" type="text" class="easyui-datebox" required="required">
-
-
+<h1>Diario de turnos</h1>
+semana  : <?= $semana ?>
 <?php
+
+echo Html::beginTag('div',['id'=>'tbDiaria']);
+    echo "Ver: ".Html::tag("input","",[
+        'id'=>'ini',
+        'type'=>'date',
+        'value'=> $fecha
+    ]);
+
 echo Html::a('Actualizar',"javascript:void(0)",[
         'class'=>"easyui-linkbutton",
         'data-options'=>"iconCls:'icon-reload',plain:true",
@@ -25,7 +31,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
     ]);
 
 	//echo $url ;
-	?>
+?>
 
 <br>
 <embed id= "rep" width="100%" height="768" src="<?= $url ?>">
@@ -34,7 +40,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 
 		function recargaPagina(){
 			
-			var ini = $('#ini').datebox('getValue');
+			var ini = $('#ini').value;
 			
 			
 			window.location.href = 'resumenturnodiarioac' + "?FECHA=" + formatea_fecha(ini);

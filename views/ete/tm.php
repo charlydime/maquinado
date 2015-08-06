@@ -164,18 +164,23 @@ use common\models\Grid;
 			desc   = $(ed_desc.target).textbox('getValue');
 			herram   = $(ed_desc.target).textbox('getValue');
 			
+
+
 			if (inicio == "" || fin == "") 
 				{alert("inicio o fin vacios capture lo que trabajo en la "); return;}
 			//valida hora
 			if( !this.validahora(inicio) ) 
-				{alert("formato de hora inicio no valido 07:00"); return;}
+				{alert("formato de hora inicio no valido debe ser  07:00"); return;}
 			
 			if( !this.validahora(fin) ) 
 				{alert("formato de hora fin no valido elemplo 01:00 "); return;}
 			
 			if (tm == "" ) 
 				{alert("Debe capturar un Tipo de Tiempo muerto "); return;}
-			
+
+			if ( !this.validatiempo(inicio,fin,tm) )
+				return; 
+
 			$(this.grid).datagrid('getRows')[this.editIndex2]['inicio'] = inicio;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['fin'] = fin;
 			$(this.grid).datagrid('getRows')[this.editIndex2]['tm'] = tm;
@@ -198,11 +203,28 @@ use common\models\Grid;
 		
 		this.validahora = function(hora){
 			
-			var pat = /^(0[1-9]|1\d|2[0-3]):([0-5]\d)$/;
+			var pat = /^(0[1-9]|1\d|2[0-3]|00):([0-5]\d)$/;
 			
 			return hora.match(pat) ? true : false;
 			
 			
+		}
+		
+		this.validatiempo = function(h1,h2,tm){
+			var d1 = new Date('1999/01/01 '+h1);
+			var d2 = new Date('1999/01/01 '+h2);
+			
+			var dif =  Math.abs(d2.getTime() - d1.getTime())/1000/60/60;
+			
+			if  (tm == '6') {
+				//tiempo muerto es junta y es mayor a 1 h
+			   if (dif > 1 ){
+					alert ("Junta no debe pasar de 1 h"); 
+					return false;
+					}
+			}
+			
+			return true;
 		}
 		
 		this.add = function() {

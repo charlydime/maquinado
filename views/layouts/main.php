@@ -108,6 +108,7 @@ AppAsset::register($this);
 									 ['label' => 'Reporte ETE n', 'url' => ['ete/ete']],
 									 ['label' => 'Reporte ETE o', 'url' => ['ete/etech']],
 									 ['label' => 'Reporte ETO', 'url' => ['ete/eto']],
+									 ['label' => 'Reporte ETO Mensual', 'url' => ['ete/etom']],
 							
 									
 				 

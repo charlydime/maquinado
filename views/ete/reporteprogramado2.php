@@ -51,7 +51,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 			var fin = $('#fin').datebox('getValue');
 			var grupo = $('#grupo').combobox('getValue');
 			
-			window.location.href = 'reporteprogramado2' + "?ini=" +  formatea_fecha(ini) +  "&fin=" +  formatea_fecha(fin) +  "&grupo =" + grupo ;
+			window.location.href = 'reporteprogramado2' + "?ini=" +  formatea_fecha(ini) +  "&fin=" +  formatea_fecha(fin) +  "&grupo=" + grupo ;
 			
 		}
 		

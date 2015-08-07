@@ -36,7 +36,7 @@ Class MaquinadoCTA4 extends Model {
 				pdp_maquina.descripcion as descripcionmaq,
 				pdp_ctb.op,
 				mp.Minutos as minmaq,
-				round(480/ nullif(pdp_ctb.Minutos,0),0) as p_t,
+				round(480/ nullif(mp.Minutos,0),0) as p_t,
 				pdp_ctb.Minutos * pdp_ctb.Cantidad as Minutos,
 				
 				isnull(alm.plb,0)+isnull(alm.plb2,0) as PLB,
@@ -53,36 +53,50 @@ Class MaquinadoCTA4 extends Model {
 				
 				ctbm.[1] as lun_prg,
 				ctbmi.[1] as lun_min,
+				eteh.[1] as hechaslun,
+				eter.[1] as rechazadaslun,
 				null as lun_set,
 				
 				
 				ctbm.[2] as mar_prg,
 				ctbmi.[2] as mar_min,
+				eteh.[2] as hechasmar,
+				eter.[2] as rechazadasmar,
 				null as mar_set,
 				
 				
 				ctbm.[3] as mie_prg,
 				ctbmi.[3] as mie_min,
+				eteh.[3] as hechasmie,
+				eter.[3] as rechazadasmie,
 				null as mie_set,
 				
 				
 				ctbm.[4] as jue_prg,
 				ctbmi.[4] as jue_min,
+				eteh.[4] as hechasjue,
+				eter.[4] as rechazadasjue,
 				null as jue_set,
 				
 				
 				ctbm.[5] as vie_prg,
 				ctbmi.[5] as vie_min,
+				eteh.[5] as hechasvie,
+				eter.[5] as rechazadasvie,
 				null as vie_set,
 			
 				
 				ctbm.[6] as sab_prg,
 				ctbmi.[6] as sab_min,
+				eteh.[6] as hechassab,
+				eter.[6] as rechazadassab,
 				null as sab_set,
 			
 			
 				ctbm.[7] as dom_prg,
 				ctbmi.[7] as dom_min,
+				eteh.[7] as hechasdom,
+				eter.[7] as rechazadasdom,
 				null as dom_set,
 			
 				
@@ -187,6 +201,70 @@ Class MaquinadoCTA4 extends Model {
 				on  pdp_ctb.Pieza = ctbmi.pieza 
 				and pdp_ctb.op = ctbmi.op 
 				and pdp_ctb.maquina = ctbmi.maquina 
+				
+				--------------
+				LEFT JOIN(
+					select * from (
+					select 
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					--sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					datepart( w,fecha) as fecha 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha BETWEEN '20150803'and '20150807' 
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+					) p 
+					PIVOT
+					(
+						sum(hechas)
+								FOR fecha in ([1],[2],[3],[4],[5],[6],[7])
+					) as piv
+				) eteh on 
+				pdp_ctb.Pieza = eteh.producto 
+				and pdp_ctb.op = eteh.op 
+				and pdp_ctb.maquina = eteh.clave 
+				
+				LEFT JOIN(
+					select * from (
+					select 
+					Producto,
+					[Num Operacion]   as OP, 
+					--sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					datepart( w,fecha) as fecha 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha BETWEEN '20150803'and '20150807' 
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+					) p 
+					PIVOT
+					(
+						sum(rechazadas)
+								FOR fecha in ([1],[2],[3],[4],[5],[6],[7])
+					) as piv
+				) eter on 
+				pdp_ctb.Pieza = eter.producto 
+				and pdp_ctb.op = eter.op 
+				and pdp_ctb.maquina = eter.clave 
+				
+				----------------
+				
 				
 				LEFT JOIN 
 				pdp_maquina_piezabr as mp  on  mp.Pieza = pdp_ctb.Pieza and mp.Maquina = pdp_ctb.Maquina and  mp.OP = pdp_ctb.OP

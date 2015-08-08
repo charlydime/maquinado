@@ -216,7 +216,7 @@ Class MaquinadoCTA4 extends Model {
 					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
 					where
-						fecha BETWEEN '20150803'and '20150807' 
+						fecha BETWEEN '$lun' and '$dom' 
 					GROUP BY
 						Producto,
 						fecha,
@@ -246,7 +246,7 @@ Class MaquinadoCTA4 extends Model {
 					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
 					where
-						fecha BETWEEN '20150803'and '20150807' 
+						fecha BETWEEN '$lun' and '$dom' 
 					GROUP BY
 						Producto,
 						fecha,

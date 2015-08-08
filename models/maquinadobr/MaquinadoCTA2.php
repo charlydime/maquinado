@@ -60,14 +60,14 @@ Class MaquinadoCTA2 extends Model {
 				
 				0 as prioridad,
 				
-				-- ETE_S1.hechas,
-				-- ETE_S1.rechazadas,
-				-- ETE_S2.hechas,
-				-- ETE_S2.rechazadas,
-				-- ETE_S3.hechas,
-				-- ETE_S3.rechazadas,				
-				-- ETE_S4.hechas,
-				-- ETE_S4.rechazadas,
+				 ETE_S1.hechas as hechas1 ,
+				 ETE_S1.rechazadas as rechazadas1,
+				 ETE_S2.hechas as hechas2,
+				 ETE_S2.rechazadas as rechazadas2,
+				 ETE_S3.hechas as hechas3,
+				 ETE_S3.rechazadas as rechazadas3,				
+				 ETE_S4.hechas as hechas4,
+				 ETE_S4.rechazadas as rechazadas4,
 				
 				isnull(alm.plb,0)+isnull(alm.plb2,0) as PLB,
 				isnull(alm.pmb,0)+isnull(alm.pmb2,0) as PMB,

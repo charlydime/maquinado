@@ -528,10 +528,10 @@ data-options="
 					// sales si es igual el dato capturado salgo para que no guarde de nuevo
 					// el controlador recibe  n para saber que no guarde 
 					if (row.opx == 10 ){
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s1'] == s1  ) s1 = 'n' ;
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s2'] == s2  ) s2 = 'n' ;
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] == s3  ) s3 = 'n';
-					 if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] == s4  ) s4 = 'n';
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s1'] == s1  ) s1 = 'n' ;
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s2'] == s2  ) s2 = 'n' ;
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s3'] == s3  ) s3 = 'n';
+					 // if($('#<?php echo $id ?>').datagrid('getRows')[editIndex]['s4'] == s4  ) s4 = 'n';
 					}
 					
 					

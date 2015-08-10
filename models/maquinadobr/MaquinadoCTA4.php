@@ -176,7 +176,7 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 				select * from (
-						select cantidad,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN '$lun' and '$dom'
+						select cantidad,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
 						) as p
 						PIVOT
 						(
@@ -190,7 +190,7 @@ Class MaquinadoCTA4 extends Model {
 				
 				LEFT JOIN(
 				select * from (
-						select min,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN '$lun' and '$dom'
+						select min,pieza,datepart(dw,dia)as dia,op,maquina from pdp_ctb_dia where dia BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
 						) as p
 						PIVOT
 						(
@@ -216,7 +216,7 @@ Class MaquinadoCTA4 extends Model {
 					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
 					where
-						fecha BETWEEN '$lun' and '$dom' 
+						fecha BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
 					GROUP BY
 						Producto,
 						fecha,
@@ -246,7 +246,7 @@ Class MaquinadoCTA4 extends Model {
 					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
 					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
 					where
-						fecha BETWEEN '$lun' and '$dom' 
+						fecha BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
 					GROUP BY
 						Producto,
 						fecha,

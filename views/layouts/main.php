@@ -30,15 +30,18 @@ AppAsset::register($this);
             //echo Html::img('@web/frontend/assets/img/fimex_logo.png',['width'=>'100']);
             $area = Yii::$app->session->get('area');
             $brandLabel = ($area !== null ? "<b>Sistema de ".$area['Descripcion']." :: </b>" : "<b>Sistema Fimex :: </b>");
-            //var_dump($area);exit;
+            // var_dump($area);exit;
             if($area !== null){
+				$u = '';
 				
 				if ($area['IdArea'] = 5){
 					
 					$usr = Yii::$app->user->identity; 
+				
+				if ($usr != null )
 					$u  =$usr->role;
 					
-					if( $u == 20 || $u == 15 ){
+					if( ($u == 20 || $u == 15) && $usr != null ){
 							$aceros=[
 								'label' => 'Aceros',
 								'items' => [

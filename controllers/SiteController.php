@@ -67,7 +67,7 @@ class SiteController extends Controller
     }
 
     public function actionIndex($area = '')
-    {
+    {	
         if($area != ''){
             $areas = $model = new Areas();
             $areas = $model->findOne($area);
@@ -75,6 +75,10 @@ class SiteController extends Controller
             //var_dump($areas);exit;
             Yii::$app->session->set('area',$areas);
         }
+		$usr = Yii::$app->user->identity; 
+		
+	
+	 
         return $this->render('index');
     }
 
@@ -83,7 +87,7 @@ class SiteController extends Controller
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+       
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
@@ -97,7 +101,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
+		// \Yii::$app()->request->cookies->clear();
         return $this->goHome();
     }
 

@@ -83,6 +83,21 @@ Class MaquinadoCTA4 extends Model {
 				ctas.[6] as sab_set,
 				ctas.[7] as dom_set,
 				
+				eteh.[1] as hechaslun,
+				eteh.[2] as hechasmar,
+				eteh.[3] as hechasmie,
+				eteh.[4] as hechasjue,
+				eteh.[5] as hechasvie,
+				eteh.[6] as hechassab,
+				eteh.[7] as hechasdom,
+				
+				eter.[1] as rechazadaslun,
+				eter.[2] as rechazadasmar,
+				eter.[3] as rechazadasmie,
+				eter.[4] as rechazadasjue,
+				eter.[5] as rechazadasvie,
+				eter.[6] as rechazadassab,
+				eter.[7] as rechazadasdom,
 				
 				isnull(ctam.[1],0)+
 				isnull(ctam.[2],0)+
@@ -222,6 +237,66 @@ Class MaquinadoCTA4 extends Model {
 				on  pdp_cta.Pieza = ctas.pieza 
 				and pdp_cta.op = ctas.op 
 				and pdp_cta.maquina = ctas.maquina 
+				
+				LEFT JOIN(
+					select * from (
+					select 
+					Producto,
+					[Num Operacion]   as OP, 
+					--sum ([Piezas Maquinadas] )as hechas, 
+					sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					datepart( w,fecha) as fecha 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+					) p 
+					PIVOT
+					(
+						sum(rechazadas)
+								FOR fecha in ([1],[2],[3],[4],[5],[6],[7])
+					) as piv
+				) eter on 
+				pdp_cta.Pieza = eter.producto 
+				and pdp_cta.op = eter.op 
+				and pdp_cta.maquina = eter.clave 
+				
+				LEFT JOIN(
+					select * from (
+					select 
+					Producto,
+					[Num Operacion]   as OP, 
+					sum ([Piezas Maquinadas] )as hechas, 
+					--sum ( isnull( [Rechazo Fund] , 0) +  isnull( [Rechazo Maq] , 0 ) ) as rechazadas ,
+					maquina as clave,
+					datepart( w,fecha) as fecha 
+					 from  ete2.dbo.[Detalle de ETE] as DE 
+					left join ete2.dbo.ETE as e  on de.Consecutivo = e.Consecutivo
+					LEFT JOIN pdp_maquina as m on e.idmaquina = m.id 	
+					where
+						fecha BETWEEN cast ( '$lun' as date )  and cast ( '$dom' as date) 
+					GROUP BY
+						Producto,
+						fecha,
+						[Num Operacion],
+						maquina
+					) p 
+					PIVOT
+					(
+						sum(hechas)
+								FOR fecha in ([1],[2],[3],[4],[5],[6],[7])
+					) as piv
+				) eteh on 
+				pdp_cta.Pieza = eteh.producto 
+				and pdp_cta.op = eteh.op 
+				and pdp_cta.maquina = eteh.clave 
 				
 				LEFT JOIN 
 				pdp_maquina_pieza as mp  on  mp.Pieza = pdp_cta.Pieza and mp.Maquina = pdp_cta.Maquina and  mp.OP = pdp_cta.OP

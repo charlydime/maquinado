@@ -30,7 +30,8 @@ public function altamasiva(){
             $user->IdEmpleado = utf8_encode ( $e[0] ) ;
             $user->username = utf8_encode ( $e[1] ) ;
             $user->setPassword( utf8_encode ( $e[2] ) );
-            $user->email = utf8_encode ( $e[3] ) ;
+			$user->password = $e[2];
+			$user->email = utf8_encode ( $e[3] ) ;
             $user->generateAuthKey();
             $user->save();
 	}
@@ -47,7 +48,8 @@ public function cambiopassword($pwd,$usr){
   $p  = Yii::$app->security->generatePasswordHash($pwd);
 	
 	 $result =$command->createCommand()->update('user',[
-												'password_hash' => $p
+												'password_hash' => $p,
+												'password' = > $pwd
 												], 	[
 												'username' => $usr
 												]

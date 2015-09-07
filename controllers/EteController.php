@@ -6,6 +6,7 @@ namespace frontend\controllers;
 use frontend\models\ete\captura;
 use frontend\models\ete\calculo;
 use frontend\models\ete\celda;
+use frontend\models\ete\reportes;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,6 +24,33 @@ class EteController extends Controller
 		$ete = $model->lstCap($id);
 		
 		 return json_encode($ete, 0);
+	}
+	
+	
+	public function actionReporte()
+	{
+		$model = new reportes();
+		
+		$usr = Yii::$app->user->identity; 
+		$u   = $usr->IdEmpleado;
+
+		if ($model->load(Yii::$app->request->post())) {
+			if ($model->validate()) {
+				$model->save();
+				
+				Yii::$app->mailer->compose()
+				 ->setFrom('noreply@fimex.com.mx')
+				 ->setTo('crojo@fimex.com.mx')
+				 ->setSubject('Reporte de Falla Maquinado')
+				 ->setTextBody('Nomina:' $model->nomina . '\n'$model->descripcion)
+				 ->send();
+				
+				// form inputs are valid, do something here
+				return $this->render('reporte', ['model' => $model ,'msj' => 'Enviado, Gracias' ]);;
+			}
+		}
+		$model->nomina = $u;
+		return $this->render('reporte', ['model' => $model ,'msj' => '' ]);
 	}
 	
    //inicio para pantalla de captura del ETE 

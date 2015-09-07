@@ -70,10 +70,24 @@ Class MaquinadoCTA2 extends Model {
 				 ETE_S4.rechazadas as rechazadas4,
 				
 				isnull(alm.plb,0)+isnull(alm.plb2,0) as PLB,
-				isnull(alm.pmb,0)+isnull(alm.pmb2,0) as PMB,
-				isnull(alm.ctb,0)+isnull(alm.ctb2,0) as CTB,
 				
-				alm.ptb as PTB,
+				CASE
+				WHEN isnull(alm.pmb,0)+isnull(alm.pmb2,0) > 0 THEN isnull(alm.pmb,0)+isnull(alm.pmb2,0)
+				WHEN isnull(alm.PLM,0) > 0 THEN isnull(alm.PLM,0)
+				WHEN isnull(alm.PCM,0) > 0 THEN isnull(alm.PCM,0)
+				END	as PMB,
+				
+				CASE 
+				WHEN isnull(alm.ctb,0)+isnull(alm.ctb2,0) > 0 THEN isnull(alm.ctb,0)+isnull(alm.ctb2,0) 
+				WHEN isnull(alm.plc,0) > 0 THEN isnull(alm.plc,0) 
+				END as CTB,
+				
+				CASE 
+				WHEN isnull(alm.ptb,0) > 0 THEN isnull(alm.ptb,0) 
+				WHEN isnull(alm.plt,0) > 0 THEN isnull(alm.plt,0) 
+				WHEN isnull(alm.pct,0) > 0 THEN isnull(alm.pct,0) 
+				END as PTB,
+								
 				
 				alm.GPC as GPC,
 				alm.GPCB as GPCB,
@@ -100,7 +114,10 @@ Class MaquinadoCTA2 extends Model {
 									select  distinct DuxSinc.dbo.ALMPROD.PRODUCTO 
 									from DuxSinc.dbo.ALMPROD 
 									 LEFT JOIN	producto as p on p.IDENTIFICACION = DuxSinc.dbo.ALMPROD.PRODUCTO 
-									where DuxSinc.dbo.ALMPROD.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2','GPCB','GPL','GPM') 
+									where DuxSinc.dbo.ALMPROD.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2',
+																		'PLC','PLM','PLT',
+																		--'PCM','PCT',
+																		'GPCB','GPL','GPM') 
 									and DuxSinc.dbo.ALMPROD.EXISTENCIA > 0 and p.PRESENTACION =  'BRO'
 									)
 								
@@ -118,7 +135,8 @@ Class MaquinadoCTA2 extends Model {
 									select  distinct DuxSinc.dbo.ALMPROD.PRODUCTO 
 									from DuxSinc.dbo.ALMPROD 
 									 LEFT JOIN	producto as p on p.IDENTIFICACION = DuxSinc.dbo.ALMPROD.PRODUCTO 
-									where DuxSinc.dbo.ALMPROD.ALMACEN in ('GPCB','GPL','GPM') 
+									where DuxSinc.dbo.ALMPROD.ALMACEN in ('GPCB','GPL','GPM'
+																		) 
 									and DuxSinc.dbo.ALMPROD.EXISTENCIA > 0 and p.PRESENTACION =  'BRO'
 									)
 				) as prod
@@ -189,12 +207,15 @@ Class MaquinadoCTA2 extends Model {
 						select * from (
 							select PRODUCTO,ALMACEN,EXISTENCIA From DuxSinc.dbo.almprod where -- producto = '200208P' and 
 							almacen in
-							('CTB','CTB2','PTB','PLB','PLB2','PMB','PMB2','GPC','GPCB','GPL','GPM','GPP','GPT')
+							('CTB','CTB2','PTB','PLB','PLB2','PMB','PMB2','GPC','GPCB','GPL','GPM','GPP','GPT',
+							'PLC','PLM','PLT','PCM','PCT')
 						) as p
 						PIVOT
 						(
 							sum(existencia)
-								FOR almacen in ([CTB],[CTB2],[PTB],[PLB],[PLB2],[PMB],[PMB2],[GPC],[GPCB],[GPL],[GPM],[GPP],[GPT])
+								FOR almacen in ([CTB],[CTB2],[PTB],[PLB],[PLB2],[PMB],[PMB2],
+								[GPC],[GPCB],[GPL],[GPM],[GPP],[GPT],
+								[PLC],[PLM],[PLT],[PCM],[PCT])
 						) as piv
 				) alm on prod.PRODUCTO = alm.PRODUCTO
 				

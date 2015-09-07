@@ -1880,7 +1880,7 @@ public function  GetInfo_pza_op($semana){
 			$minutos = $data['minutos_m']/$turnos;
 		else 
 			$minutos = $data['minutos_m'];
-		
+		$minutos = (int)$minutos;
 		
 			 $result =$command->createCommand()->update('pdp_maquina_turnos',[
 									'Matutino' => $data['Matutino'],

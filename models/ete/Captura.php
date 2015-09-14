@@ -282,7 +282,50 @@ public function ChecaOp($data){
 		
 		return $result;
 	}
-
+	
+	public function getETE($consecutivo){
+		
+		$command = \Yii::$app->db_ete;
+		
+        $result =$command->createCommand("
+		select fecha,maquina from ete
+		LEFT JOIN  maquinadoBeta.dbo.pdp_maquina  as m  on m.id = ETE.idmaquina
+		where ete.consecutivo = $consecutivo
+		"
+		)->queryAll();
+		// )->getRawSql();
+	     // echo $result;exit;
+		
+		return $result[0];
+		
+	}
+	public function checaProgramado($consecutivo,$pieza,$op,$cap){
+		
+		$command = \Yii::$app->db_mysql;
+		
+		$ete = $this->getETE($consecutivo);
+		
+		$fecha = $ete['fecha'];
+		
+		$maquina = $ete['maquina'];
+		
+        $result =$command->createCommand("
+		
+				select maquina,op,pieza,dia,cantidad from pdp_cta_dia
+				where maquina = '$maquina' and op= $op and pieza='$pieza' and dia=cast ( '$fecha' as date )
+				union 
+				select maquina,op,pieza,dia,cantidad from pdp_ctb_dia
+				where maquina = '$maquina' and op= $op  and pieza='$pieza' and dia=cast ( '$fecha' as date )
+		
+		 "
+		 )->queryAll();
+		 // )->getRawSql();
+		// echo $result;exit;
+		//echo $result[0]['cantidad']." can " . $cap;
+		echo "comprbacion". $result[0]['cantidad'] <= $cap; 
+		return $cap > $result[0]['cantidad']   ? 1  : 0;
+		
+	}
 	
 	//funcion para insertar nuevo ete
 	public function saveCap($data){
@@ -290,7 +333,10 @@ public function ChecaOp($data){
 		
 		 $data =  $data[0];
 		 $data = (array) $data;
-		  // print_r($data);
+		 
+		 $masdeloprogramado =  $this->checaProgramado($data['ID'],$data['parte'],$data['op'],$data['maq']);
+		 if($masdeloprogramado )   return false;
+		 
 		 $command = \Yii::$app->db_ete;
 		 
 		 $op = $this->getoppza($data['parte'],$data['op'],$data['ID']);

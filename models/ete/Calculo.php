@@ -9,36 +9,81 @@ Class Calculo extends Model {
 	
  public	 $fechaini = 0;
  public	 $fechafin = 0;
- public	 $maquina = 0;
- 
- public	 $ete = 0;
-	 public	 $disponibilidad = 0;
-		 public	 $tiempoDisponible = 0;
-		 public	 $tiempoReal = 0;
-		 public	 $tiempoMuertoI = 0;
-		 public	 $tiempoMuertoII = 0;
-			
-	 public	 $eficiencia = 0;
-		 public	 $produccionReal = 0;
-		 public	 $produccionEsperada = 0;
 
-	 public	 $calidad = 0;
-		 public	 $rechazosP = 0;
-		 public	 $totalesP = 0;
+ 
 		 
 	public $empleados = '';
 		 
 
  
-    //funcion que calcula ETE
-public function ete($fecha){
+
+
+public function getAsistencias2(){
+	
+	$cmdRelox = \Yii::$app->db_relox;
+	//coneccion relox
+	$this->getOperadoresMaquinado();
+	
+	$sql = "
+	
+		select
+		entrada.consec as id,
+		entrada.nomina, 
+		entrada.fecha, 
+			
+		 incidencia as descrip 
+		
+		from   
+		(
+		select * from asistencia as a 
+		left join jornada as j on j.id = a.idjornada
+		left join  turnos as t on j.Turnos_idturno = t.clave 
+		WHERE
+		a.fecha  Between '$this->fechaini' and '$this->fechafin' and
+		 a.incidencia in (
+			6,7,9,18
+			) and
+		a.nomina in (
+		$this->empleados
+		)
+		) as entrada
+
+	";
+	
+	$result =$cmdRelox->createCommand($sql)->queryAll();
+	
+	
+	$row = []; 
+	foreach($result as $r){
+		$r = array_values($r);
+		array_push ($row,$r) ;
+		
+	}
+	// print_r($row);exit;
+	
+	$row = array_chunk($row,900);
+	
+	
+	$cmdMaq = \Yii::$app->db_ete;
+	$cmdMaq->createCommand()->truncateTable( 'inasistencia' )->execute();
+	
+	$i = 0;
+	foreach($row as $r){
+	 $cmdM[$i] = \Yii::$app->db_ete;
+	 $res = $cmdM[$i]->createCommand()
+			->batchInsert('inasistencia',['id','nomina','fecha','descrip'],$r)
+	->execute();
+	// ->getRawSql();
+		 echo $res;
+		$i=$i+1;
+	}
+	
+	//return $result;
 	
 	
 	
-} 
-//disponibilidad
-public function calculaDsponibilidad(){}
-public function calculaTiempoProgramadoMaquina(){}
+}
+
 public function getAsistencias(){
 	
 	$cmdRelox = \Yii::$app->db_relox;
@@ -123,9 +168,8 @@ public function getAsistencias(){
 	
 }
 
-public function calculaTiempoDisponible(){}
-public function calculaTiempoMuerto($tipo){//tipo TMI tipo TMII
-}
+
+
 public function getLunes($fecha){
 	$command = \Yii::$app->db_mysql;
 	
@@ -154,6 +198,7 @@ public function getSemana($fecha){
 return $result[0]['semana']	;
 	
 }
+
 public function getOperadoresMaquinado(){
 	//coneccion dux interface
 	
@@ -177,21 +222,6 @@ public function getOperadoresMaquinado(){
 		
 	
 }
-
-//-----------------------------------
-
-//eficiencia
-public function calculaEficiencia(){}
-public function calculaProduccionReal(){}
-public function calculaProduccionEsperada(){}
-
-
-//calidad
-public function calculaCalidad(){}
-public function calculaRechazoP(){}
-public function calculaTotalesP(){}
-public function calculaRechazoP_dux(){}
-public function calculaTotalesP_dux(){}
 
 
    

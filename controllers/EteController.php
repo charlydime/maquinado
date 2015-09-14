@@ -6,7 +6,7 @@ namespace frontend\controllers;
 use frontend\models\ete\captura;
 use frontend\models\ete\calculo;
 use frontend\models\ete\celda;
-use frontend\models\ete\reportes;
+use frontend\models\ete\Reportes;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -27,31 +27,31 @@ class EteController extends Controller
 	}
 	
 	
-	public function actionReporte()
-	{
-		$model = new reportes();
+	// public function actionReporte()
+	// {
+		// $model = new Reportes();
 		
-		$usr = Yii::$app->user->identity; 
-		$u   = $usr->IdEmpleado;
+		// $usr = Yii::$app->user->identity; 
+		// $u   = $usr->IdEmpleado;
 
-		if ($model->load(Yii::$app->request->post())) {
-			if ($model->validate()) {
-				$model->save();
+		// if ($model->load(Yii::$app->request->post())) {
+			// if ($model->validate()) {
+				// $model->save();
 				
-				Yii::$app->mailer->compose()
-				 ->setFrom('noreply@fimex.com.mx')
-				 ->setTo('crojo@fimex.com.mx')
-				 ->setSubject('Reporte de Falla Maquinado')
-				 ->setTextBody('Nomina:' $model->nomina . '\n'$model->descripcion)
-				 ->send();
+				// Yii::$app->mailer->compose()
+				 // ->setFrom('noreply@fimex.com.mx')
+				 // ->setTo('crojo@fimex.com.mx')
+				 // ->setSubject('Reporte de Falla Maquinado')
+				 // ->setTextBody('Nomina:' $model->nomina . '\n'$model->descripcion)
+				 // ->send();
 				
 				// form inputs are valid, do something here
-				return $this->render('reporte', ['model' => $model ,'msj' => 'Enviado, Gracias' ]);;
-			}
-		}
-		$model->nomina = $u;
-		return $this->render('reporte', ['model' => $model ,'msj' => '' ]);
-	}
+				// return $this->render('reporte', ['model' => $model ,'msj' => 'Enviado, Gracias' ]);;
+			// }
+		// }
+		// $model->nomina = $u;
+		// return $this->render('reporte', ['model' => $model ,'msj' => '' ]);
+	// }
 	
    //inicio para pantalla de captura del ETE 
    public function actionCaptura(){
@@ -154,8 +154,8 @@ class EteController extends Controller
 		$data = json_decode($_POST['Data']);
 
 		$model = new Captura;
-		$model->saveCap($data);
-	
+		return $model->saveCap($data);
+
 		
 	}
 	
@@ -507,6 +507,27 @@ class EteController extends Controller
 
 		// $id =$model->getOperadoresMaquinado();
 		$id =$model->getAsistencias();
+		
+		return $id;
+		
+	}
+	
+	public function actionGetinasistencias(){
+		//$data = json_decode($_POST['Data']);
+		$model = new Calculo;
+		
+		if ( isset ($_REQUEST['fechaini']) and isset ($_REQUEST['fechafin']) ){
+			$model->fechaini = $_REQUEST['fechaini'];
+			$model->fechafin = $_REQUEST['fechafin'];
+		}else{
+			
+		$model->fechaini = '2015-01-01';
+		$model->fechafin = date('Y-m-d');
+			
+		}
+
+		// $id =$model->getOperadoresMaquinado();
+		$id =$model->getAsistencias2();
 		
 		return $id;
 		

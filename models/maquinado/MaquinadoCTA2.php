@@ -1903,10 +1903,13 @@ public function  GetInfo_pza_op($semana){
 		$command = \Yii::$app->db_mysql;
 		 // print_r($data); exit;
 		$fsemana  =$data['semana']  ;
+		
+				$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
 						
 		$maq_pieza = $this->maquinapieza_todo($data['producto']);
 		if( $data['otramaq'] == 1){
-			
+			if($u < 15) return false;
 				$result =$command->createCommand()->insert('pdp_cta',[
 
 									'pieza' => $data['producto'], //captura row
@@ -1941,6 +1944,7 @@ public function  GetInfo_pza_op($semana){
 			if ($data['cantidad'] == 0) return ;
 			
 		if ($data['otramaq'] == 0)
+			if($u < 20) return false;
 			$result =$command->createCommand()->insert('pdp_cta',[
 
 									'pieza' => $data['producto'], //captura row
@@ -1970,7 +1974,7 @@ public function  GetInfo_pza_op($semana){
 		  //echo ' existe se actualiza';
 		  
 			  if($data['cantidad'] == 0  ){
-					
+					if($u < 20) return false;
 				$result =$command->createCommand()->delete('pdp_cta',[
 														
 														'semana' => $data['semana'],
@@ -1985,7 +1989,19 @@ public function  GetInfo_pza_op($semana){
 				
 												return true; //corta ejecucion y sale
 				}
-			  
+			if($u < 15) return false;
+				 $result =$command->createCommand()->update('pdp_cta',[
+										'maquina' => $data['maquina'],
+										
+										], 	[
+										
+										'pieza' => $data['producto'],
+										'op' => $data['opx'],
+										'semana' => $data['semana'],
+										'maquina' => $maquina
+										]
+									)->execute();
+			  if($u < 20) return false;
 			  $result =$command->createCommand()->update('pdp_cta',[
 										'maquina' => $data['maquina'],
 										'prioridad' => $data['prioridad'],
@@ -1999,6 +2015,8 @@ public function  GetInfo_pza_op($semana){
 										'maquina' => $maquina
 										]
 									)->execute();
+									
+				
 								// )->getRawSql();
 								// echo $result;
 				//se llena pdp_maquina turnos

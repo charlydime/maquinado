@@ -31,17 +31,18 @@ public function getAsistencias2(){
 		entrada.nomina, 
 		entrada.fecha, 
 			
-		 incidencia as descrip 
+		 entrada.d as descrip 
 		
 		from   
 		(
 		select * from asistencia as a 
 		left join jornada as j on j.id = a.idjornada
 		left join  turnos as t on j.Turnos_idturno = t.clave 
+		LEFT JOIN ( select  clave as idcat_ins ,descrip  as d from cat_inciden) as ins  on a.incidencia = ins.idcat_ins
 		WHERE
 		a.fecha  Between '$this->fechaini' and '$this->fechafin' and
 		 a.incidencia in (
-			6,7,9,18
+			6,7,9,18,2,7,15,16,17,18,19,20,21,22,43
 			) and
 		a.nomina in (
 		$this->empleados

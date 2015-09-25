@@ -67,6 +67,9 @@ Class MaquinadoMaqPieza extends Model {
 	
 	//da de alta  maquina operador
 	public function SetMaqOp($data){
+		$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u < 15) return false;
 					
 			$result =$command->createCommand()->insert('pdp_cta',[
 														'maquina' =>  $data['maquina'], 
@@ -79,6 +82,9 @@ Class MaquinadoMaqPieza extends Model {
 	//borra maquina operador
 	public function DelMaqOp($data){
 	print_r($data);exit;
+		$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u < 15) return false;
 			$result =$command->createCommand()->delete('pdp_maquina_turnos',[
 													'maquina'  =>  $data['maquina'], 
 													'operador' =>  $data['operador'] 

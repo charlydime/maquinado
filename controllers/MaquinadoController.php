@@ -165,7 +165,7 @@ class MaquinadoController extends Controller
 		$model = new MaquinadoCta2;
         $datos_a_grabar[]= null;
         
-			
+		
 			$datos = json_decode($_POST['Data']);
 			 // $data = json_decode('
 
@@ -260,6 +260,11 @@ class MaquinadoController extends Controller
    
   public function actionCtap1hold(){
 		$model = new MaquinadoCta2;
+		
+			$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u < 15) return false;
+		
 		$data = json_decode($_POST['Data']);
 		$model->hold($data);
 		}
@@ -312,6 +317,10 @@ class MaquinadoController extends Controller
    }
       
 	public function actionMosave(){
+		
+			$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u < 15) return false;
 	
 					$data = json_decode($_POST['Data']);
 	
@@ -321,6 +330,10 @@ class MaquinadoController extends Controller
    }
    
     public function actionModel(){
+		
+			$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+			if($u < 15) return false;
 	
 					$data = json_decode($_POST['Data']);
 	

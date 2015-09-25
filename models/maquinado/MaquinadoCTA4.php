@@ -1402,6 +1402,9 @@ Class MaquinadoCTA4 extends Model {
 			$command = \Yii::$app->db_mysql;			
 			$a = date('Y');
 			$datarec=null;
+			
+			
+			
 			// echo "datos save_dia"; print_r($datos); exit; 
 			foreach ($datos as $data){
 			
@@ -1666,9 +1669,13 @@ Class MaquinadoCTA4 extends Model {
 		$command = \Yii::$app->db_mysql;
 		 echo "salvar"; 
 		 print_r($data);
+		 
+		 	$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
+		 
 		if (!$this->exist($data['fecha'],$data['Pieza'],$data['op'],$data['Maquina'] ) ){
 			if ( $data['cantidad'] == 0) return ;
-			
+			if($u < 20) return false;
 			$result =$command->createCommand()->insert('pdp_cta_dia',[
 									'maquina' => $data['Maquina'], 
 									'semana' => $data['sem'],
@@ -1685,7 +1692,7 @@ Class MaquinadoCTA4 extends Model {
 		  //echo ' existe se actualiza';
 		 
 			  if($data['cantidad'] == 0  ){
-					
+					if($u < 20) return false;
 				$result =$command->createCommand()->delete('pdp_cta_dia',[
 														'dia' => $data['fecha'],
 														'op' => $data['op'],
@@ -1698,7 +1705,7 @@ Class MaquinadoCTA4 extends Model {
 				
 					return true; //corta ejecucion y sale
 				}
-			  
+			  if($u < 20) return false;
 			  $result =$command->createCommand()->update('pdp_cta_dia',[
 										'maquina' => $data['Maquina'], 
 										'semana' => $data['sem'],

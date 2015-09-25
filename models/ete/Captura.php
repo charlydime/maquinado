@@ -311,10 +311,10 @@ public function ChecaOp($data){
 		
         $result =$command->createCommand("
 		
-				select maquina,op,pieza,dia,cantidad from pdp_cta_dia
+				select maquina,op,pieza,dia,cantidad,'AC' as area from pdp_cta_dia
 				where maquina = '$maquina' and op= $op and pieza='$pieza' and dia=cast ( '$fecha' as date )
 				union 
-				select maquina,op,pieza,dia,cantidad from pdp_ctb_dia
+				select maquina,op,pieza,dia,cantidad,'BR' as area from pdp_ctb_dia
 				where maquina = '$maquina' and op= $op  and pieza='$pieza' and dia=cast ( '$fecha' as date )
 		
 		 "
@@ -322,8 +322,12 @@ public function ChecaOp($data){
 		 // )->getRawSql();
 		// echo $result;exit;
 		//echo $result[0]['cantidad']." can " . $cap;
-		echo "comprbacion". $result[0]['cantidad'] <= $cap; 
-		return $cap > $result[0]['cantidad']   ? 1  : 0;
+		if ($result[0]['area'] == 'AC') $tolerancia = $result[0]['cantidad'] +2;
+		if ($result[0]['area'] == 'BR') $tolerancia = $result[0]['cantidad'] + floor($result[0]['cantidad']*.15);
+		
+	
+		//echo "comprbacion". $result[0]['cantidad'] <= $cap; 
+		return $cap > $tolerancia  ? 1  : 0;
 		
 	}
 	
@@ -362,6 +366,7 @@ public function ChecaOp($data){
 							// echo $result;exit;
 			 
 		 }else{
+			 if ( !isset($data['idcap']) ) return;
 			 $result =$command->createCommand()->update('Detalle de ete',[
 									'Hora Inicio' => $data['inicio'],
 									'Hora final' => $data['fin'], 

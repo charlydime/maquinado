@@ -52,7 +52,8 @@ Class MaquinadoCTA2 extends Model {
 				
 				CASE 
 					WHEN  prod.producto <>  prod_dux.CAMPOUSUARIO5 THEN 0
-					ELSE 1
+					WHEN  alm.PLC > 0 or alm.PLM > 0 or alm.PLT > 0 or alm.PCM > 0 or alm.PCT > 0 THEN 0 
+					ELSE 0 
 				END as cast,
 				
  				
@@ -116,7 +117,7 @@ Class MaquinadoCTA2 extends Model {
 									 LEFT JOIN	producto as p on p.IDENTIFICACION = DuxSinc.dbo.ALMPROD.PRODUCTO 
 									where DuxSinc.dbo.ALMPROD.ALMACEN in ('CTB','CTB2','PLB','PLB2','PMB','PMB2',
 																		'PLC','PLM','PLT',
-																		--'PCM','PCT',
+																		'PCM','PCT',
 																		'GPCB','GPL','GPM') 
 									and DuxSinc.dbo.ALMPROD.EXISTENCIA > 0 and p.PRESENTACION =  'BRO'
 									)
@@ -390,7 +391,7 @@ Class MaquinadoCTA2 extends Model {
 				dux1.fechaemb,
  				dux2.fechaemb
 				     
-				offset $page rows fetch next $row rows only     
+				--offset $page rows fetch next $row rows only     
  
 				
 		")->queryAll();
@@ -1721,8 +1722,13 @@ public function  GetInfo_pza_op($semana){
 						
 		$maq_pieza = $this->maquinapieza_todo($data['producto']);
 		
-		if( $data['otramaq'] == 1){
+		$usr = Yii::$app->user->identity; 
+					$u  =$usr->role;
 			
+					
+		
+		if( $data['otramaq'] == 1){
+					if($u < 15) return false;
 				$result =$command->createCommand()->insert('pdp_ctb',[
 
 									'pieza' => $data['producto'], //captura row
@@ -1761,6 +1767,7 @@ public function  GetInfo_pza_op($semana){
 					// if ($data['otramaq']==1) $cambio_maq = 1; else $cambio_maq = 0;
 			
 		 if ($data['otramaq'] == 0)
+			  if($u < 20) return false;
 			$result =$command->createCommand()->insert('pdp_ctb',[
 
 									'pieza' => $data['producto'], //captura row
@@ -1792,7 +1799,7 @@ public function  GetInfo_pza_op($semana){
 		  echo ' existe se actualiza';
 		  
 			  if($data['cantidad'] == 0  ){
-					
+				  if($u < 20) return false;
 				$result =$command->createCommand()->delete('pdp_ctb',[
 														
 														'semana' => $data['semana'],
@@ -1807,7 +1814,20 @@ public function  GetInfo_pza_op($semana){
 				
 												return true; //corta ejecucion y sale
 				}
-			  
+			  	
+			  if($u == 15) 
+			  $result =$command->createCommand()->update('pdp_ctb',[
+										'maquina' => $data['maquina'],
+										
+										], 	[
+										
+										'pieza' => $data['producto'],
+										'op' => $data['opx'],
+										'semana' => $data['semana'],
+										'maquina' => $maquina
+										]
+									)->execute();
+			  if($u == 20) 
 			  $result =$command->createCommand()->update('pdp_ctb',[
 										'maquina' => $data['maquina'],
 										'prioridad' => $data['prioridad'],

@@ -42,6 +42,7 @@ $model = new MaquinadoCTA4;
 
 <div id="tb" style="height:auto">
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.deshacerfila2()">Escape</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprograma()">RePrograma</a>
 </div>
 
 <div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;"
@@ -105,7 +106,7 @@ data-options="
 				<tr>
 					<th colspan= 1></th>
 					<th colspan= 2>Opeacion</th>
-					<th colspan= 1></th>
+					<th colspan= 2></th>
 					<th colspan= 2>Embaques</th>
 					<th colspan= 5>Almacenes</th>
 					<th colspan= 2>Sem <?=$sem1?></th>
@@ -127,6 +128,7 @@ data-options="
 					<th data-options="field:'op',sortable:true,width:40">num</th>
 					<th data-options="field:'minmaq',sortable:true,width:53">Min</th>
 					<th data-options="field:'p_t',sortable:true,width:53">pz*dia</th>
+					<th data-options="field:'reprog',sortable:true,width:50">Reprog</th>
 					<th data-options="field:'e0',sortable:true,width:50">Sem<?=$sem1?></th>
 					<th data-options="field:'e1',sortable:true,width:50">Sem<?=$sem2?></th>
 					<th data-options="field:'PLA1',sortable:true,width:50">PLA1</th>
@@ -301,6 +303,41 @@ data-options="
 		 this.semana = <?php echo $id?> ? <?php echo $id ?> : 0;
 		 this.url = 'cta4salva';
 		 
+		this.reprograma = function(){
+					
+					g = $(this.grid).datagrid('getRows');
+					var data = [];
+					var r = 0;
+					
+					for(var i= 0; i <= g.length-1; i++){
+					  r= g[i];
+					  if (r.reprog > 0 )
+							data.push(r);
+
+					}
+					
+					$.post('reprog',
+							{Data: JSON.stringify(data),sem_actual: '<?php echo $semana ?>'},
+							function(data,status){
+								if(status == 'success' ){
+									
+									alert("reprogramado");
+									
+									// $(grid).datagrid('reload');
+									
+									 console.log(data);
+									// $var = $(grid).datagrid('getChanges');
+								}else{
+									reject('#$id');
+									alert('Error al guardar los datos');
+								}
+							}
+					);
+					
+					
+		}
+		
+		
 		this.llena = function(){
 				var row =  $(this.grid).datagrid('getRows')[this.editIndex2];
 			
@@ -376,6 +413,8 @@ data-options="
 						// f5
                 		//if (e.keyCode === 116) {reloadcta3(true);} 
 					 }
+					 
+					 
 		 
 		 this.guarda = function(){
 			

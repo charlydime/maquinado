@@ -158,6 +158,26 @@ class MaquinadobrController extends Controller
 		$model->p2save($datos_a_grabar);
 	}
 	
+	public function actionReprog(){
+		$model = new MaquinadoCta4;
+        $datos_a_grabar[]= null;
+        
+			
+		$data = json_decode($_POST['Data']);
+		$semana = explode( '-', $_POST['sem_actual'] );// en este caso semana siguente
+
+
+
+
+
+
+
+		
+		$model->reprograma($data,$semana);
+		
+
+	}
+	
 	public function actionCtap1(){
 	
 		$model = new MaquinadoCta2;
@@ -256,6 +276,8 @@ class MaquinadobrController extends Controller
 						
 		
    }
+   
+   
    
   public function actionCtap1hold(){
 		$model = new MaquinadoCta2;

@@ -3,6 +3,7 @@
 namespace frontend\Models\Maquinadobr;
 use Yii;
 use yii\base\Model;
+use frontend\Models\Maquinadobr\MaquinadoCTA2;
 
 Class MaquinadoCTA4 extends Model {
 	
@@ -111,7 +112,7 @@ Class MaquinadoCTA4 extends Model {
 				eteh.[7] as hechasdom,
 				eter.[7] as rechazadasdom,
 				null as dom_set,
-			
+				
 				
 		null
 				
@@ -138,7 +139,11 @@ Class MaquinadoCTA4 extends Model {
 				
 				null
 				
-				as maq1
+				as maq1,
+				
+				isnull(ctbm.[1],0)+isnull(ctbm.[2],0)+isnull(ctbm.[3],0)+isnull(ctbm.[4],0)+isnull(ctbm.[5],0)+isnull(ctbm.[6],0)+isnull(ctbm.[7],0)
+			   -isnull(eteh.[1],0)-isnull(eteh.[2],0)-isnull(eteh.[3],0)-isnull(eteh.[4],0)-isnull(eteh.[5],0)-isnull(eteh.[6],0)-isnull(eteh.[7],0)
+				as reprog
 				
 				from pdp_ctb 
 				
@@ -938,6 +943,33 @@ Class MaquinadoCTA4 extends Model {
 			return date('Y-m-d',strtotime("$fecha_ini + $numdia DAY") );
 				
 		}
+		
+		public function reprograma($datos,$sem){
+			$model = new MaquinadoCta2;
+			$command = \Yii::$app->db_mysql;			
+			$a = date('Y');
+			$datarec=null;
+			
+			foreach ($datos as $data){
+				// var_dump($data);	
+				
+					$datarec['maquina'] = $data->{'Maquina'};
+					$datarec['producto'] = $data->{'Pieza'};
+					$datarec['opx'] = $data->{'op'};
+					$datarec['minutos'] = $data->{'minmaq'};
+					$datarec['cantidad'] = $data->{'reprog'};
+					$datarec['semana'] = substr($sem[1],1)+1;
+					$datarec['programado'] = substr($sem[1],1)+0;
+					$datarec['otramaq'] = 1;
+					$datarec['prioridad'] = 0;
+					$datarec['hecho'] = 1;//cuando  es 1 es reprogramado
+					$datarec['aio'] = $sem[0];//cuando  es 1 es reprogramado
+					// var_dump($datarec);
+					$model->p1save($datarec);
+			}
+			
+		}
+		
 		public function save_dia($datos,$sem){
 			$command = \Yii::$app->db_mysql;			
 			$a = date('Y');

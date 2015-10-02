@@ -47,6 +47,12 @@ Class MaquinadoCTA2 extends Model {
 				sem.[$se2] as s2,
 				sem.[$se3] as s3,
 				sem.[$se4] as s4,
+				
+				reprog.[$se1] as sr1,
+				reprog.[$se2] as sr2,
+				reprog.[$se3] as sr3,
+				reprog.[$se4] as sr4,
+				
 				sem.maquina as maquina1,
 				pdp_maquina.descripcion as decripcionmaq,
 				
@@ -227,7 +233,8 @@ Class MaquinadoCTA2 extends Model {
 						select 
 						Pieza, op, Maquina ,
 						Semana,
-						Cantidad 
+						Cantidad, 
+						hecho
 						from pdp_ctb 
 						) as p
 						PIVOT
@@ -237,7 +244,26 @@ Class MaquinadoCTA2 extends Model {
 						) as piv
 						where  [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
 				) as sem  on sem.pieza = prod.PRODUCTO  and  sem.op = pdp_maquina_piezabr.op 	
+				
+				LEFT JOIN (
+						SELECT * from (
+						select 
+						Pieza, op, Maquina ,
+						Semana,
+						Cantidad,
+						hecho						
 
+						from pdp_ctb 
+						) as p
+						PIVOT
+						(
+
+						 sum(hecho)
+							FOR semana in ([$se1],[$se2],[$se3],[$se4])
+						) as piv
+						where  [$se1] is not null or [$se2] is not null or [$se3] is not null or [$se4] is not null
+				) as reprog  on reprog.pieza = prod.PRODUCTO  and  reprog.op = pdp_maquina_piezabr.op 	
+				
 				left join	pdp_maquina  on pdp_maquina.maquina =  sem.maquina
 				
 				LEFT JOIN(
@@ -1740,6 +1766,7 @@ public function  GetInfo_pza_op($semana){
 									'semEntrega' => $fsemana,
 									'prioridad' => $data['prioridad'],
 									'programado' => $data['programado'],
+									'hecho' => isset ( $data['hecho'])  ? $data['hecho']:0 ,// 0 es cuando es programado en otra maquina
 									'op' => $data['opx'],
 		
 			 ])->execute();

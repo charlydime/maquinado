@@ -171,6 +171,15 @@ class MaquinadoController extends Controller
 		
 	}
 	
+	public function actionReprogdia(){
+		$model = new MaquinadoCta4;
+		$data = json_decode($_POST['Data']);
+		$destino = $_POST['dde'];
+		$origen = $_POST['dor'];
+		$semana = $_POST['semana'];
+		$model->reprogramadia($data,$destino,$origen,$semana);
+	}
+	
 	public function actionCtap1(){
 	
 		$model = new MaquinadoCta2;

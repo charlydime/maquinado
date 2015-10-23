@@ -42,7 +42,8 @@ $model = new MaquinadoCTA4;
 
 <div id="tb" style="height:auto">
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.deshacerfila2()">Escape</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprograma()">RePrograma</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprograma()">Reprogramar a Semana sig</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprogramadia()">Reprogramar a otro dia</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.ocultacolumnas()">Muetrsa/oculta ALM molder perm</a>
 </div>
 
@@ -293,6 +294,19 @@ data-options="
 
 </div>
 
+<?= $this->render('../maquinado/reprogdia',[
+								'lun'=> $lun,
+								'mar'=> $mar,
+								'mie'=> $mie,
+								'jue'=> $jue,
+								'vie'=> $vie,
+								'sab'=> $sab,
+								'dom'=> $dom,
+								'grid' =>$id,
+								'sem' => $se1
+								
+							]);?>
+
 <script type="text/javascript">
 	
 		//class control
@@ -333,6 +347,13 @@ data-options="
 								}
 							}
 					);
+					
+					
+		}
+		
+		 this.reprogramadia = function(){
+					
+					$('#win_rep').window('open');
 					
 					
 		}

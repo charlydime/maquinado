@@ -49,7 +49,7 @@ public function cambiopassword($pwd,$usr){
 	
 	 $result =$command->createCommand()->update('user',[
 												'password_hash' => $p,
-												'password' = > $pwd
+												'password' => $pwd
 												], 	[
 												'username' => $usr
 												]

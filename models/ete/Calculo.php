@@ -104,7 +104,7 @@ public function getAsistencias(){
 		ELSE  timediff(salida.hora,entrada.hora )
 		END  as hrs,
 		CASE 
-		WHEN  salida.hora<entrada.hora THEN TIME_TO_SEC( timediff(entrada.hora,salida.hora) ) / 60
+		WHEN  salida.hora<entrada.hora THEN 1440-TIME_TO_SEC( timediff(entrada.hora,salida.hora) ) / 60
 		ELSE TIME_TO_SEC( timediff(salida.hora,entrada.hora) ) /60 
 		END as min
 		from   

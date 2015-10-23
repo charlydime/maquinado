@@ -62,7 +62,7 @@ use common\models\Grid;
 
   
 
-   <div id="tb<?php echo $tb ?>"  style="height:auto">
+	<div id="tb<?php echo $tb ?>"  style="height:auto">
 						
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="controlcap.add()">Agregar</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="controlcap.del()">Borrar </a>
@@ -70,9 +70,8 @@ use common\models\Grid;
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="controlcap.guarda()">guardar </a>
 						<!-- <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
 						-->
-						
-						
-					</div>
+			
+	</div>
    
     <thead>
 

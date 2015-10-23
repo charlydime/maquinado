@@ -42,7 +42,8 @@ $model = new MaquinadoCTA4;
 
 <div id="tb" style="height:auto">
 		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.deshacerfila2()">Escape</a>
-		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprograma()">RePrograma</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprograma()">Reprogramar a semanal</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="control<?php echo $sem1 ?>.reprogramadia()">Reprogramar a otro dia</a>
 </div>
 
 <div class="easyui-panel" title='Sem <?=$sem1?>' style="width:100%;height:auto;padding:10px;"
@@ -294,6 +295,19 @@ data-options="
 
 </div>
 
+<?= $this->render('reprogdia',[
+								'lun'=> $lun,
+								'mar'=> $mar,
+								'mie'=> $mie,
+								'jue'=> $jue,
+								'vie'=> $vie,
+								'sab'=> $sab,
+								'dom'=> $dom,
+								'grid' =>$id,
+								'sem' => $se1
+								
+							]);?>
+
 <script type="text/javascript">
 	
 		//class control
@@ -324,7 +338,7 @@ data-options="
 									alert("reprogramado");
 									
 									// $(grid).datagrid('reload');
-									
+									$('#win_rep').window('close');
 									 console.log(data);
 									// $var = $(grid).datagrid('getChanges');
 								}else{
@@ -333,6 +347,13 @@ data-options="
 								}
 							}
 					);
+					
+					
+		}
+		
+		 this.reprogramadia = function(){
+					
+					$('#win_rep').window('open');
 					
 					
 		}

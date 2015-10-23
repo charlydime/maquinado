@@ -164,4 +164,29 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+	
+	public function actionDestroy()
+    {
+        session_destroy() ; // no lo admite 
+		 session_start();
+    }
+	
+	public function actionDestroyii()
+    {
+        $session = Yii::$app->session;
+		// if ($session->isActive){
+				// $session->close();
+				// $session->destroy();
+		// }
+		var_dump($session);
+		//var_dump(Yii::$app()->user);
+		
+		 // $cookies = Yii::$app->request->cookies;
+		 // var_dump($cookies);
+		 // $cookies->remove('username');
+		// unset($cookies['username']);
+
+    }
+	
+	
 }

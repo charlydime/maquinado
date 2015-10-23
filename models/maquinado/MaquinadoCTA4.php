@@ -1696,6 +1696,87 @@ Class MaquinadoCTA4 extends Model {
 			}
 		
 		}
+		
+		public function reprogramadia($datos,$destino,$origen,$semana){
+			
+			$command = \Yii::$app->db_mysql;			
+			$a = date('Y');
+			$datarec=null;
+			
+			foreach ($datos as $data){
+				
+				$datarec['fecha'] = $destino ;
+				$datarec['Pieza'] =  $data->{'Pieza'};
+				$datarec['op'] =  $data->{'op'};
+				$datarec['Maquina'] =  $data->{'Maquina'};
+				$datarec['sem'] =  $semana;
+				
+				$datarec['setup'] =  0;
+				
+				if ($origen == 'lun'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'lun_prg'} 
+											- $data->{'hechaslun'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				
+				if ($origen == 'mar'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'mar_prg'} 
+											- $data->{'hechasmar'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				if ($origen == 'mie'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'lun_mie'} 
+											- $data->{'hechasmie'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				if ($origen == 'jue'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'lun_jue'} 
+											- $data->{'hechasjue'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				if ($origen == 'vie'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'vie_prg'} 
+											- $data->{'hechasvie'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				if ($origen == 'sab'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'sab_prg'} 
+											- $data->{'hechassab'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				if ($origen == 'dom'){
+					$programado_destino = $this->GetCantidad($datarec['fecha'],$datarec['Pieza'],$datarec['op'],$datarec['Maquina']) ;
+					$datarec['cantidad'] =   $data->{'dom_prg'} 
+											- $data->{'hechasdom'}  
+											+ $programado_destino
+										;
+					$datarec['min'] =  $data->{'minmaq'} * $datarec['cantidad'] ;
+				}
+				
+				$this->save($datarec);
+				
+				
+					// var_dump($datarec);
+			}
+		}
    
 		public function save($data) {
 		$command = \Yii::$app->db_mysql;
@@ -1777,6 +1858,32 @@ Class MaquinadoCTA4 extends Model {
 					
 		
 		return $result[0]['m'] >  0 ? true : false;
+			
+		}
+		
+		public function GetCantidad($dia,$pieza,$op,$maquina) {
+			
+				$command = \Yii::$app->db_mysql;
+		
+		$result =$command
+					->createCommand("
+					
+					Select  cantidad as m 
+					from pdp_ctb_dia 
+					where 
+					pieza ='$pieza'  
+					and dia = '$dia'
+					and op = '$op'
+					and maquina = '$maquina'
+					"
+					)->queryAll();
+					// )->getRawSql();
+					// print_r($result);exit;
+					
+		if (  isset ($result[0]['cantidad']) ) 
+			return $result[0]['cantidad'];
+		else 
+			return 0;
 			
 		}
         

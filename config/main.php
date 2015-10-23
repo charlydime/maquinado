@@ -22,11 +22,18 @@ return [
         ],
     ],
     'components' => [
+		'session' => [
+            'name' => 'PHPMAQSESSID',
+           // 'savePath' => __DIR__ . '../tmp',
+			'cookieParams' => [
+								'path' => '/fimex2/',
+							]
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-			// 'absoluteAuthTimeout'=> 36000,
-			// 'authTimeout' => 28800,
+			'autoRenewCookie' => false,
+			 
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

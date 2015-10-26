@@ -36,7 +36,7 @@ echo Html::a('Actualizar',"javascript:void(0)",[
 
 <br>
 <embed id= "rep" width="100%" height="768" src="<?= $url ?>">
-
+<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="dosmaq()">Carga Asistencas</a>
 <script type="text/javascript">
 
 		function recargaPagina(){

@@ -13,7 +13,7 @@ use common\models\Grid;
 	
 ?>
 
-<div class "easyui-panel" title"Reposrte de Maquinado" style="width:100%;height:500px;">
+<div class "easyui-panel" title"Reporte de Maquinado" style="width:100%;height:500px;">
 
 	<form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
 				
@@ -55,18 +55,19 @@ use common\models\Grid;
 				?>
 				
 				
+				
 				<br/>
-			<!--	hora inicio:
+				hora inicio:
 				<input id="hini" class="easyui-textbox" type="text" name="hini" value = "7:00"></input>
 
 				hora fin:
 				<input id="hfin" class="easyui-textbox" type="text" name="hfin" value = "17:00"></input>
-			-->
+			<!--
 				<input type="radio" name="turno" value="1" > Matutino
 				<input type="radio" name="turno" value="2" >Vespertino
 				<input type="radio" name="turno" value="3" > Nocturno 
-				<input type="radio" name="turno" value="4" checked> Mixto
-				
+				<input type="radio" name="turno" value="4" > Mixto
+			-->	
 				<div id = 'resultado'><div>
 	</form>
 	
@@ -84,13 +85,34 @@ use common\models\Grid;
 		
 		
 	}
+	
+	
+	 function validahora(hora){
+			
+			var pat = /^(0[1-9]|1\d|2[0-3]):([0-5]\d)$/;
+			
+			return hora.match(pat) ? true : false;
+			
+			
+		}
+	
     function setmaquina(record){
-		// var hini =$('#hini').val();
-		// var hfin =$('#hfin').val();
+		 var hini =$('#hini').val();
+		 var hfin =$('#hfin').val();
 		
 		// if (hini == '' || hfin == ''){
 			// alert("debe capturar hora inicio fin en formato 24 horas ");exit;
 		// }
+		
+		if (hini  == "" || hfin == "") 
+				{$('#maquina').combobox('setValue','') ;alert("inicio o fin vacios capture lo que trabajo en la "); return;}
+			//valida hora
+			if( !validahora(hini) ) 
+				{$('#maquina').combobox('setValue','') ;alert("formato de hora inicio no valido 01:00"); return;}
+			
+			if( !validahora(hfin) ) 
+				{$('#maquina').combobox('setValue','') ;alert("formato de hora fin no valido elemplo 07:00 "); return;}
+		
 		var ok = confirm("Desea Iniciar Captura para :"+ record.clave);
 		
 		if (ok != true ) return;
@@ -100,8 +122,8 @@ use common\models\Grid;
 		  fecha : $('#fecha').val(),
 		  id: $('#id').val(),
 		  idturno: $("input[name=turno]:checked").val(),
-		  // hini: $('#hini').val(),
-		  // hfin: $('#hfin').val(),
+		   hini: $('#hini').val(),
+		   hfin: $('#hfin').val(),
 		  maquina: record.id
 		};
 		

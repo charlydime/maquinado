@@ -81,7 +81,9 @@ class EteController extends Controller
 	  $d['usuario'] = $_REQUEST['operador']; 
 	  $d['fecha']= $_REQUEST['fecha'];
 	  $d['maquina'] = $_REQUEST['maquina'];
-	  $d['idturno'] = $_REQUEST['idturno'];
+	  $d['hini'] = $_REQUEST['hini'];
+	  $d['hfin'] = $_REQUEST['hfin'];
+	  $d['idturno'] = isset($_REQUEST['idturno']) ? $_REQUEST['idturno']: 0;
 	
 	  
 	  $id = $model->saveETE($d);

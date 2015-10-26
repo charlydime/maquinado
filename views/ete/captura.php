@@ -241,6 +241,7 @@ use common\models\Grid;
 			this.deshacerfila2();
 		rows = 	$(this.grid).datagrid('getRows');
 		
+			if ( $('#id').val() =='' ) { alert("No puede capturar sin registrar maquina"); return;}
 			
 			// si no esta siendo editado
 			if (this.editIndex2 == undefined){
@@ -248,8 +249,8 @@ use common\models\Grid;
 			$(this.grid).datagrid('insertRow',{
 				index:rows.length+1,
 				row:{
-				inicio:'',
-				fin:'',
+				inicio: $('#hini').val(),
+				fin: $('#hfin').val(),
 				parte:'',
 				op:'',
 				maq:'',

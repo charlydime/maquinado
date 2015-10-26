@@ -231,6 +231,7 @@ use common\models\Grid;
 			
 		rows = 	$(this.grid).datagrid('getRows');
 		
+		if ( $('#id').val() =='' ) { alert("No puede capturar sin registrar maquina"); return;}
 			
 			// si no esta siendo editado
 			if (this.editIndex2 == undefined){

@@ -225,7 +225,7 @@ public function ChecaOp($data){
 		 $command = \Yii::$app->db_ete;
 		 $data['fecha'] = str_replace('-','', $data['fecha']);
 		 // $data['fecha'] =  $data['fecha'] ;
-		 $turno = $this->datosTurno($data['idturno']);
+		 //$turno = $this->datosTurno($data['idturno']);
 		 //print_r($turno); exit;
 		 // if (!$this->existeEte($data['usuario'],$data['fecha'],$data['maquina']))
 		 // {
@@ -233,9 +233,11 @@ public function ChecaOp($data){
 									'empleado' => $data['usuario'],
 									'fecha' => $data['fecha'], 
 									'idmaquina' => $data['maquina'],
-									'hini' => $turno[0]['hinicio'],
-									'hfin' => $turno[0]['htermino'],
-									'idturno' => $turno[0]['idturno']
+									// 'hini' => $turno[0]['hinicio'],
+									// 'hfin' => $turno[0]['htermino'],
+									'hini' => $data['hini'],
+									'hfin' => $data['hfin'],
+									//'idturno' => $turno[0]['idturno']
 
 							])->execute();
 							// ])->getRawSql();

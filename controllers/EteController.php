@@ -510,7 +510,7 @@ class EteController extends Controller
 		// $id =$model->getOperadoresMaquinado();
 		$id =$model->getAsistencias();
 		
-		return $id;
+		return  $this->goBack();
 		
 	}
 	
@@ -531,7 +531,7 @@ class EteController extends Controller
 		// $id =$model->getOperadoresMaquinado();
 		$id =$model->getAsistencias2();
 		
-		return $id;
+		return $ $this->goBack();
 		
 	}
 	

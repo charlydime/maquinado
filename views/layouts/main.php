@@ -73,6 +73,8 @@ AppAsset::register($this);
 									['label' => 'se maquina', 'url' => ['semaquina/index']],
 									['label' => 'Turnos', 'url' => ['turnos/index']],
 									['label' => 'Periodicidad', 'url' => ['periodicidad/index']],
+									['label' => 'Carga asistencias', 'url' => ['ete/getasistencias']],
+									['label' => 'Carga inasistencias', 'url' => ['ete/getinasistencias']],
 				 
 								],
 								'url' => ['/maquinado']

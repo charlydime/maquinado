@@ -30,15 +30,15 @@ public function getAsistencias2(){
 		entrada.consec as id,
 		entrada.nomina, 
 		entrada.fecha, 
-			
-		 entrada.d as descrip 
+		entrada.d as descrip 
 		
 		from   
 		(
-		select * from asistencia as a 
+		select a.*,j.*,t.*,ins.*,incidencias.status from asistencia as a 
 		left join jornada as j on j.id = a.idjornada
 		left join  turnos as t on j.Turnos_idturno = t.clave 
 		LEFT JOIN ( select  clave as idcat_ins ,descrip  as d from cat_inciden) as ins  on a.incidencia = ins.idcat_ins
+		left join  incidencias on incidencias.nomina  = a.nomina and incidencias.fecha = a.fecha and  incidencias.status = 'AUTORIZADO'
 		WHERE
 		a.fecha  Between '$this->fechaini' and '$this->fechafin' and
 		 a.incidencia in (
@@ -179,6 +179,60 @@ public function getAsistencias(){
 	 $cmdM[$i]->createCommand()
 			->batchInsert('asistencia',['id','nomina','fecha','entrada','salida','descrip','hrs','min'],$r)
 	->execute();
+	// ->getRawSql();
+		// echo $res;
+		$i=$i+1;
+	}
+	
+	//return $result;
+	
+	
+	
+}
+
+
+public function getincidencias(){
+	
+	$cmdRelox = \Yii::$app->db_relox;
+	//coneccion relox
+	
+	
+	$sql = "
+		
+		select fecha,nomina,incidencia,horas from incidencias
+		where status = 'AUTORIZADO'
+		and  fecha between  '$this->fechaini'
+		and '$this->fechafin'
+		-- and horas > 0
+		 and incidencia in (95,96,98,1) 
+		-- and incidencia in (97) 
+	
+	
+	";
+	
+	$result =$cmdRelox->createCommand($sql)->queryAll();
+	
+	
+	$row = []; 
+	foreach($result as $r){
+		$r = array_values($r);
+		array_push ($row,$r) ;
+		
+	}
+	// print_r($row);exit;
+	
+	$row = array_chunk($row,900);
+	
+	
+	$cmdMaq = \Yii::$app->db_ete;
+	$cmdMaq->createCommand()->truncateTable( 'incidencia' )->execute();
+	
+	$i = 0;
+	foreach($row as $r){
+	 $cmdM[$i] = \Yii::$app->db_ete;
+	 $cmdM[$i]->createCommand()
+			->batchInsert('incidencia',['fecha','nomina','incidencia','horas'],$r)
+			->execute();
 	// ->getRawSql();
 		// echo $res;
 		$i=$i+1;

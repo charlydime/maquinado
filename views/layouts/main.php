@@ -75,6 +75,7 @@ AppAsset::register($this);
 									['label' => 'Periodicidad', 'url' => ['periodicidad/index']],
 									['label' => 'Carga asistencias', 'url' => ['ete/getasistencias']],
 									['label' => 'Carga inasistencias', 'url' => ['ete/getinasistencias']],
+									['label' => 'Carga incidencias', 'url' => ['ete/getincidencias']],
 				 
 								],
 								'url' => ['/maquinado']
@@ -113,7 +114,8 @@ AppAsset::register($this);
 									 ['label' => 'Reporte ETE n', 'url' => ['ete/ete']],
 									 ['label' => 'Reporte ETE o', 'url' => ['ete/etech']],
 									 ['label' => 'Reporte ETO', 'url' => ['ete/eto']],
-									 ['label' => 'Reporte ETO Mensual', 'url' => ['ete/etom']],
+									 ['label' => 'Reporte ETO prueba', 'url' => ['ete/eto_a']],
+									// ['label' => 'Reporte ETO Mensual', 'url' => ['ete/etom']],
 							
 									
 				 

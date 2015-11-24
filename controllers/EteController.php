@@ -435,6 +435,33 @@ class EteController extends Controller
 		
 	}
 	
+	public function actionEtoa(){
+		
+		if ( isset ($_REQUEST["fecha"]) ){
+			$fecha = $_REQUEST["fecha"] ;
+		}else{
+			$fecha = date('Ymd');
+		}
+		
+		if ( isset ($_REQUEST["fecha2"]) ){
+			$fecha2 = $_REQUEST["fecha2"] ;
+		}else{
+			$fecha2 = date('Ymd');
+		}
+		
+		if ( isset ($_REQUEST["Area"]) ){
+			$area = $_REQUEST["Area"] ;
+		}else{
+			$area = "AC";
+		}
+		
+		return $this->render('eto_a', [ 'fecha' => $fecha , 'fecha2' => $fecha2  , 'area' => $area]);
+		
+	
+		
+	}
+	
+	
 	//reporte ETO mensual acreos / bronce
 		public function actionEtom(){
 		
@@ -514,6 +541,28 @@ class EteController extends Controller
 		
 	}
 	
+	// obtiene asistenacias de relox
+	public function actionGetincidencias(){
+		//$data = json_decode($_POST['Data']);
+		$model = new Calculo;
+		
+		if ( isset ($_REQUEST['fechaini']) and isset ($_REQUEST['fechafin']) ){
+			$model->fechaini = $_REQUEST['fechaini'];
+			$model->fechafin = $_REQUEST['fechafin'];
+		}else{
+			
+		$model->fechaini = '2015-01-01';
+		$model->fechafin = date('Y-m-d');
+			
+		}
+
+		// $id =$model->getOperadoresMaquinado();
+		$id =$model->getincidencias();
+		
+		//return  $this->goBack();
+		
+	}
+	
 	public function actionGetinasistencias(){
 		//$data = json_decode($_POST['Data']);
 		$model = new Calculo;
@@ -531,7 +580,7 @@ class EteController extends Controller
 		// $id =$model->getOperadoresMaquinado();
 		$id =$model->getAsistencias2();
 		
-		return $ $this->goBack();
+		return  $this->goBack();
 		
 	}
 	

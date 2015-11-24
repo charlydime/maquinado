@@ -18,7 +18,7 @@ Class MaquinadoMaqOp extends Model {
         pdp_maquina.Descripcion
     FROM
         maquina_operador
-        INNER JOIN empleado ON maquina_operador.operador = empleado.CODIGOANTERIOR
+        INNER JOIN DuxSinc.dbo.empleado as empleado ON maquina_operador.operador = empleado.CODIGOANTERIOR
         INNER JOIN pdp_maquina ON maquina_operador.maquina = pdp_maquina.Maquina
     WHERE
         empleado.ESTATUS <> 'Baja'
@@ -37,7 +37,7 @@ Class MaquinadoMaqOp extends Model {
 		 $command = \Yii::$app->db_mysql;
 		 $sql="
 			SELECT Empleado.CODIGOANTERIOR, Empleado.NOMBRECOMPLETO
-			FROM Empleado
+			FROM DuxSinc.dbo.empleado as Empleado
 			WHERE (Empleado.ESTATUS<>'Baja') AND (Empleado.PUESTO IN ('MAA 01','MAA 02','MAA 03','MAA 04','MAA 05','MAA 06','MAB 01','MAB 02','MAB 03','PA 01','TH 03'))
 			ORDER BY Empleado.CODIGOANTERIOR
 		 ";

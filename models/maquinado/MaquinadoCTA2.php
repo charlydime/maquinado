@@ -2234,12 +2234,12 @@ public function  GetInfo_pza_op($semana){
 					->createCommand("
 				select operador , rtrim( empleado.CODIGOANTERIOR)+'-'+empleado.NOMBRECOMPLETO as NOMBRECOMPLETO
 					from maquina_operador
-					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
+					left join  DuxSinc.dbo.Empleado as Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'
 					UNION
 					select operador+10000 , concat ('FAN-',rtrim(empleado.CODIGOANTERIOR) ,'-',empleado.NOMBRECOMPLETO) as NOMBRECOMPLETO
 					from maquina_operador
-					left join  Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
+					left join  DuxSinc.dbo.Empleado as Empleado  on empleado.CODIGOANTERIOR = maquina_operador.operador
 					where maquina = '". $maquina."'
 					
 					

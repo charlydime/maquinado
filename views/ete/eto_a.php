@@ -10,7 +10,7 @@ use yii\helpers\URL;
 use common\models\Grid;
 
 $per = '%25';
-$url = "http://devserver:8181/birt/frameset?__report=EtoPorSemana.rptdesign&FechaInicio=$fecha&FechaFinal=$fecha2&Area=$area";
+$url = "http://192.168.0.4:8080/birt/frameset?__report=EtoPorSemana.rptdesign&FechaInicio=$fecha&FechaFinal=$fecha2&Area=$area";
 $url = htmlentities($url);
 $per = htmlentities($per);
 ?>
@@ -20,8 +20,8 @@ Fecha fin :
 <input id="fin" type="text" class="easyui-datebox" required="required" value="formatea_fecha($fecha2)">
 Area :
 <select id="area" class="easyui-combobox" name="area" style="width:200px;">
-    <option value="BR">Aceros</option>
-    <option value="AC">Bronces</option>
+    <option value="AC">Aceros</option>
+    <option value="BR">Bronces</option>
 </select>
 
 <?php

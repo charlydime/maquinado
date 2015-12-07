@@ -127,9 +127,11 @@ Class Captura extends Model {
 public function detectanoche($op){
 		$command = \Yii::$app->db_mysql;
 		
+		$f =  date('Y-m-d');
+		
         $result =$command->createCommand("
 		
-				select count(dia) as m ,cast (dateadd( day, -1 ,getdate() ) as date ) as d   from 
+				select count(dia) as m ,cast (dateadd( day, -1 , $f ) as date ) as d   from 
 				(
 					select * from 	pdp_maquina_turno_dia
 					Union 
@@ -137,7 +139,7 @@ public function detectanoche($op){
 
 			   ) as turno
 				where turno = 'Nocturno' and
-				dia =  cast (dateadd( day, -1 ,getdate() ) as date ) and 
+				dia =  cast (dateadd( day, -1 , $f ) as date ) and 
 				op = $op
 		
 		")->queryAll();
